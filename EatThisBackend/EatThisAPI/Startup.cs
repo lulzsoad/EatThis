@@ -36,8 +36,10 @@ namespace EatThisAPI
                        .AllowAnyHeader();
             }));
 
-            // Baza danych
+            // Rejestracja kontekstu bazy danych
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
+            // Rejestracja Seedera
+            services.AddScoped<Seeder>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -47,8 +49,10 @@ namespace EatThisAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seeder seeder)
         {
+            seeder.Seed();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

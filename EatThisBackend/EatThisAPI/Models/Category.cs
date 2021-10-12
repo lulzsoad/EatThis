@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace EatThisAPI.Models
 {
-    public class Ingredient
+    public class Category
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<IngredientQuantity> IngredientQuantities { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
     }
 }

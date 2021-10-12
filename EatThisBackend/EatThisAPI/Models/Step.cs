@@ -12,6 +12,6 @@ namespace EatThisAPI.Models
 
         public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
-        public virtual Image Image { get; set; }
+        public virtual StepImage StepImage { get; set; }
     }
 }
