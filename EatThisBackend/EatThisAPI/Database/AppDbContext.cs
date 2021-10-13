@@ -28,6 +28,9 @@ namespace EatThisAPI.Database
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(100);
+            modelBuilder.Entity<Category>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
 
             modelBuilder.Entity<StepImage>()
                 .Property(x => x.Url)

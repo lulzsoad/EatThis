@@ -1,4 +1,6 @@
 using EatThisAPI.Database;
+using EatThisAPI.Repositories;
+using EatThisAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +43,10 @@ namespace EatThisAPI
             // Rejestracja Seedera
             services.AddScoped<Seeder>();
 
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientService, IngredientService>();
+
+            services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
