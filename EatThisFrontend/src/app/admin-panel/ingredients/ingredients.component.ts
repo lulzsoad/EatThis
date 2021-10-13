@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
+import { IngredientService } from 'src/app/services/ingredient.service';
 
 @Component({
   selector: 'app-ingredients',
@@ -20,7 +21,7 @@ export class IngredientsComponent implements OnInit {
   public formGroup: FormGroup = new FormGroup({});
   private editedRowIndex: number = 0;
 
-  constructor() {
+  constructor(private ingredientService: IngredientService) {
   }
 
   public ngOnInit(): void {
