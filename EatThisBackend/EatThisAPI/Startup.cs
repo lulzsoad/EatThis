@@ -1,4 +1,5 @@
 using EatThisAPI.Database;
+using EatThisAPI.Helpers;
 using EatThisAPI.Repositories;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Builder;
@@ -42,12 +43,14 @@ namespace EatThisAPI
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
             // Rejestracja Seedera
             services.AddScoped<Seeder>();
+            
 
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();
+            services.AddScoped<ErrorHandlingMiddleware>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EatThisAPI", Version = "v1" });
@@ -65,6 +68,8 @@ namespace EatThisAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EatThisAPI v1"));
             }
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

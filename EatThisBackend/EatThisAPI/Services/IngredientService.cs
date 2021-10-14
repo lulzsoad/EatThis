@@ -2,6 +2,9 @@
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
 using EatThisAPI.Repositories;
+using EatThisAPI.Validators;
+using Microsoft.Extensions.Logging;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +24,13 @@ namespace EatThisAPI.Services
     {
         private readonly IIngredientRepository ingredientRepository;
         private readonly IMapper mapper;
-        public IngredientService(IIngredientRepository ingredientRepository, IMapper mapper)
+        private readonly ILogger<IngredientService> logger;
+
+        public IngredientService(IIngredientRepository ingredientRepository, IMapper mapper, ILogger<IngredientService> logger)
         {
             this.ingredientRepository = ingredientRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public async Task<IEnumerable<IngredientDto>> GetAll() 
@@ -38,10 +44,7 @@ namespace EatThisAPI.Services
         {
             Ingredient ingredient = await ingredientRepository.GetById(id);
 
-            if(ingredient == null)
-            {
-                throw new Exception("Nie znaleziono składnika");
-            }
+            IngredientValidator.Validate(ingredient);
             var ingredientDto = mapper.Map<IngredientDto>(ingredient);
             return ingredientDto;
         }

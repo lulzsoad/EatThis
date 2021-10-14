@@ -11,8 +11,7 @@ import { InputsModule } from '@progress/kendo-angular-inputs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
-
-
+import { IngredientService } from './services/ingredient.service';
 
 
 @NgModule({
@@ -31,7 +30,9 @@ import { IngredientsComponent } from './admin-panel/ingredients/ingredients.comp
     BrowserAnimationsModule,
     GridModule
   ],
-  providers: [],
+  providers: [
+    IngredientService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
