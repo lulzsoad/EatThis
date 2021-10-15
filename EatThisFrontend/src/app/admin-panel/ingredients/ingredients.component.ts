@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { DataBindingDirective, GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
+import { Ingredient } from 'src/app/models/ingredient.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
+import { process } from "@progress/kendo-data-query";
 
 @Component({
   selector: 'app-ingredients',
@@ -11,41 +13,40 @@ import { IngredientService } from 'src/app/services/ingredient.service';
   styleUrls: ['./ingredients.component.scss']
 })
 export class IngredientsComponent implements OnInit {
+  @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
+  public gridView: GridDataResult;
+  public ingredients: Ingredient[];
+  public gridViewSearch: any[];
+  public pageSize = 15;
+  public skip = 0;
 
-  public data = [];
-  public gridState: State = {
-    sort: [],
-    skip: 0,
-    take: 10,
-  };
-  public formGroup: FormGroup = new FormGroup({});
+  public formGroup: FormGroup;
+  public loadingPanelVisible = false;
+
   private editedRowIndex: number = 0;
 
   constructor(private ingredientService: IngredientService) {
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
+    await this.getAll();
+    await this.loadData()
   }
 
-  public onStateChange(state: State) {
-    this.gridState = state;
+  private async getAll(){
+    this.loadingPanelVisible = true;
+    this.ingredients = await this.ingredientService.getAll().toPromise();
+    this.loadingPanelVisible = false;
   }
+
+  
 
   public addHandler({ sender }: any) {
     this.closeEditor(sender);
 
     this.formGroup = new FormGroup({
-      ProductID: new FormControl(),
-      ProductName: new FormControl("", Validators.required),
-      UnitPrice: new FormControl(0),
-      UnitsInStock: new FormControl(
-        "",
-        Validators.compose([
-          Validators.required,
-          Validators.pattern("^[0-9]{1,3}"),
-        ])
-      ),
-      Discontinued: new FormControl(false),
+      id: new FormControl(),
+      name: new FormControl(),
     });
 
     sender.addRow(this.formGroup);
@@ -53,19 +54,9 @@ export class IngredientsComponent implements OnInit {
 
   public editHandler({ sender, rowIndex, dataItem }: any) {
     this.closeEditor(sender);
-
     this.formGroup = new FormGroup({
-      ProductID: new FormControl(dataItem.ProductID),
-      ProductName: new FormControl(dataItem.ProductName, Validators.required),
-      UnitPrice: new FormControl(dataItem.UnitPrice),
-      UnitsInStock: new FormControl(
-        dataItem.UnitsInStock,
-        Validators.compose([
-          Validators.required,
-          Validators.pattern("^[0-9]{1,3}"),
-        ])
-      ),
-      Discontinued: new FormControl(dataItem.Discontinued),
+      id: new FormControl(dataItem.id),
+      name: new FormControl(dataItem.name),
     });
 
     this.editedRowIndex = rowIndex;
@@ -77,8 +68,27 @@ export class IngredientsComponent implements OnInit {
     this.closeEditor(sender, rowIndex);
   }
 
-  public saveHandler({ sender, rowIndex, formGroup, isNew }: any) {
-
+  public async saveHandler({ sender, rowIndex, formGroup, isNew }: any) {
+    let ingredient: Ingredient = formGroup.value;
+    if(isNew){
+      this.loadingPanelVisible = true;
+      ingredient.id = 0;
+      await this.ingredientService.add(ingredient).toPromise().then(async (ingredientId) => {
+        ingredient.id = ingredientId;
+        this.ingredients.push(ingredient);
+        await this.loadData();
+        this.skip += 1;
+      }) as number;
+      this.loadingPanelVisible = false;
+    } else{
+      this.loadingPanelVisible = true;
+      await this.ingredientService.update(ingredient).toPromise().then(async () => {
+        await this.loadData();
+        this.skip += 1;
+        sender.data.data[rowIndex].name = formGroup.value.name;
+      });
+      this.loadingPanelVisible = false;
+    }
     sender.closeRow(rowIndex);
   }
 
@@ -89,6 +99,41 @@ export class IngredientsComponent implements OnInit {
     grid.closeRow(rowIndex);
     this.editedRowIndex = 0;
     this.formGroup = new FormGroup({});
+  }
+
+  public async pageChange(event: PageChangeEvent){
+    this.skip = event.skip;
+    await this.loadData();
+  }
+
+  private async loadData(): Promise<void>{
+    this.gridView = {
+      data: this.ingredients.slice(this.skip, this.skip + this.pageSize),
+      total: this.ingredients.length,
+    }
+    let event: any = { target: { value: "" } };
+    this.onFilter(event);
+  }
+
+  async dataStateChange(event: any){
+    this.skip = event.skip;
+  }
+
+  public onFilter(event: any): void {
+    this.gridViewSearch = process(this.ingredients, {
+      filter: {
+        logic: "or",
+        filters: [
+          {
+            field: "name",
+            operator: "contains",
+            value: event.target.value,
+          }
+        ],
+      },
+    }).data;
+
+    this.dataBinding.skip = 0;
   }
 
 }

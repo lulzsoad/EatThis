@@ -12,6 +12,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { IngredientService } from './services/ingredient.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { IndicatorsModule } from '@progress/kendo-angular-indicators';
+
 
 
 @NgModule({
@@ -21,16 +24,21 @@ import { IngredientService } from './services/ingredient.service';
     UserPanelComponent,
     AdminNavigationComponent,
     DropdownDirective,
-    IngredientsComponent
+    IngredientsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     InputsModule,
     BrowserAnimationsModule,
-    GridModule
+    GridModule,
+    HttpClientModule,
+    IndicatorsModule,
+    BrowserModule, 
+    IndicatorsModule
   ],
   providers: [
+    HttpClient,
     IngredientService
   ],
   bootstrap: [AppComponent]

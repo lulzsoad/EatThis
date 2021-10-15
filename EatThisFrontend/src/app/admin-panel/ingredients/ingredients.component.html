@@ -1,48 +1,58 @@
-<kendo-grid
-      [data]="data"
-      [height]="533"
+<div class="grid-wrapper">
+  <kendo-grid
+      [kendoGridBinding]="gridViewSearch"
+      [data]="gridView"
+      [height]="700"
+      [pageSize]="pageSize"
+      [skip]="skip"
       [pageable]="true"
-      [sortable]="true"
-      (dataStateChange)="onStateChange($event)"
+      (dataStateChange)="dataStateChange($event)"
+      (pageChange)="pageChange($event)"
       (edit)="editHandler($event)"
       (cancel)="cancelHandler($event)"
       (save)="saveHandler($event)"
       (remove)="removeHandler($event)"
       (add)="addHandler($event)"
-      [navigable]="true"
     >
-      <ng-template kendoGridToolbarTemplate>
-        <button kendoGridAddCommand>Add new</button>
-      </ng-template>
-      <kendo-grid-column
-        field="ProductName"
-        title="Product Name"
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoGridAddCommand>Dodaj</button>
+      <input
+        placeholder="Szukaj..."
+        kendoTextBox
+        (input)="onFilter($event)"
+      />
+    </ng-template>
+    <kendo-grid-column
+        field="id"
+        title="ID"
+        [hidden]="true"
       ></kendo-grid-column>
       <kendo-grid-column
-        field="UnitPrice"
-        editor="numeric"
-        title="Price"
+        field="name"
+        title="Nazwa"
       ></kendo-grid-column>
-      <kendo-grid-column
-        field="Discontinued"
-        editor="boolean"
-        title="Discontinued"
-      ></kendo-grid-column>
-      <kendo-grid-column
-        field="UnitsInStock"
-        editor="numeric"
-        title="Units In Stock"
-      ></kendo-grid-column>
-      <kendo-grid-command-column title="command" [width]="220">
+      <kendo-grid-command-column title="Akcje" [width]="220">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
-          <button kendoGridEditCommand [primary]="true">Edit</button>
-          <button kendoGridRemoveCommand>Remove</button>
-          <button kendoGridSaveCommand>
-            {{ isNew ? "Add" : "Update" }}
+          <button kendoGridEditCommand [primary]="true">Edytuj</button>
+          <button kendoGridRemoveCommand>Usuń</button>
+          <button kendoGridSaveCommand >
+            {{ isNew ? "Dodaj" : "Aktualizuj" }}
           </button>
           <button kendoGridCancelCommand>
-            {{ isNew ? "Discard changes" : "Cancel" }}
+            {{ isNew ? "Odrzuć zmiany" : "Anuluj" }}
           </button>
         </ng-template>
       </kendo-grid-command-column>
     </kendo-grid>
+      <div class="k-loading-panel" *ngIf="loadingPanelVisible">
+        <div class="k-loading-panel-mask"></div>
+        <div class="k-loading-panel-wrapper">
+          <kendo-loader
+            type="infinite-spinner"
+            themeColor="primary"
+            size="large"
+          >
+          </kendo-loader>
+        </div>
+      </div>
+</div>

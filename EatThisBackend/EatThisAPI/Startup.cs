@@ -69,6 +69,8 @@ namespace EatThisAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EatThisAPI v1"));
             }
 
+            app.UseCors("MyPolicy");
+
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
