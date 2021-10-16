@@ -25,7 +25,7 @@ namespace EatThisAPI.Repositories
             this.context = context;
         }
 
-        public async Task<IEnumerable<Ingredient>> GetAll() => await context.Ingredients.ToListAsync();
+        public async Task<IEnumerable<Ingredient>> GetAll() => await context.Ingredients.OrderBy(x => x.Name).ToListAsync();
         public async Task<Ingredient> GetById(int id) => await context.Ingredients.FirstOrDefaultAsync(x => x.Id == id);
         public async Task<int> Add(Ingredient ingredient)
         {

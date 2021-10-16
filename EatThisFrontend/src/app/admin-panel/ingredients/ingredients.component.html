@@ -1,18 +1,25 @@
+<app-ingredient-create-modal
+  [opened]="isCreateModalOpened"
+  [isNew]="isNew"
+  [ingredient]="ingredient"
+></app-ingredient-create-modal>
+<app-delete-object-modal
+[opened]="deleteModalOpened"
+[object]="ingredient"
+></app-delete-object-modal>
 <div class="grid-wrapper">
   <kendo-grid
       [kendoGridBinding]="gridViewSearch"
       [data]="gridView"
       [height]="700"
+      [loading]="loadingPanelVisible"
       [pageSize]="pageSize"
       [skip]="skip"
       [pageable]="true"
-      (dataStateChange)="dataStateChange($event)"
       (pageChange)="pageChange($event)"
       (edit)="editHandler($event)"
-      (cancel)="cancelHandler($event)"
-      (save)="saveHandler($event)"
       (remove)="removeHandler($event)"
-      (add)="addHandler($event)"
+      (add)="addHandler()"
     >
     <ng-template kendoGridToolbarTemplate>
       <button kendoGridAddCommand>Dodaj</button>
@@ -35,24 +42,7 @@
         <ng-template kendoGridCellTemplate let-isNew="isNew">
           <button kendoGridEditCommand [primary]="true">Edytuj</button>
           <button kendoGridRemoveCommand>Usuń</button>
-          <button kendoGridSaveCommand >
-            {{ isNew ? "Dodaj" : "Aktualizuj" }}
-          </button>
-          <button kendoGridCancelCommand>
-            {{ isNew ? "Odrzuć zmiany" : "Anuluj" }}
-          </button>
         </ng-template>
       </kendo-grid-command-column>
     </kendo-grid>
-      <div class="k-loading-panel" *ngIf="loadingPanelVisible">
-        <div class="k-loading-panel-mask"></div>
-        <div class="k-loading-panel-wrapper">
-          <kendo-loader
-            type="infinite-spinner"
-            themeColor="primary"
-            size="large"
-          >
-          </kendo-loader>
-        </div>
-      </div>
 </div>

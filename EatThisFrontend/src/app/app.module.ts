@@ -14,8 +14,14 @@ import { IngredientsComponent } from './admin-panel/ingredients/ingredients.comp
 import { IngredientService } from './services/ingredient.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { IndicatorsModule } from '@progress/kendo-angular-indicators';
-
-
+import { DialogsModule, WindowModule} from '@progress/kendo-angular-dialog';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
+import { IngredientCreateModalComponent } from './admin-panel/ingredients/ingredient-create-modal/ingredient-create-modal.component';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { LabelModule } from '@progress/kendo-angular-label';
+import { WindowService } from './services/window.service';
+import { DeleteObjectModalComponent } from './shared/components/delete-object-modal/delete-object-modal.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +31,8 @@ import { IndicatorsModule } from '@progress/kendo-angular-indicators';
     AdminNavigationComponent,
     DropdownDirective,
     IngredientsComponent,
+    IngredientCreateModalComponent,
+    DeleteObjectModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,11 +43,20 @@ import { IndicatorsModule } from '@progress/kendo-angular-indicators';
     HttpClientModule,
     IndicatorsModule,
     BrowserModule, 
-    IndicatorsModule
+    IndicatorsModule, 
+    DialogsModule,
+    WindowModule,
+    ButtonsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DateInputsModule,
+    InputsModule,
+    LabelModule,
   ],
   providers: [
     HttpClient,
-    IngredientService
+    IngredientService,
+    WindowService
   ],
   bootstrap: [AppComponent]
 })

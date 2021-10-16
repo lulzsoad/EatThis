@@ -1,0 +1,15 @@
+<kendo-dialog
+      title="Usuń obiekt"
+      *ngIf="opened"
+      (close)="close()"
+      [minWidth]="250"
+      [width]="450"
+    >
+      <p style="margin: 30px; text-align: center;">
+        Czy na pewno chcesz usunąć obiekt o nazwie: <strong>{{object.name}}</strong>
+      </p>
+      <kendo-dialog-actions>
+        <button kendoButton (click)="handleResult(false)">Nie</button>
+        <button kendoButton (click)="handleResult(true)" [primary]="true">Tak</button>
+      </kendo-dialog-actions>
+    </kendo-dialog>

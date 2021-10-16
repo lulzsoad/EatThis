@@ -2,9 +2,12 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from "../app-config/app.config";
 import { Ingredient } from "../models/ingredient.model";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class IngredientService{
+    public createIngredientModalSaved: Subject<Ingredient> = new Subject<Ingredient>();
+
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/ingredient/`;
     
