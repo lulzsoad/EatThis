@@ -1,0 +1,35 @@
+<div class="container">
+    <h2>Utwórz przepis</h2>
+    <form class="k-form" [formGroup]="form">
+        <kendo-formfield>
+          <kendo-floatinglabel [text]="'Nazwa'">
+            <kendo-textbox
+              [formControlName]="'name'"
+              required
+            ></kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formhint>Wprowadź nazwę przepisu</kendo-formhint>
+          <kendo-formerror>Błąd: Nazwa jest wymagana</kendo-formerror>
+        </kendo-formfield>
+        <kendo-formfield>
+            <kendo-floatinglabel [text]="'Podnazwa'">
+              <kendo-textbox
+                [formControlName]="'subName'"
+              ></kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formhint>Wprowadź podnazwę przepisu</kendo-formhint>
+        </kendo-formfield>
+        <kendo-formfield>
+            <kendo-floatinglabel [text]="'Opis'">
+              <kendo-textarea
+                [rows]="5"
+                [resizable]="'none'"
+                [formControlName]="'description'"
+                required
+              ></kendo-textarea>
+            </kendo-floatinglabel>
+            <kendo-formhint>Wprowadź opis przepisu</kendo-formhint>
+            <kendo-formerror>Błąd: Opis jest wymagany</kendo-formerror>
+        </kendo-formfield>
+      </form>
+</div>

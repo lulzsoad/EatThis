@@ -47,6 +47,8 @@ namespace EatThisAPI
 
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();

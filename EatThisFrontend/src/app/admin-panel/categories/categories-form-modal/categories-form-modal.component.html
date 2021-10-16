@@ -1,0 +1,36 @@
+<kendo-window
+      [title]="isNew ? 'Dodaj kategorię': 'Edytuj kategorię'"
+      *ngIf="opened"
+      (close)="close()"
+      [minWidth]="250"
+      [width]="450"
+    >
+      <form class="k-form" [formGroup]="form">
+        <fieldset hidden="true">
+          <legend>ID</legend>
+
+          <label class="k-form-field">
+            <span>ID</span>
+            <input [(ngModel)]="category.id" class="k-textbox" placeholder="Id kategorii" formControlName="id"/>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kategoria</legend>
+
+          <label class="k-form-field">
+            <span>Nazwa</span>
+            <input [(ngModel)]="category.name" class="k-textbox" placeholder="Nazwa kategorii" formControlName="name"/>
+          </label>
+        </fieldset>
+
+        <div class="k-actions k-actions-end">
+          <button type="button" class="k-button" (click)="close()">
+            Anuluj
+          </button>
+          <button type="button" class="k-button k-primary" (click)="submit()" [disabled]="category.name.length < 1">
+            Dodaj
+          </button>
+        </div>
+      </form>
+</kendo-window>

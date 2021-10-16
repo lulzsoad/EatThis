@@ -11,5 +11,10 @@ namespace EatThisAPI.Helpers
         {
             public static string INGREDIENT_NOT_FOUND = "Nie znaleziono składnika";
         }
+
+        public class Category
+        {
+            public static string CATEGORY_NOT_FOUND = "Nie znaleziono kategorii";
+        }
     }
 }

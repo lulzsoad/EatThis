@@ -22,6 +22,12 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { WindowService } from './services/window.service';
 import { DeleteObjectModalComponent } from './shared/components/delete-object-modal/delete-object-modal.component';
+import { AdminRecipeCreateComponent } from './admin-panel/admin-recipes/admin-recipe-create/admin-recipe-create.component';
+import { AdminRecipeCreateFormComponent } from './admin-panel/admin-recipes/admin-recipe-create/admin-recipe-create-form/admin-recipe-create-form.component';
+import { AdminRecipeCreatePreviewComponent } from './admin-panel/admin-recipes/admin-recipe-create/admin-recipe-create-preview/admin-recipe-create-preview.component';
+import { CategoriesFormModalComponent } from './admin-panel/categories/categories-form-modal/categories-form-modal.component';
+import { CategoriesComponent } from './admin-panel/categories/categories.component';
+import { CategoryService } from './services/category.service';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,11 @@ import { DeleteObjectModalComponent } from './shared/components/delete-object-mo
     IngredientsComponent,
     IngredientCreateModalComponent,
     DeleteObjectModalComponent,
+    AdminRecipeCreateComponent,
+    AdminRecipeCreateFormComponent,
+    AdminRecipeCreatePreviewComponent,
+    CategoriesComponent,
+    CategoriesFormModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +67,8 @@ import { DeleteObjectModalComponent } from './shared/components/delete-object-mo
   providers: [
     HttpClient,
     IngredientService,
-    WindowService
+    WindowService,
+    CategoryService
   ],
   bootstrap: [AppComponent]
 })

@@ -13,6 +13,8 @@ namespace EatThisAPI.Models
         public string Description { get; set; }
         public string Difficulty { get; set; }
         public bool IsVisible { get; set; }
+        public int Time { get; set; }
+        public int PersonQuantity { get; set; }
 
         public ICollection<IngredientQuantity> IngredientQuantities { get; set; }
         public ICollection<Step> Steps { get; set; }

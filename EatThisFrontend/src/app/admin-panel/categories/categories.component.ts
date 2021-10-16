@@ -1,38 +1,38 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataBindingDirective, GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
-import { State } from '@progress/kendo-data-query';
-import { Observable, Subscription } from 'rxjs';
-import { Ingredient } from 'src/app/models/ingredient.model';
-import { IngredientService } from 'src/app/services/ingredient.service';
-import { process } from "@progress/kendo-data-query";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { PageChangeEvent } from '@progress/kendo-angular-dropdowns/dist/es2015/common/models/page-change-event';
+import { DataBindingDirective, GridDataResult } from '@progress/kendo-angular-grid';
+import { Subscription } from 'rxjs';
+import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category.service';
 import { DeleteObject, WindowService } from 'src/app/services/window.service';
+import { process } from "@progress/kendo-data-query";
 
 @Component({
-  selector: 'app-ingredients',
-  templateUrl: './ingredients.component.html',
-  styleUrls: ['./ingredients.component.scss']
+  selector: 'app-categories',
+  templateUrl: './categories.component.html',
+  styleUrls: ['./categories.component.scss']
 })
-export class IngredientsComponent implements OnInit, OnDestroy {
+export class CategoriesComponent implements OnInit {
   @ViewChild(DataBindingDirective) dataBinding: DataBindingDirective;
   public gridView: GridDataResult;
-  public ingredients: Ingredient[];
+  public categories: Category[];
   public gridViewSearch: any[];
   public isCreateModalOpened = false;
   public deleteModalOpened = false;
   public pageSize = 15;
   public skip = 0;
   public isNew = false;
-  public ingredient: Ingredient;
+  public category: Category;
 
   public formGroup: FormGroup;
   public loadingPanelVisible = false;
 
   private windowCloseListener: Subscription;
-  private ingredientSaveListener: Subscription;
-  private ingredientDeleteListener: Subscription;
+  private categorySaveListener: Subscription;
+  private categoryDeleteListener: Subscription;
 
-  constructor(private ingredientService: IngredientService, private windowService: WindowService) {
+  constructor(private categoryService: CategoryService, private windowService: WindowService) {
     this.addListeners();
   }
 
@@ -47,7 +47,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
 
   private async removeListeners(){
     this.windowCloseListener.unsubscribe();
-    this.ingredientSaveListener.unsubscribe();
+    this.categorySaveListener.unsubscribe();
     this.windowService.deleteObject.unsubscribe();
   }
 
@@ -56,65 +56,66 @@ export class IngredientsComponent implements OnInit, OnDestroy {
       this.isCreateModalOpened = value;
       this.deleteModalOpened = value;
     })
-    this.ingredientSaveListener = this.ingredientService.createIngredientModalSaved.subscribe(async ingredient => {
+    this.categorySaveListener = this.categoryService.createCategoryModalSaved.subscribe(async category => {
       if(this.isNew){
-        await this.saveIngredient(ingredient);
+        await this.saveCategory(category);
+        console.log("Log");
       }else{
-        await this.updateIngredient(ingredient);
+        await this.updateCategory(category);
       }
     });
-    this.ingredientDeleteListener = this.windowService.deleteObject.subscribe(async object => {
-      await this.deleteIngredient(object);
+    this.categoryDeleteListener = this.windowService.deleteObject.subscribe(async object => {
+      await this.deleteCategory(object);
     })
   }
 
-  private async deleteIngredient(deleteObject: DeleteObject){
+  private async deleteCategory(deleteObject: DeleteObject){
     this.loadingPanelVisible = true;
-    this.ingredient.id = deleteObject.id;
-    this.ingredient.name = deleteObject.name;
-    await this.ingredientService.delete(this.ingredient).toPromise();
-    await this.ngOnInit();
+    this.category.id = deleteObject.id;
+    this.category.name = deleteObject.name;
+    await this.categoryService.delete(this.category).toPromise();
     this.loadingPanelVisible = false;
+    await this.ngOnInit();
   }
 
-  private async saveIngredient(ingredient: Ingredient){
+  private async saveCategory(category: Category){
     this.loadingPanelVisible = true;
-    await this.ingredientService.add(ingredient).toPromise();
-    await this.ngOnInit();
+    await this.categoryService.add(category).toPromise();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
+    await this.ngOnInit();
   }
 
-  private async updateIngredient(ingredient: Ingredient){
+  private async updateCategory(category: Category){
     this.loadingPanelVisible = true;
     this.isNew = false;
-    await this.ingredientService.update(ingredient).toPromise();
-    await this.ngOnInit();
+    await this.categoryService.update(category).toPromise();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
+    await this.ngOnInit();
   }
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.ingredients = await this.ingredientService.getAll().toPromise();
+    this.categories = await this.categoryService.getAll().toPromise();
     this.loadingPanelVisible = false;
   }
 
   public addHandler() {
     this.isCreateModalOpened = true;
     this.isNew = true;
-    this.ingredient = {id: 0, name: ""}
+    this.category = {id: 0, name: ""}
   }
 
   public editHandler({dataItem }: any) {
     this.isCreateModalOpened = true;
-    this.ingredient = dataItem;
+    this.category = dataItem;
     this.isNew = false;
   }
 
   public removeHandler({ dataItem }: any) {
     this.deleteModalOpened = true;
-    this.ingredient = dataItem;
+    this.category = dataItem;
   }
 
 
@@ -125,15 +126,15 @@ export class IngredientsComponent implements OnInit, OnDestroy {
 
   private async loadData(): Promise<void>{
     this.gridView = {
-      data: this.ingredients.slice(this.skip, this.skip + this.pageSize),
-      total: this.ingredients.length,
+      data: this.categories.slice(this.skip, this.skip + this.pageSize),
+      total: this.categories.length,
     }
     let event: any = { target: { value: "" } };
     this.onFilter(event);
   }
 
   public onFilter(event: any): void {
-    this.gridViewSearch = process(this.ingredients, {
+    this.gridViewSearch = process(this.categories, {
       filter: {
         logic: "or",
         filters: [
