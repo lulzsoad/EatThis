@@ -28,6 +28,8 @@ import { AdminRecipeCreatePreviewComponent } from './admin-panel/admin-recipes/a
 import { CategoriesFormModalComponent } from './admin-panel/categories/categories-form-modal/categories-form-modal.component';
 import { CategoriesComponent } from './admin-panel/categories/categories.component';
 import { CategoryService } from './services/category.service';
+import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+
 
 @NgModule({
   declarations: [
@@ -63,6 +65,7 @@ import { CategoryService } from './services/category.service';
     DateInputsModule,
     InputsModule,
     LabelModule,
+    DropDownsModule,
   ],
   providers: [
     HttpClient,
