@@ -1,0 +1,36 @@
+<kendo-window
+      [title]="isNew ? 'Dodaj składnik': 'Edytuj składnik'"
+      *ngIf="opened"
+      (close)="close()"
+      [minWidth]="250"
+      [width]="450"
+    >
+      <form class="k-form" [formGroup]="form">
+        <fieldset hidden="true">
+          <legend>ID</legend>
+
+          <label class="k-form-field">
+            <span>ID</span>
+            <input [(ngModel)]="unit.id" class="k-textbox" placeholder="Id składnika" formControlName="id"/>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Składnik</legend>
+
+          <label class="k-form-field">
+            <span>Nazwa</span>
+            <input [(ngModel)]="unit.name" class="k-textbox" placeholder="Nazwa składnika" formControlName="name"/>
+          </label>
+        </fieldset>
+
+        <div class="k-actions k-actions-end">
+          <button type="button" class="k-button" (click)="close()">
+            Anuluj
+          </button>
+          <button type="button" class="k-button k-primary" (click)="submit()" [disabled]="unit.name.length < 1">
+            Dodaj
+          </button>
+        </div>
+      </form>
+</kendo-window>

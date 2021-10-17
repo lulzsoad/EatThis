@@ -29,6 +29,9 @@ import { CategoriesFormModalComponent } from './admin-panel/categories/categorie
 import { CategoriesComponent } from './admin-panel/categories/categories.component';
 import { CategoryService } from './services/category.service';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
+import { UnitsComponent } from './admin-panel/units/units.component';
+import { UnitFormModalComponent } from './admin-panel/units/unit-form-modal/unit-form-modal.component';
+import { UnitService } from './services/unit.service';
 
 
 @NgModule({
@@ -46,6 +49,8 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
     AdminRecipeCreatePreviewComponent,
     CategoriesComponent,
     CategoriesFormModalComponent,
+    UnitsComponent,
+    UnitFormModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +76,8 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
     HttpClient,
     IngredientService,
     WindowService,
-    CategoryService
+    CategoryService,
+    UnitService
   ],
   bootstrap: [AppComponent]
 })

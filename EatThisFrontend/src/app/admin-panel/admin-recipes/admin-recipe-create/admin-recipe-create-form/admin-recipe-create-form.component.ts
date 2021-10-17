@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Category } from 'src/app/models/category.model';
+import { IngredientQuantity } from 'src/app/models/ingredient-quantity.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
+import { Recipe } from 'src/app/models/recipe.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
 
@@ -13,8 +15,11 @@ import { IngredientService } from 'src/app/services/ingredient.service';
 export class AdminRecipeCreateFormComponent implements OnInit {
   public form: FormGroup
   public ingredients: Ingredient[];
+  public chosenIngredients: Ingredient[] = [];
+  public ingredientsQuantity: IngredientQuantity[];
   public categories: Category[];
   public loadingPanelVisible = false;
+  public recipe: Recipe;
   constructor(
     private categorySerice: CategoryService,
     private ingredientService: IngredientService
