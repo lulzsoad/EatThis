@@ -32,7 +32,7 @@ namespace EatThisAPI.Helpers
                 logger.LogError(ex, ex.Message);
 
                 context.Response.StatusCode = 500;
-                await context.Response.WriteAsync("Wystąpił błąd");
+                await context.Response.WriteAsync(BackendMessage.General.GENERAL_ERROR);
             }
         }
     }

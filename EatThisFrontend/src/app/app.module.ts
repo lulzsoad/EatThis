@@ -32,6 +32,8 @@ import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { UnitsComponent } from './admin-panel/units/units.component';
 import { UnitFormModalComponent } from './admin-panel/units/unit-form-modal/unit-form-modal.component';
 import { UnitService } from './services/unit.service';
+import { ToastrModule } from 'ngx-toastr';
+import { AlertService } from './services/alert.service';
 
 
 @NgModule({
@@ -71,13 +73,15 @@ import { UnitService } from './services/unit.service';
     InputsModule,
     LabelModule,
     DropDownsModule,
+    ToastrModule.forRoot(),
   ],
   providers: [
     HttpClient,
     IngredientService,
     WindowService,
     CategoryService,
-    UnitService
+    UnitService,
+    AlertService
   ],
   bootstrap: [AppComponent]
 })

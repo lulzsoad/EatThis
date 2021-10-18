@@ -24,59 +24,58 @@ namespace EatThisAPI.Services
         private readonly IUnitRepository unitRepository;
         private readonly IMapper mapper;
         private readonly ILogger<UnitService> logger;
+        private readonly IUnitValidator unitValidator;
 
-        public UnitService(IUnitRepository unitRepository, IMapper mapper, ILogger<UnitService> logger)
+        public UnitService(
+            IUnitRepository unitRepository,
+            IMapper mapper, ILogger<UnitService> logger,
+            IUnitValidator unitValidator
+            )
         {
             this.unitRepository = unitRepository;
             this.mapper = mapper;
             this.logger = logger;
+            this.unitValidator = unitValidator;
         }
 
         public async Task<IEnumerable<UnitDto>> GetAll()
         {
-            IEnumerable<Unit> units = await unitRepository.GetAll();
-            IEnumerable<UnitDto> unitDtos = mapper.Map<IEnumerable<UnitDto>>(units);
+            IEnumerable<Unit> categories = await unitRepository.GetAll();
+            IEnumerable<UnitDto> unitDtos = mapper.Map<IEnumerable<UnitDto>>(categories);
             return unitDtos;
         }
 
         public async Task<UnitDto> GetById(int id)
         {
-            Unit unit = await unitRepository.GetById(id);
+            await unitValidator.CheckIfNotFound(id);
 
-            UnitValidator.Validate(unit);
+            Unit unit = await unitRepository.GetById(id);
             var unitDto = mapper.Map<UnitDto>(unit);
             return unitDto;
         }
 
-        public async Task<int> Add(UnitDto unit)
+        public async Task<int> Add(UnitDto unitDto)
         {
-            if (unit == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
+            var unit = mapper.Map<Unit>(unitDto);
+            unitValidator.IsNull(unit);
+            await unitValidator.CheckIfAlreadyExists(unit);
 
-            int id = await unitRepository.Add(new Unit { Id = unit.Id, Name = unit.Name });
+            int id = await unitRepository.Add(unit);
             return id;
         }
 
         public async Task Delete(UnitDto unitDto)
         {
-            if (unitDto == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            await unitRepository.Delete(new Unit { Id = unitDto.Id, Name = unitDto.Name });
+            var unit = mapper.Map<Unit>(unitDto);
+            unitValidator.IsNull(unit);
+            await unitRepository.Delete(unit);
         }
 
         public async Task<UnitDto> Update(UnitDto unitDto)
         {
-            if (unitDto == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            Unit unit = new Unit { Id = unitDto.Id, Name = unitDto.Name };
+            var unit = mapper.Map<Unit>(unitDto);
+            unitValidator.IsNull(unit);
+            await unitValidator.CheckIfNotFound(unitDto.Id);
             unit = await unitRepository.Update(unit);
             unitDto.Name = unit.Name;
             return unitDto;

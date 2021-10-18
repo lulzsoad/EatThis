@@ -48,7 +48,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   private async removeListeners(){
     this.windowCloseListener.unsubscribe();
     this.ingredientSaveListener.unsubscribe();
-    this.windowService.deleteObject.unsubscribe();
+    this.ingredientDeleteListener.unsubscribe();
   }
 
   private async addListeners(){
@@ -72,14 +72,14 @@ export class IngredientsComponent implements OnInit, OnDestroy {
     this.loadingPanelVisible = true;
     this.ingredient.id = deleteObject.id;
     this.ingredient.name = deleteObject.name;
-    await this.ingredientService.delete(this.ingredient).toPromise();
+    await this.ingredientService.delete(this.ingredient);
     await this.ngOnInit();
     this.loadingPanelVisible = false;
   }
 
   private async saveIngredient(ingredient: Ingredient){
     this.loadingPanelVisible = true;
-    await this.ingredientService.add(ingredient).toPromise();
+    await this.ingredientService.add(ingredient);
     await this.ngOnInit();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
@@ -88,7 +88,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   private async updateIngredient(ingredient: Ingredient){
     this.loadingPanelVisible = true;
     this.isNew = false;
-    await this.ingredientService.update(ingredient).toPromise();
+    await this.ingredientService.update(ingredient);
     await this.ngOnInit();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
@@ -96,7 +96,8 @@ export class IngredientsComponent implements OnInit, OnDestroy {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.ingredients = await this.ingredientService.getAll().toPromise();
+    this.ingredients = await this.ingredientService.getAll();
+    console.log('ingredients component:' + this.ingredients)
     this.loadingPanelVisible = false;
   }
 

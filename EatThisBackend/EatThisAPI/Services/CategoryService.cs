@@ -24,12 +24,18 @@ namespace EatThisAPI.Services
         private readonly ICategoryRepository categoryRepository;
         private readonly IMapper mapper;
         private readonly ILogger<CategoryService> logger;
+        private readonly ICategoryValidator categoryValidator;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ILogger<CategoryService> logger)
+        public CategoryService(
+            ICategoryRepository categoryRepository, 
+            IMapper mapper, ILogger<CategoryService> logger,
+            ICategoryValidator categoryValidator
+            )
         {
             this.categoryRepository = categoryRepository;
             this.mapper = mapper;
             this.logger = logger;
+            this.categoryValidator = categoryValidator;
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAll()
@@ -41,42 +47,35 @@ namespace EatThisAPI.Services
 
         public async Task<CategoryDto> GetById(int id)
         {
-            Category category = await categoryRepository.GetById(id);
+            await categoryValidator.CheckIfNotFound(id);
 
-            CategoryValidator.Validate(category);
+            Category category = await categoryRepository.GetById(id);
             var categoryDto = mapper.Map<CategoryDto>(category);
             return categoryDto;
         }
 
-        public async Task<int> Add(CategoryDto category)
+        public async Task<int> Add(CategoryDto categoryDto)
         {
-            if (category == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
+            var category = mapper.Map<Category>(categoryDto);
+            categoryValidator.IsNull(category);
+            await categoryValidator.CheckIfAlreadyExists(category);
 
-            int id = await categoryRepository.Add(new Category { Id = category.Id, Name = category.Name });
+            int id = await categoryRepository.Add(category);
             return id;
         }
 
         public async Task Delete(CategoryDto categoryDto)
         {
-            if (categoryDto == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            await categoryRepository.Delete(new Category { Id = categoryDto.Id, Name = categoryDto.Name });
+            var category = mapper.Map<Category>(categoryDto);
+            categoryValidator.IsNull(category);
+            await categoryRepository.Delete(category);
         }
 
         public async Task<CategoryDto> Update(CategoryDto categoryDto)
         {
-            if (categoryDto == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            Category category = new Category { Id = categoryDto.Id, Name = categoryDto.Name };
+            var category = mapper.Map<Category>(categoryDto);
+            categoryValidator.IsNull(category);
+            await categoryValidator.CheckIfNotFound(categoryDto.Id);
             category = await categoryRepository.Update(category);
             categoryDto.Name = category.Name;
             return categoryDto;

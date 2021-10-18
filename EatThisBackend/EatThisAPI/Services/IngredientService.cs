@@ -25,12 +25,17 @@ namespace EatThisAPI.Services
         private readonly IIngredientRepository ingredientRepository;
         private readonly IMapper mapper;
         private readonly ILogger<IngredientService> logger;
+        private readonly IIngredientValidator ingredientValidator;
 
-        public IngredientService(IIngredientRepository ingredientRepository, IMapper mapper, ILogger<IngredientService> logger)
+        public IngredientService(IIngredientRepository ingredientRepository, 
+            IMapper mapper, 
+            ILogger<IngredientService> logger, 
+            IIngredientValidator ingredientValidator)
         {
             this.ingredientRepository = ingredientRepository;
             this.mapper = mapper;
             this.logger = logger;
+            this.ingredientValidator = ingredientValidator;
         }
 
         public async Task<IEnumerable<IngredientDto>> GetAll() 
@@ -42,42 +47,36 @@ namespace EatThisAPI.Services
 
         public async Task<IngredientDto> GetById(int id)
         {
-            Ingredient ingredient = await ingredientRepository.GetById(id);
+            await ingredientValidator.CheckIfNotFound(id);
 
-            IngredientValidator.Validate(ingredient);
+            Ingredient ingredient = await ingredientRepository.GetById(id);
             var ingredientDto = mapper.Map<IngredientDto>(ingredient);
             return ingredientDto;
         }
 
-        public async Task<int> Add(IngredientDto ingredient)
+        public async Task<int> Add(IngredientDto ingredientDto)
         {
-            if(ingredient == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
+            var ingredient = mapper.Map<Ingredient>(ingredientDto);
 
-            int id = await ingredientRepository.Add(new Ingredient { Id = ingredient.Id, Name = ingredient.Name });
+            ingredientValidator.IsNull(ingredient);
+            await ingredientValidator.CheckIfAlreadyExists(ingredient);
+
+            int id = await ingredientRepository.Add(ingredient);
             return id;
         }
 
         public async Task Delete(IngredientDto ingredientDto)
         {
-            if(ingredientDto == null)
-            {
-               throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            await ingredientRepository.Delete(new Ingredient { Id = ingredientDto.Id, Name = ingredientDto.Name });
+            var ingredient = mapper.Map<Ingredient>(ingredientDto);
+            ingredientValidator.IsNull(ingredient);
+            await ingredientRepository.Delete(ingredient);
         }
 
         public async Task<IngredientDto> Update(IngredientDto ingredientDto)
         {
-            if (ingredientDto == null)
-            {
-                throw new Exception("Nieprawidłowy model obiektu");
-            }
-
-            Ingredient ingredient = new Ingredient { Id = ingredientDto.Id, Name = ingredientDto.Name };
+            var ingredient = mapper.Map<Ingredient>(ingredientDto);
+            ingredientValidator.IsNull(ingredient);
+            await ingredientValidator.CheckIfNotFound(ingredientDto.Id);
             ingredient = await ingredientRepository.Update(ingredient);
             ingredientDto.Name = ingredient.Name;
             return ingredientDto;

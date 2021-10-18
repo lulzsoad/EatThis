@@ -47,7 +47,7 @@ export class UnitsComponent implements OnInit {
   private async removeListeners(){
     this.windowCloseListener.unsubscribe();
     this.unitSaveListener.unsubscribe();
-    this.windowService.deleteObject.unsubscribe();
+    this.unitDeleteListener.unsubscribe();
   }
 
   private async addListeners(){
@@ -71,14 +71,14 @@ export class UnitsComponent implements OnInit {
     this.loadingPanelVisible = true;
     this.unit.id = deleteObject.id;
     this.unit.name = deleteObject.name;
-    await this.unitService.delete(this.unit).toPromise();
+    await this.unitService.delete(this.unit)
     await this.ngOnInit();
     this.loadingPanelVisible = false;
   }
 
   private async saveUnit(unit: Unit){
     this.loadingPanelVisible = true;
-    await this.unitService.add(unit).toPromise();
+    await this.unitService.add(unit);
     await this.ngOnInit();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
@@ -87,7 +87,7 @@ export class UnitsComponent implements OnInit {
   private async updateUnit(unit: Unit){
     this.loadingPanelVisible = true;
     this.isNew = false;
-    await this.unitService.update(unit).toPromise();
+    await this.unitService.update(unit)
     await this.ngOnInit();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
@@ -95,7 +95,7 @@ export class UnitsComponent implements OnInit {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.units = await this.unitService.getAll().toPromise();
+    this.units = await this.unitService.getAll()
     this.loadingPanelVisible = false;
   }
 

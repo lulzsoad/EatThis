@@ -15,6 +15,8 @@ namespace EatThisAPI.Repositories
         Task<int> Add(Category category);
         Task Delete(Category category);
         Task<Category> Update(Category category);
+        Task<bool> CheckIfExists(Category category);
+        Task<bool> CheckIfExistsById(int id);
     }
 
     public class CategoryRepository : ICategoryRepository
@@ -46,5 +48,7 @@ namespace EatThisAPI.Repositories
             context.SaveChanges();
             return categoryToEdit;
         }
+        public async Task<bool> CheckIfExists(Category category) => await context.Categories.AnyAsync(x => x.Name == category.Name);
+        public async Task<bool> CheckIfExistsById(int id) => await context.Categories.AnyAsync(x => x.Id == id);
     }
 }

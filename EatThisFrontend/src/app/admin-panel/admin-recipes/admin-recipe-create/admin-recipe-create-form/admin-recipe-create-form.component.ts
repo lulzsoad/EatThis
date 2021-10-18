@@ -4,8 +4,10 @@ import { Category } from 'src/app/models/category.model';
 import { IngredientQuantity } from 'src/app/models/ingredient-quantity.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
+import { Unit } from 'src/app/models/unit.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
+import { UnitService } from 'src/app/services/unit.service';
 
 @Component({
   selector: 'app-admin-recipe-create-form',
@@ -18,11 +20,13 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   public chosenIngredients: Ingredient[] = [];
   public ingredientsQuantity: IngredientQuantity[];
   public categories: Category[];
+  public units: Unit[];
   public loadingPanelVisible = false;
   public recipe: Recipe;
   constructor(
     private categorySerice: CategoryService,
-    private ingredientService: IngredientService
+    private ingredientService: IngredientService,
+    private unitService: UnitService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -45,15 +49,20 @@ export class AdminRecipeCreateFormComponent implements OnInit {
 
     await this.getIngredients();
     await this.getCategories();
+    await this.getUnits();
 
     this.loadingPanelVisible = false;
   }
 
   async getIngredients(){
-    this.ingredients = await this.ingredientService.getAll().toPromise();
+    this.ingredients = await this.ingredientService.getAll();
   }
 
   async getCategories(){
-    this.categories = await this.categorySerice.getAll().toPromise();
+    this.categories = await this.categorySerice.getAll();
+  }
+
+  async getUnits(){
+    this.units = await this.unitService.getAll();
   }
 }

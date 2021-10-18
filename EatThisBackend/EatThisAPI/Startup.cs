@@ -2,6 +2,7 @@ using EatThisAPI.Database;
 using EatThisAPI.Helpers;
 using EatThisAPI.Repositories;
 using EatThisAPI.Services;
+using EatThisAPI.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,8 +44,10 @@ namespace EatThisAPI
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
             // Rejestracja Seedera
             services.AddScoped<Seeder>();
-            
 
+            services.AddScoped<IIngredientValidator, IngredientValidator>();
+            services.AddScoped<ICategoryValidator, CategoryValidator>();
+            services.AddScoped<IUnitValidator, UnitValidator>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

@@ -3,6 +3,20 @@
         <div class="container">
             <h2>Utwórz przepis</h2>
             <form class="k-form" [formGroup]="form">
+              <kendo-formfield>
+                <kendo-floatinglabel [text]="'Kategoria'">
+                  <kendo-dropdownlist
+                    [data]="categories"
+                    textField="name"
+                    valueField="id"
+                    [formControlName]="'category'"
+                    required
+                  >
+                  </kendo-dropdownlist>
+                </kendo-floatinglabel>
+                <kendo-formhint>Wybierz kategorię kuchni</kendo-formhint>
+                <kendo-formerror>Błąd: Kategoria jest wymagana</kendo-formerror>
+              </kendo-formfield>
                 <kendo-formfield>
                   <kendo-floatinglabel [text]="'Nazwa'">
                     <kendo-textbox

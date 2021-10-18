@@ -40,7 +40,10 @@ namespace EatThisAPI.Database
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(75);
-            
+            modelBuilder.Entity<Ingredient>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
+
             modelBuilder.Entity<IngredientQuantity>()
                 .Property(x => x.IngredientId)
                 .IsRequired();
@@ -76,6 +79,9 @@ namespace EatThisAPI.Database
                 .Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(30);
+            modelBuilder.Entity<Unit>()
+                .HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

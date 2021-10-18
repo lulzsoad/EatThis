@@ -1,5 +1,5 @@
 <kendo-window
-      [title]="isNew ? 'Dodaj składnik': 'Edytuj składnik'"
+      [title]="isNew ? 'Dodaj jednostkę': 'Edytuj jednostkę'"
       *ngIf="opened"
       (close)="close()"
       [minWidth]="250"
@@ -11,16 +11,16 @@
 
           <label class="k-form-field">
             <span>ID</span>
-            <input [(ngModel)]="unit.id" class="k-textbox" placeholder="Id składnika" formControlName="id"/>
+            <input [(ngModel)]="unit.id" class="k-textbox" placeholder="Id jednostki" formControlName="id"/>
           </label>
         </fieldset>
 
         <fieldset>
-          <legend>Składnik</legend>
+          <legend>Jednostka</legend>
 
           <label class="k-form-field">
             <span>Nazwa</span>
-            <input [(ngModel)]="unit.name" class="k-textbox" placeholder="Nazwa składnika" formControlName="name"/>
+            <input [(ngModel)]="unit.name" class="k-textbox" placeholder="Nazwa jednostki" formControlName="name"/>
           </label>
         </fieldset>
 

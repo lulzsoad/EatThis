@@ -15,6 +15,8 @@ namespace EatThisAPI.Repositories
         Task<int> Add(Ingredient ingredient);
         Task Delete(Ingredient ingredient);
         Task<Ingredient> Update(Ingredient ingredient);
+        Task<bool> CheckIfExists(Ingredient ingredient);
+        Task<bool> CheckIfExistsById(int id);
     }
 
     public class IngredientRepository : IIngredientRepository
@@ -46,5 +48,8 @@ namespace EatThisAPI.Repositories
             context.SaveChanges();
             return ingredientToEdit;
         }
+
+        public async Task<bool> CheckIfExists(Ingredient ingredient) => await context.Ingredients.AnyAsync(x => x.Name == ingredient.Name);
+        public async Task<bool> CheckIfExistsById(int id) => await context.Ingredients.AnyAsync(x => x.Id == id);
     }
 }

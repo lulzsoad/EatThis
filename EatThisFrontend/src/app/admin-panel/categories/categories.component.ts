@@ -48,7 +48,7 @@ export class CategoriesComponent implements OnInit {
   private async removeListeners(){
     this.windowCloseListener.unsubscribe();
     this.categorySaveListener.unsubscribe();
-    this.windowService.deleteObject.unsubscribe();
+    this.categoryDeleteListener.unsubscribe();
   }
 
   private async addListeners(){
@@ -73,14 +73,14 @@ export class CategoriesComponent implements OnInit {
     this.loadingPanelVisible = true;
     this.category.id = deleteObject.id;
     this.category.name = deleteObject.name;
-    await this.categoryService.delete(this.category).toPromise();
+    await this.categoryService.delete(this.category)
     this.loadingPanelVisible = false;
     await this.ngOnInit();
   }
 
   private async saveCategory(category: Category){
     this.loadingPanelVisible = true;
-    await this.categoryService.add(category).toPromise();
+    await this.categoryService.add(category)
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
     await this.ngOnInit();
@@ -89,7 +89,7 @@ export class CategoriesComponent implements OnInit {
   private async updateCategory(category: Category){
     this.loadingPanelVisible = true;
     this.isNew = false;
-    await this.categoryService.update(category).toPromise();
+    await this.categoryService.update(category)
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
     await this.ngOnInit();
@@ -97,7 +97,7 @@ export class CategoriesComponent implements OnInit {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.categories = await this.categoryService.getAll().toPromise();
+    this.categories = await this.categoryService.getAll()
     this.loadingPanelVisible = false;
   }
 

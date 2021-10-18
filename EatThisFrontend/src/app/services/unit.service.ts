@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AppConfig } from "../app-config/app.config";
 import { Unit } from "../models/unit.model";
 import { Subject } from "rxjs";
+import { AlertService } from "./alert.service";
 
 @Injectable()
 export class UnitService{
@@ -11,25 +12,49 @@ export class UnitService{
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/unit/`;
     
-    constructor(private httpClient: HttpClient){}
+    constructor(private httpClient: HttpClient, private alertService: AlertService){}
     
-    getAll(){
-        return this.httpClient.get<Unit[]>(`${this.apiUrl}`);
+    async getAll(): Promise<Unit[]>{
+        let result: Unit[] = [];
+        await this.httpClient.get<Unit[]>(`${this.apiUrl}`)
+            .toPromise()
+            .then(data => result = data)
+            .catch((err) => this.alertService.showError(err.error));
+        return result;
     }
 
-    getById(id: number){
-        return this.httpClient.get<Unit>(`${this.apiUrl}/${id}`);
+    async getById(id: number){
+        let unit: Unit = new Unit();
+        await this.httpClient.get<Unit>(`${this.apiUrl}/${id}`)
+            .toPromise()
+            .then(data => unit = data)
+            .catch(err => this.alertService.showError(err.error));
+        return unit;
     }
 
-    add(unit: Unit){
-        return this.httpClient.post<number>(this.apiUrl, unit);
+    async add(unit: Unit){
+        let id: number;
+        await this.httpClient.post<number>(this.apiUrl, unit)
+            .toPromise()
+            .then(data => {
+                id = data;
+                this.alertService.showSuccess("Sukces");
+            })
+            .catch(err => this.alertService.showError(err.error));
     }
 
-    update(unit: Unit){
-        return this.httpClient.put<Unit>(this.apiUrl, unit);
+    async update(unit: Unit){
+        await this.httpClient.put<Unit>(this.apiUrl, unit)
+            .toPromise()
+            .then(data => {unit = data; this.alertService.showSuccess("Sukces")})
+            .catch(err => this.alertService.showError(err.error));
+        return unit;
     }
 
-    delete(unit: Unit){
-        return this.httpClient.delete(this.apiUrl, {body: unit});
+    async delete(unit: Unit){
+        await this.httpClient.delete(this.apiUrl, {body: unit})
+            .toPromise()
+            .then(() => this.alertService.showSuccess("Sukces"))
+            .catch(err => this.alertService.showError(err.error));
     }
 }

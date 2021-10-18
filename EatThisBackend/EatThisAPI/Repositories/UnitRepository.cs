@@ -15,6 +15,8 @@ namespace EatThisAPI.Repositories
         Task<int> Add(Unit unit);
         Task Delete(Unit unit);
         Task<Unit> Update(Unit unit);
+        Task<bool> CheckIfExists(Unit unit);
+        Task<bool> CheckIfExistsById(int id);
     }
 
     public class UnitRepository : IUnitRepository
@@ -46,5 +48,7 @@ namespace EatThisAPI.Repositories
             context.SaveChanges();
             return unitToEdit;
         }
+        public async Task<bool> CheckIfExists(Unit unit) => await context.Units.AnyAsync(x => x.Name == unit.Name);
+        public async Task<bool> CheckIfExistsById(int id) => await context.Units.AnyAsync(x => x.Id == id);
     }
 }
