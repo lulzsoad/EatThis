@@ -29,5 +29,14 @@ namespace EatThisAPI.Helpers
             public static string UNIT_NOT_FOUND = "Nie znaleziono jednostki";
             public static string UNIT_ALREADY_EXISTS = "Jednostka już istnieje";
         }
+
+        public class Account
+        {
+            public static string USER_EMAIL_ALEADY_TAKEN = "Istnieje już konto z takim adresem E-mail";
+            public static string USER_INVALID_EMAIL = "Nieprawidłowy adres E-mail";
+            public static string USER_INVALID_PASSWORD = "Hasło powinno zawierać mnimum 6 znaków";
+            public static string USER_FIRST_NAME_REQUIRED = "Imię jest wymagane";
+            public static string USER_LAST_NAME_REQUIRED = "Nazwisko jest wymagane";
+        }
     }
 }

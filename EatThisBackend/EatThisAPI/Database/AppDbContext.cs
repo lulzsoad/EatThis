@@ -16,6 +16,8 @@ namespace EatThisAPI.Database
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Step> Steps { get; set; }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -82,6 +84,23 @@ namespace EatThisAPI.Database
             modelBuilder.Entity<Unit>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(x => x.Email)
+                .IsRequired();
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Email)
+                .IsUnique();
+            modelBuilder.Entity<User>()
+                .Property(x => x.FirstName)
+                .IsRequired();
+            modelBuilder.Entity<User>()
+                .Property(x => x.LastName)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(x => x.Name)
+                .IsRequired();
         }
     }
 }

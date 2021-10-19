@@ -18,7 +18,13 @@ namespace EatThisAPI.Database
         {
             if (context.Database.CanConnect())
             {
-                var data = context.Units.ToList();
+                if (!context.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    context.Roles.AddRange(roles);
+                    context.SaveChanges();
+                }
+
                 if (!context.Units.Any())
                 {
                     var units = GetUnits();
@@ -156,6 +162,29 @@ namespace EatThisAPI.Database
             };
 
             return units;
+        }
+        #endregion
+
+        #region Role
+        private List<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role
+                {
+                    Name = "Admin"
+                },
+                new Role
+                {
+                    Name = "Employee"
+                },
+                new Role
+                {
+                    Name = "User"
+                }
+            };
+
+            return roles;
         }
         #endregion
     }

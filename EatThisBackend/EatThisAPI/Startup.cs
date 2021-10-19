@@ -1,11 +1,13 @@
 using EatThisAPI.Database;
 using EatThisAPI.Helpers;
+using EatThisAPI.Models;
 using EatThisAPI.Repositories;
 using EatThisAPI.Services;
 using EatThisAPI.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -44,16 +46,21 @@ namespace EatThisAPI
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
             // Rejestracja Seedera
             services.AddScoped<Seeder>();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddScoped<IIngredientValidator, IngredientValidator>();
             services.AddScoped<ICategoryValidator, CategoryValidator>();
             services.AddScoped<IUnitValidator, UnitValidator>();
+            services.AddScoped<IUserValidator, UserValidator>();
+
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<IUnitService, UnitService>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();
