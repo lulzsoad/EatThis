@@ -45,6 +45,9 @@ namespace EatThisAPI.Helpers
                 .ForMember(x => x.FirstName, y => y.MapFrom(z => z.FirstName))
                 .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName));
 
+            CreateMap<LoginDto, User>()
+                .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
+                .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password));
         }
     }
 }

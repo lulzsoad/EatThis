@@ -37,6 +37,7 @@ namespace EatThisAPI.Helpers
             public static string USER_INVALID_PASSWORD = "Hasło powinno zawierać mnimum 6 znaków";
             public static string USER_FIRST_NAME_REQUIRED = "Imię jest wymagane";
             public static string USER_LAST_NAME_REQUIRED = "Nazwisko jest wymagane";
+            public static string USER_INVALID_EMAIL_OR_PASSWORD = "Nieprawidłowe dane logowania";
         }
     }
 }

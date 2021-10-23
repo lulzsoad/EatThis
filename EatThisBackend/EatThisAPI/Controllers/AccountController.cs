@@ -25,5 +25,12 @@ namespace EatThisAPI.Controllers
             await accountService.RegisterUser(registerUserDto);
             return Ok();
         }
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult> Login([FromBody]LoginDto loginDto)
+        {
+            return Ok(await accountService.GenerateJwtToken(loginDto));
+            
+        }
     }
 }

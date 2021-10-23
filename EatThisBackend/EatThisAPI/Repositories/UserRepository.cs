@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace EatThisAPI.Repositories
 {
-    public interface IAccountRepository
+    public interface IUserRepository
     {
         Task RegisterUser(User newUser);
         Task<bool> EmailExists(string email);
+        Task<User> GetUserByEmail(string email);
     }
-    public class AccountRepository : IAccountRepository
+    public class UserRepository : IUserRepository
     {
         private readonly AppDbContext context;
-        public AccountRepository(AppDbContext context)
+        public UserRepository(AppDbContext context)
         {
             this.context = context;
         }
@@ -30,6 +31,13 @@ namespace EatThisAPI.Repositories
         public async Task<bool> EmailExists(string email)
         {
             return await context.Users.AnyAsync(x => x.Email == email);
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Email == email);
         }
     }
 }

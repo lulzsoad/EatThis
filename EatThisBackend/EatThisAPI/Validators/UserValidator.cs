@@ -16,13 +16,14 @@ namespace EatThisAPI.Validators
         Task ValidateEmail(string email);
         void ValidatePassword(string password);
         void ValidatePersonalData(User user);
+        void LoginUserValidate(User user);
     }
     public class UserValidator : IUserValidator
     {
-        private readonly IAccountRepository accountRepository;
-        public UserValidator(IAccountRepository accountRepository)
+        private readonly IUserRepository userRepository;
+        public UserValidator(IUserRepository userRepository)
         {
-            this.accountRepository = accountRepository;
+            this.userRepository = userRepository;
         }
         public async Task RegisterUserValidate(User user)
         {
@@ -30,6 +31,14 @@ namespace EatThisAPI.Validators
             await ValidateEmail(user.Email);
             ValidatePassword(user.PasswordHash); // Jeszcze nie hashowany
             ValidatePersonalData(user);
+        }
+
+        public void LoginUserValidate(User user)
+        {
+            if(user == null)
+            {
+                throw new CustomException(BackendMessage.Account.USER_INVALID_EMAIL_OR_PASSWORD);
+            }
         }
 
         public void IsNull(User user)
@@ -42,7 +51,7 @@ namespace EatThisAPI.Validators
 
         public async Task ValidateEmail(string email)
         {
-            if (!await accountRepository.EmailExists(email))
+            if (await userRepository.EmailExists(email))
             {
                 throw new CustomException(BackendMessage.Account.USER_EMAIL_ALEADY_TAKEN);
             }
