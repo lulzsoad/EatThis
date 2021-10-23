@@ -115,7 +115,7 @@ namespace EatThisAPI
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

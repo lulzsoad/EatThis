@@ -5,10 +5,14 @@ import { AdminRecipeCreateComponent } from './admin-panel/admin-recipes/admin-re
 import { CategoriesComponent } from './admin-panel/categories/categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { UnitsComponent } from './admin-panel/units/units.component';
+import { LoginComponent } from './user-panel/login/login.component';
+import { RegisterComponent } from './user-panel/register/register.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 
 const routes: Routes = [
   {path: '', component: UserPanelComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'admin-panel', component: AdminPanelComponent, children: [
     {path: 'ingredients', component: IngredientsComponent},
     {path: 'categories', component: CategoriesComponent},

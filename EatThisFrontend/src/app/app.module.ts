@@ -34,6 +34,9 @@ import { UnitFormModalComponent } from './admin-panel/units/unit-form-modal/unit
 import { UnitService } from './services/unit.service';
 import { ToastrModule } from 'ngx-toastr';
 import { AlertService } from './services/alert.service';
+import { LoginComponent } from './user-panel/login/login.component';
+import { RegisterComponent } from './user-panel/register/register.component';
+import {RequiredFieldDirective } from './shared/directives/required-field.directive';
 
 
 @NgModule({
@@ -43,6 +46,7 @@ import { AlertService } from './services/alert.service';
     UserPanelComponent,
     AdminNavigationComponent,
     DropdownDirective,
+    RequiredFieldDirective,
     IngredientsComponent,
     IngredientCreateModalComponent,
     DeleteObjectModalComponent,
@@ -53,6 +57,8 @@ import { AlertService } from './services/alert.service';
     CategoriesFormModalComponent,
     UnitsComponent,
     UnitFormModalComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
