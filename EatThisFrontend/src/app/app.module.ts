@@ -37,6 +37,7 @@ import { AlertService } from './services/alert.service';
 import { LoginComponent } from './user-panel/login/login.component';
 import { RegisterComponent } from './user-panel/register/register.component';
 import {RequiredFieldDirective } from './shared/directives/required-field.directive';
+import { AccountService } from './services/account.service';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import {RequiredFieldDirective } from './shared/directives/required-field.direct
     WindowService,
     CategoryService,
     UnitService,
-    AlertService
+    AlertService,
+    AccountService
   ],
   bootstrap: [AppComponent]
 })

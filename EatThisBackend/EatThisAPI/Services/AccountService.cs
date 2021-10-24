@@ -46,6 +46,7 @@ namespace EatThisAPI.Services
             var newUser = mapper.Map<User>(registerUserDto);
             newUser.PasswordHash = registerUserDto.Password;
             newUser.RegisterDate = DateTime.UtcNow;
+            newUser.IsActive = false;
 
             await userValidator.RegisterUserValidate(newUser);
 

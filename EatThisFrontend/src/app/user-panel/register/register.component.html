@@ -8,36 +8,64 @@
             <h2 class="text-center text-warning">Zarejestruj się</h2>
           </div>
           <div class="card-body">
-            <form>
+            <form [formGroup]="formGroup" #form>
               <div class="form-group m-1">
-                <label>E-mail*</label>
-                <input type="email" class="form-control" placeholder="Wprowadź email" requiredField>
+                <label>* E-mail</label>
+                <input
+                    formControlName="email"
+                    type="email" 
+                    class="form-control" placeholder="Wprowadź email" requiredField>
+                <small class="form-text text-danger validation-warning">Wprowadź poprawny adres e-mail</small>
               </div>
               <div class="form-group m-1">
-                <label>Hasło*</label>
-                <input type="password" class="form-control" placeholder="Hasło">
+                <label>* Hasło</label>
+                <input
+                    formControlName="password"
+                    type="password"
+                    class="form-control" 
+                    placeholder="Hasło" 
+                    requiredField>
+                <small id="passwordWarning" class="form-text text-danger validation-warning">Hasło jest wymagane</small>
               </div>
               <div class="form-group m-1">
-                <label>Powtórz Hasło*</label>
-                <input type="password" class="form-control" placeholder="Powtórz Hasło">
+                <label>* Powtórz Hasło</label>
+                <input
+                    formControlName="confirmPassword"
+                    type="password" 
+                    class="form-control" placeholder="Powtórz Hasło" requiredField>
+                <small id="confirmPasswordWarning" class="form-text text-danger validation-warning">Hasło jest wymagane</small>
               </div>
               <div class="form-group m-1">
-                <label>Imię*</label>
-                <input type="text" class="form-control" placeholder="Powtórz Hasło">
+                <label>* Imię</label>
+                <input
+                    formControlName="firstName"
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Podaj imię" 
+                    requiredField>
+                <small class="form-text text-danger validation-warning">Pole jest wymagane</small>
               </div>
               <div class="form-group m-1">
-                <label>Nawisko*</label>
-                <input type="text" class="form-control" placeholder="Powtórz Hasło">
+                <label>* Nawisko</label>
+                <input
+                    formControlName="lastName"
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Podaj nazwisko" requiredField>
+                <small class="form-text text-danger validation-warning">Pole jest wymagane</small>
               </div>
               <div class="form-group m-1">
                 <label>Data urodzenia</label>
-                <input type="date" class="form-control" placeholder="Powtórz Hasło">
+                <input 
+                    formControlName="birthDate"
+                    type="date" 
+                    class="form-control"/>
               </div>
               <div class="form-group">
                 <p class="form-text text-muted text-center">Masz już konto? <a routerLink="../login">Zaloguj się!</a></p>
               </div>
               <div class="d-flex justify-content-end">
-                <button class="btn btn-warning m-1 text-right">Zarejestruj</button>
+                <button class="btn btn-warning m-1 text-right" (click)="register()">Zarejestruj</button>
               </div>
             </form>
           </div>

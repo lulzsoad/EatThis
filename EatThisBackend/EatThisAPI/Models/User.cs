@@ -14,6 +14,7 @@ namespace EatThisAPI.Models
         public DateTime? BirthDate { get; set; }
         public DateTime? RegisterDate { get; set; }
         public string PasswordHash { get; set; }
+        public bool IsActive { get; set; }
         public int RoleId { get; set; }
         public virtual Role Role { get; set; }
     }
