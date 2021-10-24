@@ -10,7 +10,7 @@ namespace EatThisAPI.Repositories
 {
     public interface IUserRepository
     {
-        Task RegisterUser(User newUser);
+        Task<int> RegisterUser(User newUser);
         Task<bool> EmailExists(string email);
         Task<User> GetUserByEmail(string email);
     }
@@ -22,10 +22,11 @@ namespace EatThisAPI.Repositories
             this.context = context;
         }
 
-        public async Task RegisterUser(User newUser)
+        public async Task<int> RegisterUser(User newUser)
         {
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
+            return newUser.Id;
         }
 
         public async Task<bool> EmailExists(string email)

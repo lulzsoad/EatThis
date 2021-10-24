@@ -25,12 +25,19 @@ namespace EatThisAPI.Controllers
             await accountService.RegisterUser(registerUserDto);
             return Ok();
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult> Login([FromBody]LoginDto loginDto)
         {
             return Ok(await accountService.GenerateJwtToken(loginDto));
-            
+        }
+
+        [HttpGet]
+        [Route("activate/{activationCode}")]
+        public async Task<ActionResult> Activate([FromRoute]string activationCode)
+        {
+            return Ok(await accountService.CheckAndActivateAccount(activationCode));
         }
     }
 }

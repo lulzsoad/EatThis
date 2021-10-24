@@ -37,7 +37,9 @@ namespace EatThisAPI
         public void ConfigureServices(IServiceCollection services)
         {
             var authenticationSettings = new AuthenticationSettings();
+            var noReplyEmailSettings = new NoReplyEmailSettings();
             Configuration.GetSection("Authentication").Bind(authenticationSettings);
+            Configuration.GetSection("NoReplyEmailConfiguration").Bind(noReplyEmailSettings);
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = "Bearer";
@@ -56,6 +58,7 @@ namespace EatThisAPI
             });
 
             services.AddSingleton(authenticationSettings);
+            services.AddSingleton(noReplyEmailSettings);
 
             //Konfiguracja CORS
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -84,6 +87,8 @@ namespace EatThisAPI
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserActivatingCodeRepository, UserActivatingCodeRepository>();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();

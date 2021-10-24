@@ -18,6 +18,8 @@ namespace EatThisAPI.Database
         public DbSet<Unit> Units { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<UserActivatingCode> UserActivatingCodes { get; set; }
+
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

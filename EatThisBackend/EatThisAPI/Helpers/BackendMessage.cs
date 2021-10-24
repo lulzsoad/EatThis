@@ -39,5 +39,10 @@ namespace EatThisAPI.Helpers
             public static string USER_LAST_NAME_REQUIRED = "Nazwisko jest wymagane";
             public static string USER_INVALID_EMAIL_OR_PASSWORD = "Nieprawidłowe dane logowania";
         }
+
+        public class EmailMessages
+        {
+            public static string EMAILMESSAGE_ACTIVATIONLINK = "Dziękujemy za rejestrację w naszym serwisie! Kliknij poniższy link, aby aktywować swoje konto i korzystać z pełnej funkcjonalności naszej aplikacji.";
+        }
     }
 }
