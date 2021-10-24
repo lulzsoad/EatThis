@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterUser } from 'src/app/models/register-user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { isNamedImports, validateLocaleAndSetLanguage } from 'typescript';
@@ -20,19 +21,25 @@ export class RegisterComponent implements OnInit {
     birthDate: new FormControl()
   });
   public form: ElementRef;
+  public loadingPanelVisible = false;
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
   }
 
-  register(){
+  async register(){
     if(!this.validateForm()){
       return;
     }
-    
+    this.loadingPanelVisible = true;
     let registerUser: RegisterUser = this.formGroup.value;
-    this.accountService.register(registerUser);
+    let registerSucceed = await this.accountService.register(registerUser);
+    if(!registerSucceed){
+      return;
+    }
+    this.loadingPanelVisible = false;
+    this.router.navigate(['success'], {relativeTo: this.route, queryParams: {email: registerUser.email}});
   }
 
   validateForm(): boolean{

@@ -119,7 +119,10 @@ namespace EatThisAPI.Services
             };
 
             await userActivatingCodeRepository.Add(userActivatingCode);
-            await emailService.SendByNoReply(email, "Aktywuj swoje konto", $"{BackendMessage.EmailMessages.EMAILMESSAGE_ACTIVATIONLINK}\n\n{AppSettings.URL_ACTIVATION_ENDPOINT}{activatingCode}");
+            await emailService.SendByNoReply(
+                email, 
+                "Aktywuj swoje konto", 
+                $"{BackendMessage.EmailMessages.EMAILMESSAGE_ACTIVATIONLINK}\n\n{AppSettings.URL_ACCOUNT_ACTIVATION}{activatingCode}");
 
         }
 

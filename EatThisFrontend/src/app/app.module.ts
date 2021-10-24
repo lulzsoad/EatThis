@@ -38,6 +38,7 @@ import { LoginComponent } from './user-panel/login/login.component';
 import { RegisterComponent } from './user-panel/register/register.component';
 import {RequiredFieldDirective } from './shared/directives/required-field.directive';
 import { AccountService } from './services/account.service';
+import { RegisterSuccessComponent } from './user-panel/register/register-success/register-success.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { AccountService } from './services/account.service';
     UnitFormModalComponent,
     LoginComponent,
     RegisterComponent,
+    RegisterSuccessComponent
   ],
   imports: [
     BrowserModule,

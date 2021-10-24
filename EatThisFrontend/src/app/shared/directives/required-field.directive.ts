@@ -6,7 +6,6 @@ import { Directive, ElementRef, HostBinding, HostListener, OnInit } from "@angul
 export class RequiredFieldDirective implements OnInit{
     @HostBinding('element') elementRef: ElementRef;
     @HostListener('focusout') validate(){
-        console.log(this.elementRef);
         let isOk = this.isInputOk(this.elementRef);
 
         if(!isOk){
