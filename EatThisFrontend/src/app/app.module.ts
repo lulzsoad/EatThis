@@ -34,11 +34,12 @@ import { UnitFormModalComponent } from './admin-panel/units/unit-form-modal/unit
 import { UnitService } from './services/unit.service';
 import { ToastrModule } from 'ngx-toastr';
 import { AlertService } from './services/alert.service';
-import { LoginComponent } from './user-panel/login/login.component';
-import { RegisterComponent } from './user-panel/register/register.component';
+import { LoginComponent } from './user-panel/account/login/login.component';
+import { RegisterComponent } from './user-panel/account/register/register.component';
 import {RequiredFieldDirective } from './shared/directives/required-field.directive';
 import { AccountService } from './services/account.service';
-import { RegisterSuccessComponent } from './user-panel/register/register-success/register-success.component';
+import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
+import { ActivateComponent } from './user-panel/account/activate/activate.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { RegisterSuccessComponent } from './user-panel/register/register-success
     UnitFormModalComponent,
     LoginComponent,
     RegisterComponent,
-    RegisterSuccessComponent
+    RegisterSuccessComponent,
+    ActivateComponent
   ],
   imports: [
     BrowserModule,

@@ -16,14 +16,25 @@ export class AccountService{
     async register(registerUser: RegisterUser){
         let isOk: Boolean = false;
         await this.httpClient.post<RegisterUser>(`${this.apiUrl}register`, registerUser)
-        .toPromise()
-        .then(() => {
-            isOk = true;
-        })
-        .catch((err) => {
-            this.alertService.showError(err.error);
-            isOk = false;;
-        })
+            .toPromise()
+            .then(() => {
+                isOk = true;
+            })
+            .catch((err) => {
+                this.alertService.showError(err.error);
+                isOk = false;;
+            });
         return isOk;
+    }
+
+    async activateAccount(activationCode: string){
+        let result: boolean = false;
+        await this.httpClient.get<boolean>(`${this.apiUrl}activate/${activationCode}`)
+            .toPromise()
+            .then(data => result = data)
+            .catch(err => {
+                this.alertService.showError(err.error);
+            });
+        return result;
     }
 }

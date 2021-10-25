@@ -36,10 +36,11 @@ export class RegisterComponent implements OnInit {
     let registerUser: RegisterUser = this.formGroup.value;
     let registerSucceed = await this.accountService.register(registerUser);
     if(!registerSucceed){
+      this.loadingPanelVisible = false;
       return;
     }
     this.loadingPanelVisible = false;
-    this.router.navigate(['success'], {relativeTo: this.route, queryParams: {email: registerUser.email}});
+    this.router.navigate(['./success'], {relativeTo: this.route, queryParams: {email: registerUser.email}});
   }
 
   validateForm(): boolean{
