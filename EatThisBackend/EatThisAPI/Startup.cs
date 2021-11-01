@@ -76,11 +76,14 @@ namespace EatThisAPI
 
             services.AddScoped<IIngredientValidator, IngredientValidator>();
             services.AddScoped<ICategoryValidator, CategoryValidator>();
+            services.AddScoped<IIngredientCategoryValidator, IngredientCategoryValidator>();
             services.AddScoped<IUnitValidator, UnitValidator>();
             services.AddScoped<IUserValidator, UserValidator>();
 
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IIngredientCategoryRepository, IngredientCategoryRepository>();
+            services.AddScoped<IIngredientCategoryService, IngredientCategoryService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUnitRepository, UnitRepository>();

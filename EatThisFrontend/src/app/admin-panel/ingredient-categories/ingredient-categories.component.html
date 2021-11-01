@@ -1,0 +1,48 @@
+<app-ingredient-category-form-modal
+  [opened]="isCreateModalOpened"
+  [isNew]="isNew"
+  [ingredientCategory]="ingredientCategory"
+></app-ingredient-category-form-modal>
+<app-delete-object-modal
+[opened]="deleteModalOpened"
+[object]="ingredientCategory"
+></app-delete-object-modal>
+<div class="grid-wrapper">
+  <kendo-grid
+      [kendoGridBinding]="gridViewSearch"
+      [data]="gridView"
+      [height]="675"
+      [loading]="loadingPanelVisible"
+      [pageSize]="pageSize"
+      [skip]="skip"
+      [pageable]="true"
+      (pageChange)="pageChange($event)"
+      (edit)="editHandler($event)"
+      (remove)="removeHandler($event)"
+      (add)="addHandler()"
+    >
+    <ng-template kendoGridToolbarTemplate>
+      <button kendoGridAddCommand>Dodaj</button>
+      <input
+        placeholder="Szukaj..."
+        kendoTextBox
+        (input)="onFilter($event)"
+      />
+    </ng-template>
+    <kendo-grid-column
+        field="id"
+        title="ID"
+        [hidden]="true"
+      ></kendo-grid-column>
+      <kendo-grid-column
+        field="name"
+        title="Nazwa"
+      ></kendo-grid-column>
+      <kendo-grid-command-column title="Akcje" [width]="220">
+        <ng-template kendoGridCellTemplate let-isNew="isNew">
+          <button kendoGridEditCommand [primary]="true">Edytuj</button>
+          <button kendoGridRemoveCommand>Usuń</button>
+        </ng-template>
+      </kendo-grid-command-column>
+    </kendo-grid>
+</div>

@@ -58,6 +58,7 @@ namespace EatThisAPI.Services
             newUser.PasswordHash = registerUserDto.Password;
             newUser.RegisterDate = DateTime.UtcNow;
             newUser.IsActive = false;
+            newUser.RoleId = 3;
 
             await userValidator.RegisterUserValidate(newUser);
 

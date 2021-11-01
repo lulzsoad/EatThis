@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminRecipeCreateComponent } from './admin-panel/admin-recipes/admin-recipe-create/admin-recipe-create.component';
 import { CategoriesComponent } from './admin-panel/categories/categories.component';
+import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { UnitsComponent } from './admin-panel/units/units.component';
 import { ActivateComponent } from './user-panel/account/activate/activate.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'account/activate', component: ActivateComponent},
   {path: 'admin-panel', component: AdminPanelComponent, children: [
     {path: 'ingredients', component: IngredientsComponent},
+    {path: 'ingredient-categories', component: IngredientCategoriesComponent},
     {path: 'categories', component: CategoriesComponent},
     {path: 'units', component: UnitsComponent},
     {path: 'create-recipe', component: AdminRecipeCreateComponent}

@@ -31,12 +31,12 @@ namespace EatThisAPI.Database
                     context.Units.AddRange(units);
                     context.SaveChanges();
                 }
-                if (!context.Ingredients.Any())
-                {
-                    var ingredients = GetIngredients();
-                    context.Ingredients.AddRange(ingredients);
-                    context.SaveChanges();
-                }
+                //if (!context.Ingredients.Any())
+                //{
+                //    var ingredients = GetIngredients();
+                //    context.Ingredients.AddRange(ingredients);
+                //    context.SaveChanges();
+                //}
             }
         }
 

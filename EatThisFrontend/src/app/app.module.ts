@@ -40,6 +40,9 @@ import {RequiredFieldDirective } from './shared/directives/required-field.direct
 import { AccountService } from './services/account.service';
 import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
 import { ActivateComponent } from './user-panel/account/activate/activate.component';
+import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
+import { IngredientCategoryFormModalComponent } from './admin-panel/ingredient-categories/ingredient-category-form-modal/ingredient-category-form-modal.component';
+import { IngredientCategoryService } from './services/ingredient-category.service';
 
 
 @NgModule({
@@ -63,7 +66,9 @@ import { ActivateComponent } from './user-panel/account/activate/activate.compon
     LoginComponent,
     RegisterComponent,
     RegisterSuccessComponent,
-    ActivateComponent
+    ActivateComponent,
+    IngredientCategoriesComponent,
+    IngredientCategoryFormModalComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +98,8 @@ import { ActivateComponent } from './user-panel/account/activate/activate.compon
     CategoryService,
     UnitService,
     AlertService,
-    AccountService
+    AccountService,
+    IngredientCategoryService
   ],
   bootstrap: [AppComponent]
 })

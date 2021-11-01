@@ -13,6 +13,7 @@ namespace EatThisAPI.Database
         public DbSet<StepImage> Images { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<IngredientQuantity> IngredientQuantities { get; set; }
+        public DbSet<IngredientCategory> IngredientCategories { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Step> Steps { get; set; }
         public DbSet<Unit> Units { get; set; }
