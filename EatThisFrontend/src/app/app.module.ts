@@ -44,6 +44,9 @@ import { IngredientCategoriesComponent } from './admin-panel/ingredient-categori
 import { IngredientCategoryFormModalComponent } from './admin-panel/ingredient-categories/ingredient-category-form-modal/ingredient-category-form-modal.component';
 import { IngredientCategoryService } from './services/ingredient-category.service';
 import { ForgotPasswordComponent } from './user-panel/account/forgot-password/forgot-password.component';
+import { PasswordResetCodeComponent } from './user-panel/account/forgot-password/password-reset-code/password-reset-code.component';
+import { ForgotPasswordNewPasswordComponent } from './user-panel/account/forgot-password/forgot-password-new-password/forgot-password-new-password.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 
 @NgModule({
@@ -70,7 +73,10 @@ import { ForgotPasswordComponent } from './user-panel/account/forgot-password/fo
     ActivateComponent,
     IngredientCategoriesComponent,
     IngredientCategoryFormModalComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    PasswordResetCodeComponent,
+    ForgotPasswordNewPasswordComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

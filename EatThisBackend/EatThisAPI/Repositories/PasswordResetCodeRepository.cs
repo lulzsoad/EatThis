@@ -22,9 +22,20 @@ namespace EatThisAPI.Repositories
 
         public async Task Add(string email, string code, string securedRoute)
         {
-            var model = new PasswordResetCode { Email = email, Code = code };
-            context.PasswordResetCodes.Add(model);
-            await context.SaveChangesAsync(); 
+            var passwordResetCode = context.PasswordResetCodes.FirstOrDefault(x => x.Email == email);
+            if(passwordResetCode != null)
+            {
+                passwordResetCode.Code = code;
+                passwordResetCode.SecuredRoute = securedRoute;
+                context.PasswordResetCodes.Update(passwordResetCode);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                var model = new PasswordResetCode { Email = email, Code = code };
+                context.PasswordResetCodes.Add(model);
+                await context.SaveChangesAsync();
+            }
         }
 
         public Task Delete(string email, string code)

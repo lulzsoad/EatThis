@@ -47,5 +47,8 @@ namespace EatThisAPI.Controllers
             await accountService.GeneratePasswordResetCode(email);
             return Ok();
         }
+
+        [HttpGet]
+        Route
     }
 }

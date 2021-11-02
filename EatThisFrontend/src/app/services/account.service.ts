@@ -39,10 +39,13 @@ export class AccountService{
     }
 
     async sendPasswordResetRequest(email: string){
+        let isOk: boolean = false;
         await this.httpClient.get(`${this.apiUrl}forgotten-password?email=${email}`)
         .toPromise()
+        .then(() => isOk = true)
         .catch(err => {
             this.alertService.showError(err.error);
         })
+        return isOk;
     }
 }
