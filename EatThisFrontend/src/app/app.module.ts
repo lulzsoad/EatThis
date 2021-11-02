@@ -43,6 +43,7 @@ import { ActivateComponent } from './user-panel/account/activate/activate.compon
 import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientCategoryFormModalComponent } from './admin-panel/ingredient-categories/ingredient-category-form-modal/ingredient-category-form-modal.component';
 import { IngredientCategoryService } from './services/ingredient-category.service';
+import { ForgotPasswordComponent } from './user-panel/account/forgot-password/forgot-password.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { IngredientCategoryService } from './services/ingredient-category.servic
     RegisterSuccessComponent,
     ActivateComponent,
     IngredientCategoriesComponent,
-    IngredientCategoryFormModalComponent
+    IngredientCategoryFormModalComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

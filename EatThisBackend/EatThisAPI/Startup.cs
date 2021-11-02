@@ -92,6 +92,7 @@ namespace EatThisAPI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserActivatingCodeRepository, UserActivatingCodeRepository>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddControllers();

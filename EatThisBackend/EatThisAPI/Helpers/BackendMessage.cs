@@ -38,11 +38,15 @@ namespace EatThisAPI.Helpers
             public static string USER_FIRST_NAME_REQUIRED = "Imię jest wymagane";
             public static string USER_LAST_NAME_REQUIRED = "Nazwisko jest wymagane";
             public static string USER_INVALID_EMAIL_OR_PASSWORD = "Nieprawidłowe dane logowania";
+            public static string USER_EMAIL_NOT_FOUND = "Nie znaleziono adresu email";
         }
 
         public class EmailMessages
         {
             public static string EMAILMESSAGE_ACTIVATIONLINK = "Dziękujemy za rejestrację w naszym serwisie! Kliknij poniższy link, aby aktywować swoje konto i korzystać z pełnej funkcjonalności naszej aplikacji.";
+            public static string EMAILMESSAGE_ACTIVATE_YOUR_ACCOUNT = "Aktywuj swoje konto";
+            public static string EMAILMESSAGE_RESET_YOUR_PASSWORD = "Prośba o zresetowanie hasła";
+            public static string EMAILMESSAGE_RESET_YOUR_PASSWORD_MESSAGE = "Otrzymaliśmy informację o tym, że chcesz zresetować swoje hasło. Wpisz poniższy kod na naszej stronie, aby kontynuować. Jeżeli to nie Ty wysłałeś/aś zapytanie o zresetowaniu hasła, zalecamy je zmienić w razie próby kradzieży konta.";
         }
     }
 }

@@ -17,6 +17,7 @@ namespace EatThisAPI.Validators
         void ValidatePassword(string password);
         void ValidatePersonalData(User user);
         void LoginUserValidate(User user);
+        Task EmailExists(string email);
     }
     public class UserValidator : IUserValidator
     {
@@ -78,6 +79,14 @@ namespace EatThisAPI.Validators
             if (string.IsNullOrWhiteSpace(user.LastName))
             {
                 throw new CustomException(BackendMessage.Account.USER_LAST_NAME_REQUIRED);
+            }
+        }
+
+        public async Task EmailExists(string email)
+        {
+            if(!await userRepository.EmailExists(email))
+            {
+                throw new CustomException(BackendMessage.Account.USER_EMAIL_NOT_FOUND);
             }
         }
     }

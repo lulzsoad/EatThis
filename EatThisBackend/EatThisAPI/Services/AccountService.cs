@@ -24,6 +24,7 @@ namespace EatThisAPI.Services
         Task<string> GenerateJwtToken(LoginDto loginDto);
         Task SendActivatingCode(string email, int userId);
         Task<bool> CheckAndActivateAccount(string activationCode);
+        Task GeneratePasswordResetCode(string email);
     }
 
     public class AccountService : IAccountService
@@ -35,6 +36,7 @@ namespace EatThisAPI.Services
         private readonly AuthenticationSettings authenticationSettings;
         private readonly IEmailService emailService;
         private readonly IUserActivatingCodeRepository userActivatingCodeRepository;
+        private readonly IPasswordResetCodeRepository passwordResetCodeRepository;
         public AccountService(
             IMapper mapper, 
             IUserRepository userRepository, 
@@ -42,7 +44,8 @@ namespace EatThisAPI.Services
             IUserValidator userValidator,
             IEmailService emailService,
             IUserActivatingCodeRepository userActivatingCodeRepository,
-            AuthenticationSettings authenticationSettings)
+            AuthenticationSettings authenticationSettings,
+            IPasswordResetCodeRepository passwordResetCodeRepository)
         {
             this.mapper = mapper;
             this.userRepository = userRepository;
@@ -51,6 +54,7 @@ namespace EatThisAPI.Services
             this.authenticationSettings = authenticationSettings;
             this.emailService = emailService;
             this.userActivatingCodeRepository = userActivatingCodeRepository;
+            this.passwordResetCodeRepository = passwordResetCodeRepository;
         }
         public async Task RegisterUser(RegisterUserDto registerUserDto)
         {
@@ -132,10 +136,33 @@ namespace EatThisAPI.Services
             return await userActivatingCodeRepository.CheckAndActivateAccount(activationCode);
         }
 
+        public async Task GeneratePasswordResetCode(string email)
+        {
+            await userValidator.EmailExists(email);
+            string code = GenerateRandomString();
+            StringBuilder sb = new StringBuilder();
+            var timestamp = DateTime.UtcNow.ToString();
+            foreach (byte b in GetHash(timestamp))
+            {
+                sb.Append(b.ToString("X2"));
+            }
+            var securedRoute = sb.ToString();
+            await passwordResetCodeRepository.Add(email, code, securedRoute);
+            await emailService.SendByNoReply(email, BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD, $"{BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD_MESSAGE}\n\n{code}");
+        }
+
         private static byte[] GetHash(string inputString)
         {
             using (HashAlgorithm algorithm = SHA256.Create())
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+
+        private static string GenerateRandomString()
+        {
+            Random rand = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 10)
+              .Select(s => s[rand.Next(s.Length)]).ToArray());
         }
     }
 }

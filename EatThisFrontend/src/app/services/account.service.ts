@@ -37,4 +37,12 @@ export class AccountService{
             });
         return result;
     }
+
+    async sendPasswordResetRequest(email: string){
+        await this.httpClient.get(`${this.apiUrl}forgotten-password?email=${email}`)
+        .toPromise()
+        .catch(err => {
+            this.alertService.showError(err.error);
+        })
+    }
 }

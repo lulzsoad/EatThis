@@ -39,5 +39,13 @@ namespace EatThisAPI.Controllers
         {
             return Ok(await accountService.CheckAndActivateAccount(activationCode));
         }
+
+        [HttpGet]
+        [Route("forgotten-password")]
+        public async Task<ActionResult> GeneratePasswordResetCode([FromQuery] string email)
+        {
+            await accountService.GeneratePasswordResetCode(email);
+            return Ok();
+        }
     }
 }
