@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs.User;
@@ -24,7 +25,9 @@ namespace EatThisAPI.Services
         Task<string> GenerateJwtToken(LoginDto loginDto);
         Task SendActivatingCode(string email, int userId);
         Task<bool> CheckAndActivateAccount(string activationCode);
-        Task GeneratePasswordResetCode(string email);
+        Task<PasswordResetCodeViewModel> GeneratePasswordResetCode(string email);
+        Task<PasswordResetCodeViewModel> PasswordResetCodeCheck(PasswordResetCodeViewModel passwordResetCodeVM);
+        Task ChangePasswordByResetCode(ChangePasswordResetCodeViewModel changePasswordResetCodeViewModel);
     }
 
     public class AccountService : IAccountService
@@ -37,6 +40,7 @@ namespace EatThisAPI.Services
         private readonly IEmailService emailService;
         private readonly IUserActivatingCodeRepository userActivatingCodeRepository;
         private readonly IPasswordResetCodeRepository passwordResetCodeRepository;
+        private readonly IValidator validator;
         public AccountService(
             IMapper mapper, 
             IUserRepository userRepository, 
@@ -45,7 +49,7 @@ namespace EatThisAPI.Services
             IEmailService emailService,
             IUserActivatingCodeRepository userActivatingCodeRepository,
             AuthenticationSettings authenticationSettings,
-            IPasswordResetCodeRepository passwordResetCodeRepository)
+            IPasswordResetCodeRepository passwordResetCodeRepository,IValidator validator)
         {
             this.mapper = mapper;
             this.userRepository = userRepository;
@@ -55,6 +59,7 @@ namespace EatThisAPI.Services
             this.emailService = emailService;
             this.userActivatingCodeRepository = userActivatingCodeRepository;
             this.passwordResetCodeRepository = passwordResetCodeRepository;
+            this.validator = validator;
         }
         public async Task RegisterUser(RegisterUserDto registerUserDto)
         {
@@ -136,10 +141,24 @@ namespace EatThisAPI.Services
             return await userActivatingCodeRepository.CheckAndActivateAccount(activationCode);
         }
 
-        public async Task GeneratePasswordResetCode(string email)
+        public async Task<PasswordResetCodeViewModel> GeneratePasswordResetCode(string email)
         {
+            var vm = new PasswordResetCodeViewModel();
             await userValidator.EmailExists(email);
             string code = GenerateRandomString();
+
+            await passwordResetCodeRepository.AddResetCode(email, code);
+            await emailService.SendByNoReply(email, BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD, $"{BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD_MESSAGE}\n\n{code}");
+            
+            vm.Email = email;
+            return vm;
+        }
+
+        public async Task<PasswordResetCodeViewModel> PasswordResetCodeCheck(PasswordResetCodeViewModel passwordResetCodeVM)
+        {
+            var vm = new PasswordResetCodeViewModel();
+            await userValidator.EmailExists(passwordResetCodeVM.Email);
+
             StringBuilder sb = new StringBuilder();
             var timestamp = DateTime.UtcNow.ToString();
             foreach (byte b in GetHash(timestamp))
@@ -147,8 +166,38 @@ namespace EatThisAPI.Services
                 sb.Append(b.ToString("X2"));
             }
             var securedRoute = sb.ToString();
-            await passwordResetCodeRepository.Add(email, code, securedRoute);
-            await emailService.SendByNoReply(email, BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD, $"{BackendMessage.EmailMessages.EMAILMESSAGE_RESET_YOUR_PASSWORD_MESSAGE}\n\n{code}");
+
+            var prc = new PasswordResetCode { Email = passwordResetCodeVM.Email, Code = passwordResetCodeVM.Code, SecuredRoute = securedRoute };
+            prc = await passwordResetCodeRepository.CheckPasswordResetCode(prc);
+            userValidator.IsPasswordCodeCorrect(prc);
+
+            vm.Code = prc.Code;
+            vm.Email = prc.Email;
+            vm.SecuredRoute = prc.SecuredRoute;
+            return vm;
+        }
+
+        public async Task ChangePasswordByResetCode(ChangePasswordResetCodeViewModel changePasswordResetCodeViewModel)
+        {
+            validator.IsObjectNull(changePasswordResetCodeViewModel);
+            userValidator.ValidatePassword(changePasswordResetCodeViewModel.Password);
+            var prc = await passwordResetCodeRepository
+                .GetPasswordResetCodeBySecuredRouteAndEmail(
+                    changePasswordResetCodeViewModel.PasswordResetCode.SecuredRoute,
+                    changePasswordResetCodeViewModel.PasswordResetCode.Email
+                    );
+
+            if(prc == null || prc.Code != null)
+            {
+                throw new CustomException(BackendMessage.Account.PASSWORD_RESET_CODE_ERROR);
+            }
+
+            var user = await userRepository.GetUserByEmail(changePasswordResetCodeViewModel.PasswordResetCode.Email);
+            validator.IsObjectNull(user);
+            var hashedPassword = passwordHasher.HashPassword(user, changePasswordResetCodeViewModel.Password);
+            user.PasswordHash = hashedPassword;
+
+            await passwordResetCodeRepository.ChangePasswordByResetCode(prc, user);
         }
 
         private static byte[] GetHash(string inputString)

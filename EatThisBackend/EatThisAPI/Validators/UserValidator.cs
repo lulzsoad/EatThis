@@ -18,6 +18,7 @@ namespace EatThisAPI.Validators
         void ValidatePersonalData(User user);
         void LoginUserValidate(User user);
         Task EmailExists(string email);
+        void IsPasswordCodeCorrect(PasswordResetCode passwordResetCodeModel);
     }
     public class UserValidator : IUserValidator
     {
@@ -87,6 +88,14 @@ namespace EatThisAPI.Validators
             if(!await userRepository.EmailExists(email))
             {
                 throw new CustomException(BackendMessage.Account.USER_EMAIL_NOT_FOUND);
+            }
+        }
+
+        public void IsPasswordCodeCorrect(PasswordResetCode passwordResetCodeModel)
+        {
+            if(passwordResetCodeModel == null)
+            {
+                throw new CustomException(BackendMessage.Account.PASSWORD_RESET_CODE_INVALID);
             }
         }
     }

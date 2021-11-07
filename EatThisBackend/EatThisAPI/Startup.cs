@@ -74,6 +74,7 @@ namespace EatThisAPI
             services.AddScoped<Seeder>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+            services.AddScoped<IValidator, Validator>();
             services.AddScoped<IIngredientValidator, IngredientValidator>();
             services.AddScoped<ICategoryValidator, CategoryValidator>();
             services.AddScoped<IIngredientCategoryValidator, IngredientCategoryValidator>();

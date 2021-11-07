@@ -44,11 +44,22 @@ namespace EatThisAPI.Controllers
         [Route("forgotten-password")]
         public async Task<ActionResult> GeneratePasswordResetCode([FromQuery] string email)
         {
-            await accountService.GeneratePasswordResetCode(email);
-            return Ok();
+            return Ok(await accountService.GeneratePasswordResetCode(email));
         }
 
-        [HttpGet]
-        Route
+        [HttpPost]
+        [Route("check-reset-code")]
+        public async Task<ActionResult> CheckPasswordResetCode([FromBody] PasswordResetCodeViewModel passwordResetCodeModel)
+        {
+            return Ok(await accountService.PasswordResetCodeCheck(passwordResetCodeModel));
+        }
+
+        [HttpPost]
+        [Route("change-password-reset-code")]
+        public async Task<ActionResult> ChangePasswordResetCode([FromBody] ChangePasswordResetCodeViewModel changePasswordResetCodeModel)
+        {
+            await accountService.ChangePasswordByResetCode(changePasswordResetCodeModel);
+            return Ok();
+        }
     }
 }

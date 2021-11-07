@@ -1,6 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppConfig } from "../app-config/app.config";
+import { PasswordResetCodeCheckModel } from "../models/password-reset-code-check.model";
+import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-password.model";
+import { PasswordReset } from "../models/password-reset.model";
 import { RegisterUser } from "../models/register-user.model";
 import { AlertService } from "./alert.service";
 
@@ -39,13 +42,45 @@ export class AccountService{
     }
 
     async sendPasswordResetRequest(email: string){
-        let isOk: boolean = false;
-        await this.httpClient.get(`${this.apiUrl}forgotten-password?email=${email}`)
+        let passwordResetModel: PasswordReset = new PasswordReset();
+
+        await this.httpClient.get<PasswordReset>(`${this.apiUrl}forgotten-password?email=${email}`)
         .toPromise()
-        .then(() => isOk = true)
+        .then(data => passwordResetModel = data)
         .catch(err => {
             this.alertService.showError(err.error);
         })
-        return isOk;
+
+        return passwordResetModel;
+    }
+
+    async checkPasswordResetCode(request: PasswordResetCodeCheckModel){
+        let response: PasswordReset = new PasswordReset();
+        await this.httpClient.post<PasswordReset>(`${this.apiUrl}check-reset-code`, request)
+        .toPromise()
+        .then(data => response = data)
+        .catch(err => {this.alertService.showError(err.error); return;});
+        return response;
+    } 
+
+    async changePassword(passwordReset: PasswordReset, newPassword: string){
+        let response: boolean = false;
+        console.log(passwordReset);
+        console.log(newPassword);
+
+        let request = new PasswordResetCodeNewPassword()
+        request.passwordResetCode = passwordReset;
+        request.password = newPassword;
+        console.log(request);
+
+        await this.httpClient.post(`${this.apiUrl}change-password-reset-code`, request)
+        .toPromise()
+        .then(() => {
+            response = true;
+            this.alertService.showSuccess("Hasło zostało zmienione");
+        })
+        .catch((err) => this.alertService.showError(err.error))
+
+        return response;
     }
 }
