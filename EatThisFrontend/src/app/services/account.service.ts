@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppConfig } from "../app-config/app.config";
+import { AuthToken } from "../models/auth-token.model";
+import { Login } from "../models/login.model";
 import { PasswordResetCodeCheckModel } from "../models/password-reset-code-check.model";
 import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-password.model";
 import { PasswordReset } from "../models/password-reset.model";
@@ -82,5 +84,18 @@ export class AccountService{
         .catch((err) => this.alertService.showError(err.error))
 
         return response;
+    }
+
+    async logIn(login: Login){
+        let token: AuthToken = new AuthToken();
+        await this.httpClient.post<AuthToken>(`${this.apiUrl}login`, login)
+            .toPromise()
+            .then((response) => {
+                token = response;
+                this.alertService.showSuccess("Zalogowano pomyślnie");
+                return token;
+            })
+            .catch((err) => this.alertService.showError(err.error));
+        return token;
     }
 }

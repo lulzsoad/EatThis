@@ -22,7 +22,7 @@ namespace EatThisAPI.Services
     public interface IAccountService
     {
         Task RegisterUser(RegisterUserDto registerUserDto);
-        Task<string> GenerateJwtToken(LoginDto loginDto);
+        Task<AuthToken> GenerateJwtToken(LoginDto loginDto);
         Task SendActivatingCode(string email, int userId);
         Task<bool> CheckAndActivateAccount(string activationCode);
         Task<PasswordResetCodeViewModel> GeneratePasswordResetCode(string email);
@@ -78,7 +78,7 @@ namespace EatThisAPI.Services
             await SendActivatingCode(newUser.Email, userId);
         }
 
-        public async Task<string> GenerateJwtToken(LoginDto loginDto)
+        public async Task<AuthToken> GenerateJwtToken(LoginDto loginDto)
         {
             var user = await userRepository.GetUserByEmail(loginDto.Email);
             userValidator.LoginUserValidate(user);
@@ -109,7 +109,10 @@ namespace EatThisAPI.Services
                 signingCredentials: credentails);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+            var result = tokenHandler.WriteToken(token);
+            var authToken = new AuthToken();
+            authToken.Token = result;
+            return authToken;
         }
 
         public async Task SendActivatingCode(string email, int userId)
