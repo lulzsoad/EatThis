@@ -1,5 +1,6 @@
 ﻿using EatThisAPI.Models.DTOs;
 using EatThisAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,12 +33,14 @@ namespace EatThisAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<int>> Add([FromBody] CategoryDto categoryDto)
         {
             return Ok(await categoryService.Add(categoryDto));
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult> Delete([FromBody] CategoryDto categoryDto)
         {
             await categoryService.Delete(categoryDto);
@@ -45,6 +48,7 @@ namespace EatThisAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<CategoryDto>> Update([FromBody] CategoryDto categoryDto)
         {
             return Ok(await categoryService.Update(categoryDto));

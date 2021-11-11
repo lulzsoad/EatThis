@@ -33,16 +33,14 @@ namespace EatThisAPI.Controllers
         }
         
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<int>> Add([FromBody] IngredientDto ingredientDto)
         {
             return Ok(await ingredientService.Add(ingredientDto));
         }
 
         [HttpDelete]
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult> Delete([FromBody] IngredientDto ingredientDto)
         {
             await ingredientService.Delete(ingredientDto);
@@ -50,8 +48,7 @@ namespace EatThisAPI.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Admin")]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<ActionResult<IngredientDto>> Update([FromBody] IngredientDto ingredientDto)
         {
             return Ok(await ingredientService.Update(ingredientDto));
