@@ -1,5 +1,2 @@
-<button class="btn btn-info" routerLink="admin-panel" *ngIf="isAuthenticated">Panel Administracyjny</button>
-<button class="btn btn-primary" routerLink="login" *ngIf="!isAuthenticated">Zaloguj się</button>
-<button class="btn btn-success" routerLink="register" *ngIf="!isAuthenticated">Zarejestruj się</button>
-<button class="btn btn-success" *ngIf="isAuthenticated">Wyloguj się</button>
+<app-user-navigation></app-user-navigation>
 <router-outlet></router-outlet>

@@ -49,6 +49,7 @@ import { ForgotPasswordNewPasswordComponent } from './user-panel/account/forgot-
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { AccountComponent } from './user-panel/account/account.component';
+import { UserNavigationComponent } from './user-panel/user-navigation/user-navigation.component';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import { AccountComponent } from './user-panel/account/account.component';
     PasswordResetCodeComponent,
     ForgotPasswordNewPasswordComponent,
     SpinnerComponent,
-    AccountComponent
+    AccountComponent,
+    UserNavigationComponent
   ],
   imports: [
     BrowserModule,

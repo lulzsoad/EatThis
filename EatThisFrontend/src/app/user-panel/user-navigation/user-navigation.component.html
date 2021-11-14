@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #e7b343;">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" routerLink="./">Zjedz to</a>
+      <div class="collapse navbar-collapse" >
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+        </ul>
+        <div class="d-flex">
+            <button  class="btn btn-outline-primary text-white" routerLink="admin-panel" *ngIf="isAuthenticated">Panel Administracyjny</button>
+            <button class="btn btn-outline-danger text-white" *ngIf="isAuthenticated">Wyloguj się</button>
+            <button class="btn btn-outline-warning text-white" routerLink="register" *ngIf="!isAuthenticated">Zarejestruj</button>
+            <button class="btn btn-outline-warning text-white" routerLink="login" *ngIf="!isAuthenticated">Zaloguj</button>
+        </div>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Szukaj przepisu..." aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Szukaj</button>
+        </form>
+      </div>
+    </div>
+  </nav>
