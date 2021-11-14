@@ -7,6 +7,10 @@ namespace EatThisAPI.Models.DTOs.User
 {
     public class AuthToken
     {
+        public int UserId { get; set; }
+        public string Email { get; set; }
+        
         public string Token { get; set; }
+        public DateTime TokenExpirationDate { get; set; }
     }
 }

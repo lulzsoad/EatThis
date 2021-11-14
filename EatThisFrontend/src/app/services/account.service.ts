@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 import { AppConfig } from "../app-config/app.config";
 import { AuthToken } from "../models/auth-token.model";
 import { Login } from "../models/login.model";
@@ -7,12 +8,16 @@ import { PasswordResetCodeCheckModel } from "../models/password-reset-code-check
 import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-password.model";
 import { PasswordReset } from "../models/password-reset.model";
 import { RegisterUser } from "../models/register-user.model";
+import { User } from "../models/user.model";
 import { AlertService } from "./alert.service";
 
 @Injectable()
 export class AccountService{
+    public user: Subject<User> = new Subject<User>();
+    
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/account/`;
+    
 
     constructor(private httpClient: HttpClient, private alertService: AlertService){
 
@@ -87,15 +92,17 @@ export class AccountService{
     }
 
     async logIn(login: Login){
-        let token: AuthToken = new AuthToken();
+        let isOk = false;
         await this.httpClient.post<AuthToken>(`${this.apiUrl}login`, login)
             .toPromise()
             .then((response) => {
-                token = response;
+                const expirationDate = response.tokenExpirationDate;
+                const user = new User(response.email, response.userId, response.token, expirationDate)
+                this.user.next(user);
                 this.alertService.showSuccess("Zalogowano pomyślnie");
-                return token;
+                isOk = true;
             })
             .catch((err) => this.alertService.showError(err.error));
-        return token;
+        return isOk;
     }
 }

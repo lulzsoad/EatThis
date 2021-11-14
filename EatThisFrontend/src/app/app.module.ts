@@ -47,6 +47,8 @@ import { ForgotPasswordComponent } from './user-panel/account/forgot-password/fo
 import { PasswordResetCodeComponent } from './user-panel/account/forgot-password/password-reset-code/password-reset-code.component';
 import { ForgotPasswordNewPasswordComponent } from './user-panel/account/forgot-password/forgot-password-new-password/forgot-password-new-password.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
+import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
+import { AccountComponent } from './user-panel/account/account.component';
 
 
 @NgModule({
@@ -70,13 +72,15 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
     LoginComponent,
     RegisterComponent,
     RegisterSuccessComponent,
+    RegisterFormComponent,
     ActivateComponent,
     IngredientCategoriesComponent,
     IngredientCategoryFormModalComponent,
     ForgotPasswordComponent,
     PasswordResetCodeComponent,
     ForgotPasswordNewPasswordComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

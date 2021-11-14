@@ -111,7 +111,10 @@ namespace EatThisAPI.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var result = tokenHandler.WriteToken(token);
             var authToken = new AuthToken();
+            authToken.UserId = user.Id;
+            authToken.Email = user.Email;
             authToken.Token = result;
+            authToken.TokenExpirationDate = expires;
             return authToken;
         }
 

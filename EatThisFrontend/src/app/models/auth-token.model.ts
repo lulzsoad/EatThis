@@ -1,3 +1,6 @@
 export class AuthToken{
-    token: string;
+    public email: string;
+    public userId: string;
+    public token: string;
+    public tokenExpirationDate: Date;
 }
