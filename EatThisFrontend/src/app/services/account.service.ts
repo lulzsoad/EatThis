@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { AppConfig } from "../app-config/app.config";
 import { AuthToken } from "../models/auth-token.model";
 import { Login } from "../models/login.model";
@@ -11,9 +11,10 @@ import { RegisterUser } from "../models/register-user.model";
 import { User } from "../models/user.model";
 import { AlertService } from "./alert.service";
 
+
 @Injectable()
 export class AccountService{
-    public user: Subject<User> = new Subject<User>();
+    public user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
     
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/account/`;
@@ -21,20 +22,6 @@ export class AccountService{
 
     constructor(private httpClient: HttpClient, private alertService: AlertService){
 
-    }
-
-    async register(registerUser: RegisterUser){
-        let isOk: Boolean = false;
-        await this.httpClient.post<RegisterUser>(`${this.apiUrl}register`, registerUser)
-            .toPromise()
-            .then(() => {
-                isOk = true;
-            })
-            .catch((err) => {
-                this.alertService.showError(err.error);
-                isOk = false;;
-            });
-        return isOk;
     }
 
     async activateAccount(activationCode: string){
@@ -89,20 +76,5 @@ export class AccountService{
         .catch((err) => this.alertService.showError(err.error))
 
         return response;
-    }
-
-    async logIn(login: Login){
-        let isOk = false;
-        await this.httpClient.post<AuthToken>(`${this.apiUrl}login`, login)
-            .toPromise()
-            .then((response) => {
-                const expirationDate = response.tokenExpirationDate;
-                const user = new User(response.email, response.userId, response.token, expirationDate)
-                this.user.next(user);
-                this.alertService.showSuccess("Zalogowano pomyślnie");
-                isOk = true;
-            })
-            .catch((err) => this.alertService.showError(err.error));
-        return isOk;
     }
 }

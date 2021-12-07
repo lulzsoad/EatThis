@@ -50,6 +50,8 @@ import { SpinnerComponent } from './shared/components/spinner/spinner.component'
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { AccountComponent } from './user-panel/account/account.component';
 import { UserNavigationComponent } from './user-panel/user-navigation/user-navigation.component';
+import { AuthService } from './services/auth.service';
+import { AppInformationService } from './services/app-information.service';
 
 
 @NgModule({
@@ -113,7 +115,9 @@ import { UserNavigationComponent } from './user-panel/user-navigation/user-navig
     UnitService,
     AlertService,
     AccountService,
-    IngredientCategoryService
+    IngredientCategoryService,
+    AuthService,
+    AppInformationService
   ],
   bootstrap: [AppComponent]
 })

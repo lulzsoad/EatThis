@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthToken } from 'src/app/models/auth-token.model';
 import { Login } from 'src/app/models/login.model';
 import { AccountService } from 'src/app/services/account.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   private login: Login;
 
-  constructor(private accountService: AccountService, private router: Router) { }
+  constructor(private accountService: AccountService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -28,8 +29,10 @@ export class LoginComponent implements OnInit {
     this.loadingPanelVisible = true;
     let isOk: boolean;
     this.login = new Login(this.loginForm.value.email, this.loginForm.value.password)
-    await this.accountService.logIn(this.login);
+    isOk = await this.authService.logIn(this.login);
     this.loadingPanelVisible = false;
-    this.router.navigate(['../']);
+    if(isOk){
+      this.router.navigate(['../']);
+    }
   }
 }
