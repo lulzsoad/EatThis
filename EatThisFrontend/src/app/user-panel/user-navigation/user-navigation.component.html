@@ -11,7 +11,7 @@
         <div class="d-flex">
             <button  class="btn btn-primary text-white me-2" routerLink="admin-panel" *ngIf="isAuthenticated">Panel Administracyjny</button>
             <button class="btn btn-primary text-white me-2" (click)="testRequest()">Test autoryzacji</button>
-            <button class="btn btn-danger text-white me-2" *ngIf="isAuthenticated">Wyloguj się</button>
+            <button class="btn btn-danger text-white me-2" *ngIf="isAuthenticated" (click)="onLogout()">Wyloguj się</button>
             <button class="btn btn-primary text-white me-2" routerLink="register" *ngIf="!isAuthenticated">Zarejestruj</button>
             <button class="btn btn-primary text-white me-2" routerLink="login" *ngIf="!isAuthenticated">Zaloguj</button>
         </div>

@@ -28,4 +28,8 @@ export class UserNavigationComponent implements OnInit, OnDestroy {
   testRequest(){
     this.appInfoService.getAppInformation().toPromise().then(data => {console.log(data)}).catch(err=> {console.log(err); console.log(err.error)});
   }
+
+  onLogout(){
+    this.authService.logout();
+  }
 }

@@ -8,6 +8,7 @@ import { AlertService } from "./alert.service";
 import { Login } from "../models/login.model";
 import { AuthToken } from "../models/auth-token.model";
 import { User } from "../models/user.model";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class AuthService{
@@ -16,7 +17,7 @@ export class AuthService{
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/account/`;
 
-    constructor(private http: HttpClient, private alertService: AlertService){
+    constructor(private http: HttpClient, private alertService: AlertService, private router: Router){
 
     }
 
@@ -52,5 +53,11 @@ export class AuthService{
         const user = new User(email, userId, token, tokenExpirationDate)
         this.user.next(user);
         localStorage.setItem("token", user.token);
+    }
+
+    logout(){
+        this.user.next(null);
+        this.alertService.showInfo("Wylogowano");
+        this.router.navigate(['/login']);
     }
 }
