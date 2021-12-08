@@ -12,6 +12,7 @@ namespace EatThisAPI.Models.DTOs
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
+        public int IngredientCategoryId { get; set; }
         public IngredientCategoryDto IngredientCategory;
     }
 }

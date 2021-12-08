@@ -12,7 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GridModule } from '@progress/kendo-angular-grid';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { IngredientService } from './services/ingredient.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IndicatorsModule } from '@progress/kendo-angular-indicators';
 import { DialogsModule, WindowModule} from '@progress/kendo-angular-dialog';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
@@ -52,6 +52,7 @@ import { AccountComponent } from './user-panel/account/account.component';
 import { UserNavigationComponent } from './user-panel/user-navigation/user-navigation.component';
 import { AuthService } from './services/auth.service';
 import { AppInformationService } from './services/app-information.service';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 
 @NgModule({
@@ -117,7 +118,8 @@ import { AppInformationService } from './services/app-information.service';
     AccountService,
     IngredientCategoryService,
     AuthService,
-    AppInformationService
+    AppInformationService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]
 })

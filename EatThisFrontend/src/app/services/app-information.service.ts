@@ -14,7 +14,7 @@ export class AppInformationService{
 
     getAppInformation(){
         return this.authService.user.pipe(take(1), exhaustMap(user => {
-            return this.http.get(this.apiPath, {headers: new HttpHeaders().set("Authorization", `bearer ${user.token}`)});
+            return this.http.get(this.apiPath);
         }));
         
     };
