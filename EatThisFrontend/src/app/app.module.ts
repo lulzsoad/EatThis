@@ -53,6 +53,7 @@ import { UserNavigationComponent } from './user-panel/user-navigation/user-navig
 import { AuthService } from './services/auth.service';
 import { AppInformationService } from './services/app-information.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @NgModule({
@@ -119,6 +120,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     IngredientCategoryService,
     AuthService,
     AppInformationService,
+    AuthGuard,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]

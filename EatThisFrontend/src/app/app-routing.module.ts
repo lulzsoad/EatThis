@@ -6,6 +6,7 @@ import { CategoriesComponent } from './admin-panel/categories/categories.compone
 import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { UnitsComponent } from './admin-panel/units/units.component';
+import { AuthGuard } from './guards/auth.guard';
 import { AccountComponent } from './user-panel/account/account.component';
 import { ActivateComponent } from './user-panel/account/activate/activate.component';
 import { ForgotPasswordComponent } from './user-panel/account/forgot-password/forgot-password.component';
@@ -30,7 +31,7 @@ const routes: Routes = [
     ]}
   ]},
   
-  {path: 'admin-panel', component: AdminPanelComponent, children: [
+  {path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard], children: [
     {path: 'ingredients', component: IngredientsComponent},
     {path: 'ingredient-categories', component: IngredientCategoriesComponent},
     {path: 'categories', component: CategoriesComponent},
