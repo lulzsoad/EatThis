@@ -52,12 +52,36 @@ export class AuthService{
     private handleAuthentication(email: string, userId: string, token: string, tokenExpirationDate: Date){
         const user = new User(email, userId, token, tokenExpirationDate)
         this.user.next(user);
-        localStorage.setItem("token", user.token);
+        localStorage.setItem("userData", JSON.stringify(user));
     }
 
     logout(){
         this.user.next(null);
         this.alertService.showInfo("Wylogowano");
         this.router.navigate(['/login']);
+    }
+
+    autoLogIn(){
+        const userData: {
+            email: string, 
+            id: string, 
+            _token: string, 
+            _tokenExpirationDate: string
+        } = JSON.parse(localStorage.getItem('userData'));
+        
+        if(!userData){
+            return;
+        }
+
+        const loadedUser = new User(
+            userData.email, 
+            userData.id, 
+            userData._token, 
+            new Date(userData._tokenExpirationDate)
+        );
+
+        if(loadedUser.token) {
+            this.user.next(loadedUser);
+        }
     }
 }
