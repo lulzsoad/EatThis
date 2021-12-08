@@ -16,6 +16,7 @@ export class AuthService{
 
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/account/`;
+    private tokenExpirationTimer: any;
 
     constructor(private http: HttpClient, private alertService: AlertService, private router: Router){
 
@@ -52,6 +53,8 @@ export class AuthService{
     private handleAuthentication(email: string, userId: string, token: string, tokenExpirationDate: Date){
         const user = new User(email, userId, token, tokenExpirationDate)
         this.user.next(user);
+        const expirationDuration = new Date(tokenExpirationDate).getTime() - new Date().getTime();
+        this.autoLogOut(expirationDuration);
         localStorage.setItem("userData", JSON.stringify(user));
     }
 
@@ -59,6 +62,11 @@ export class AuthService{
         this.user.next(null);
         this.alertService.showInfo("Wylogowano");
         this.router.navigate(['/login']);
+        localStorage.removeItem('userData');
+        if(this.tokenExpirationTimer){
+            clearTimeout(this.tokenExpirationTimer);
+        }
+        this.tokenExpirationTimer = null;
     }
 
     autoLogIn(){
@@ -82,6 +90,14 @@ export class AuthService{
 
         if(loadedUser.token) {
             this.user.next(loadedUser);
+            const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+            this.autoLogOut(expirationDuration);
         }
+    }
+
+    autoLogOut(expirationDuration: number){
+        this.tokenExpirationTimer = setTimeout(() => {
+            this.logout();
+        }, expirationDuration)
     }
 }
