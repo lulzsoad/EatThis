@@ -19,6 +19,7 @@ namespace EatThisAPI.Validators
         void LoginUserValidate(User user);
         Task EmailExists(string email);
         void IsPasswordCodeCorrect(PasswordResetCode passwordResetCodeModel);
+        void UserExists(User user);
     }
     public class UserValidator : IUserValidator
     {
@@ -48,6 +49,14 @@ namespace EatThisAPI.Validators
             if(user == null)
             {
                 throw new CustomException(BackendMessage.General.INVALID_OBJECT_MODEL);
+            }
+        }
+
+        public void UserExists(User user)
+        {
+            if(user == null)
+            {
+                throw new CustomException(BackendMessage.User.USER_NOT_FOUND);
             }
         }
 

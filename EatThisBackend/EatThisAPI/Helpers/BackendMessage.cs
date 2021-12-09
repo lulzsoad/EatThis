@@ -56,5 +56,10 @@ namespace EatThisAPI.Helpers
         {
             public static string TRANSACTION_ERROR = "Błąd wykonania transakcji EF";
         }
+
+        public static class User
+        {
+            public static string USER_NOT_FOUND = "Nie znaleziono użytkownika";
+        }
     }
 }

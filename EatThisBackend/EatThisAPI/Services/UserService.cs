@@ -36,7 +36,7 @@ namespace EatThisAPI.Services
         {
             validator.IsObjectNull(id);
             var user = await userRepository.GetUserById(id);
-            userValidator.IsNull(user);
+            userValidator.UserExists(user);
             return mapper.Map<UserDto>(user);
         }
     }
