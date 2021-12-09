@@ -55,6 +55,23 @@ namespace EatThisAPI.Helpers
             CreateMap<LoginDto, User>()
                 .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
                 .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password));
+
+            CreateMap<UserDto, User>()
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.FirstName, y => y.MapFrom(z => z.Name))
+                .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
+                .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
+                .ForMember(x => x.BirthDate, y => y.MapFrom(z => z.BirthDate))
+                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role));
+
+            CreateMap<User, UserDto>()
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.Name, y => y.MapFrom(z => z.FirstName))
+                .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
+                .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
+                .ForMember(x => x.BirthDate, y => y.MapFrom(z => z.BirthDate))
+                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role));
+
         }
     }
 }

@@ -13,6 +13,7 @@ namespace EatThisAPI.Repositories
         Task<int> RegisterUser(User newUser);
         Task<bool> EmailExists(string email);
         Task<User> GetUserByEmail(string email);
+        Task<User> GetUserById(int id);
     }
     public class UserRepository : IUserRepository
     {
@@ -39,6 +40,13 @@ namespace EatThisAPI.Repositories
             return await context.Users
                 .Include(x => x.Role)
                 .FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            return await context.Users
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }
