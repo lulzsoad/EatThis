@@ -1,7 +1,8 @@
 export class User{
     constructor(
         public email: string, 
-        public id: string, 
+        public id: string,
+        private _roleId: number,
         private _token: string, 
         private _tokenExpirationDate: Date){
     }
@@ -11,5 +12,9 @@ export class User{
             return null;
         }
         return this._token;
+    }
+
+    get roleId(){
+        return this._roleId;
     }
 }

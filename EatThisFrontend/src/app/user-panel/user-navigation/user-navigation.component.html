@@ -9,11 +9,14 @@
           
         </ul>
         <div class="d-flex">
-            <button  class="btn btn-primary text-white me-2" routerLink="admin-panel" *ngIf="isAuthenticated">Panel Administracyjny</button>
+            <button  class="btn btn-primary text-white me-2" routerLink="admin-panel" 
+              *ngIf="authInfo.isAuthenticated && (authInfo.isEmployee || authInfo.isAdmin)">
+                Panel Administracyjny
+              </button>
             <button class="btn btn-primary text-white me-2" (click)="testRequest()">Test autoryzacji</button>
-            <button class="btn btn-danger text-white me-2" *ngIf="isAuthenticated" (click)="onLogout()">Wyloguj się</button>
-            <button class="btn btn-primary text-white me-2" routerLink="register" *ngIf="!isAuthenticated">Zarejestruj</button>
-            <button class="btn btn-primary text-white me-2" routerLink="login" *ngIf="!isAuthenticated">Zaloguj</button>
+            <button class="btn btn-danger text-white me-2" *ngIf="authInfo.isAuthenticated" (click)="onLogout()">Wyloguj się</button>
+            <button class="btn btn-primary text-white me-2" routerLink="register" *ngIf="!authInfo.isAuthenticated">Zarejestruj</button>
+            <button class="btn btn-primary text-white me-2" routerLink="login" *ngIf="!authInfo.isAuthenticated">Zaloguj</button>
         </div>
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Szukaj przepisu..." aria-label="Search">

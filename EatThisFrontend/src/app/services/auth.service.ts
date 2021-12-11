@@ -42,7 +42,7 @@ export class AuthService{
             .toPromise()
             .then((response) => {
                 const expirationDate = response.tokenExpirationDate;
-                this.handleAuthentication(response.email, response.userId, response.token, expirationDate)
+                this.handleAuthentication(response.email, response.userId, response.roleId, response.token, expirationDate)
                 this.alertService.showSuccess("Zalogowano pomyślnie");
                 isOk = true;
             })
@@ -50,8 +50,8 @@ export class AuthService{
         return isOk;
     }
 
-    private handleAuthentication(email: string, userId: string, token: string, tokenExpirationDate: Date){
-        const user = new User(email, userId, token, tokenExpirationDate)
+    private handleAuthentication(email: string, userId: string, roleId: number, token: string, tokenExpirationDate: Date){
+        const user = new User(email, userId, roleId, token, tokenExpirationDate)
         this.user.next(user);
         const expirationDuration = new Date(tokenExpirationDate).getTime() - new Date().getTime();
         this.autoLogOut(expirationDuration);
@@ -73,6 +73,7 @@ export class AuthService{
         const userData: {
             email: string, 
             id: string, 
+            _roleId: number,
             _token: string, 
             _tokenExpirationDate: string
         } = JSON.parse(localStorage.getItem('userData'));
@@ -84,6 +85,7 @@ export class AuthService{
         const loadedUser = new User(
             userData.email, 
             userData.id, 
+            userData._roleId,
             userData._token, 
             new Date(userData._tokenExpirationDate)
         );

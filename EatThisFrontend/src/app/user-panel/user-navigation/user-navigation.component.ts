@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AuthInfo } from 'src/app/models/auth-info.model';
 import { AppInformationService } from 'src/app/services/app-information.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { IngredientCategoryService } from 'src/app/services/ingredient-category.service';
@@ -10,14 +11,16 @@ import { IngredientCategoryService } from 'src/app/services/ingredient-category.
   styleUrls: ['./user-navigation.component.scss']
 })
 export class UserNavigationComponent implements OnInit, OnDestroy {
-  public isAuthenticated: boolean = false;
+  public authInfo: AuthInfo;
   private userSub: Subscription;
 
   constructor(private authService: AuthService, private appInfoService: AppInformationService) { }
 
   ngOnInit(): void {
     this.userSub = this.authService.user.subscribe(user => {
-      this.isAuthenticated = !user ? false : true;
+      console.log(user);
+      this.authInfo = new AuthInfo(user);
+      console.log(this.authInfo);
     });
   }
 

@@ -113,6 +113,7 @@ namespace EatThisAPI.Services
             var authToken = new AuthToken();
             authToken.UserId = user.Id;
             authToken.Email = user.Email;
+            authToken.RoleId = user.RoleId;
             authToken.Token = result;
             authToken.TokenExpirationDate = expires;
             return authToken;
