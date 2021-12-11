@@ -2,6 +2,8 @@
   [opened]="isCreateModalOpened"
   [isNew]="isNew"
   [ingredient]="ingredient"
+  [selectedValue]="selectedCategoryValue"
+  [ingredientCategories]="ingredientCategories"
 ></app-ingredient-create-modal>
 <app-delete-object-modal
 [opened]="deleteModalOpened"
@@ -37,6 +39,10 @@
       <kendo-grid-column
         field="name"
         title="Nazwa"
+      ></kendo-grid-column>
+      <kendo-grid-column
+        field="ingredientCategory.name"
+        title="Kategoria"
       ></kendo-grid-column>
       <kendo-grid-command-column title="Akcje" [width]="220">
         <ng-template kendoGridCellTemplate let-isNew="isNew">

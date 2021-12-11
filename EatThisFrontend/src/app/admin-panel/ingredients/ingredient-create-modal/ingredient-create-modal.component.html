@@ -16,6 +16,21 @@
         </fieldset>
 
         <fieldset>
+          <legend>Kategoria</legend>
+
+          <label class="k-form-field">
+            <span>Kategoria</span>
+            <kendo-dropdownlist
+              [data]="ingredientCategories"
+              textField="name"
+              valueField="id"
+              [ngModel]="selectedValue"
+              formControlName="ingredientCategory">
+            </kendo-dropdownlist>
+          </label>
+        </fieldset>
+
+        <fieldset>
           <legend>Składnik</legend>
 
           <label class="k-form-field">
@@ -29,7 +44,7 @@
             Anuluj
           </button>
           <button type="button" class="k-button k-primary" (click)="submit()" [disabled]="ingredient.name.length < 1">
-            Dodaj
+            Zapisz
           </button>
         </div>
       </form>

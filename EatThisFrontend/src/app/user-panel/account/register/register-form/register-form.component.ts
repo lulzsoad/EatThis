@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigStore } from 'src/app/app-config/config-store';
 import { RegisterUser } from 'src/app/models/register-user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { AlertService } from 'src/app/services/alert.service';
@@ -32,14 +33,12 @@ export class RegisterFormComponent implements OnInit {
     birthDate: new FormControl(),
   });
   public form: ElementRef;
-  public loadingPanelVisible = false;
 
   constructor(
-    private accountService: AccountService,
     private router: Router,
     private route: ActivatedRoute,
-    private alertService: AlertService,
-    private authService: AuthService
+    private authService: AuthService,
+    private configStore: ConfigStore
   ) {}
 
   ngOnInit(): void {}
@@ -68,14 +67,14 @@ export class RegisterFormComponent implements OnInit {
     if(!this.validateForm()){
       return;
     }
-    this.loadingPanelVisible = true;
+    this.configStore.startLoadingPanel();
     let registerUser: RegisterUser = this.formGroup.value;
     let registerSucceed = await this.authService.signup(registerUser);
     if(!registerSucceed){
-      this.loadingPanelVisible = false;
+      this.configStore.stopLoadingPanel();
       return;
     }
-    this.loadingPanelVisible = false;
+    this.configStore.stopLoadingPanel();
     this.router.navigate(['./success'], {relativeTo: this.route, queryParams: {email: registerUser.email}});
   }
 

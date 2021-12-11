@@ -27,12 +27,20 @@ namespace EatThisAPI.Repositories
             this.context = context;
         }
 
-        public async Task<IEnumerable<Ingredient>> GetAll() => await context.Ingredients.OrderBy(x => x.Name).ToListAsync();
+        public async Task<IEnumerable<Ingredient>> GetAll() => await context.Ingredients.Include(x => x.IngredientCategory).OrderBy(x => x.Name).ToListAsync();
         public async Task<Ingredient> GetById(int id) => await context.Ingredients.FirstOrDefaultAsync(x => x.Id == id);
         public async Task<int> Add(Ingredient ingredient)
         {
             context.Ingredients.Add(ingredient);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex.InnerException;
+            }
+            
             return ingredient.Id;
         }
         public async Task Delete(Ingredient ingredient)
@@ -45,6 +53,7 @@ namespace EatThisAPI.Repositories
         {
             var ingredientToEdit = await context.Ingredients.FirstOrDefaultAsync(x => x.Id == ingredient.Id);
             ingredientToEdit.Name = ingredient.Name;
+            ingredientToEdit.IngredientCategoryId = ingredient.IngredientCategoryId;
             context.SaveChanges();
             return ingredientToEdit;
         }

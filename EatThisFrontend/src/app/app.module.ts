@@ -56,6 +56,7 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { ConfigStore } from './app-config/config-store';
 
 
 @NgModule({
@@ -125,6 +126,7 @@ import { AdminGuard } from './guards/admin.guard';
     AuthGuard,
     EmployeeGuard,
     AdminGuard,
+    ConfigStore,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]

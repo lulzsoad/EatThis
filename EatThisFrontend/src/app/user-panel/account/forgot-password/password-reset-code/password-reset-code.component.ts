@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigStore } from 'src/app/app-config/config-store';
 import { PasswordResetCodeCheckModel } from 'src/app/models/password-reset-code-check.model';
 import { PasswordReset } from 'src/app/models/password-reset.model';
 import { AccountService } from 'src/app/services/account.service';
@@ -15,7 +16,6 @@ export class PasswordResetCodeComponent implements OnInit {
   public code: string = "";
   public email: string;
   public isPasswordResetCodeCoreect = false;
-  public loadingPanelVisible = false;
   public changePasswordForm: FormGroup = new FormGroup({
     newPassword: new FormControl(''),
     confirmPassword: new FormControl('')
@@ -26,7 +26,13 @@ export class PasswordResetCodeComponent implements OnInit {
   private response: PasswordReset = new PasswordReset();
 
 
-  constructor(private route: ActivatedRoute, private router: Router, private accountService: AccountService, private alertService: AlertService) { 
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private accountService: AccountService, 
+    private alertService: AlertService, 
+    private configStore: ConfigStore
+    ) { 
     this.route.queryParams.subscribe(queryParams => {
       this.email = queryParams['email'];
       this.sr = queryParams['sr'];
@@ -51,28 +57,28 @@ export class PasswordResetCodeComponent implements OnInit {
     }
 
     async checkPasswordResetCode(){
-      this.loadingPanelVisible = true;
+      this.configStore.startLoadingPanel();
       this.request.code = this.code;
       this.request.email = this.email;
       this.response = await this.accountService.checkPasswordResetCode(this.request);
       if(this.response.email != null && this.response.securedRoute != null){
         this.isPasswordResetCodeCoreect = true;
-        this.loadingPanelVisible = false;
+        this.configStore.stopLoadingPanel();
       }
-      this.loadingPanelVisible = false;
+      this.configStore.stopLoadingPanel();
   }
 
   async changePassword(){
-    this.loadingPanelVisible = true;
+    this.configStore.startLoadingPanel();
     let validateOk = await this.validateChangePasswordForm();
     if(!validateOk){
-      this.loadingPanelVisible = false;
+      this.configStore.stopLoadingPanel();
       return;
     }
   
     let response = await this.accountService.changePassword(this.response, this.changePasswordForm.value.newPassword);
     this.router.navigate(['../../']);
-    this.loadingPanelVisible = false;
+    this.configStore.stopLoadingPanel();
   }
 
   validateChangePasswordForm(): boolean{

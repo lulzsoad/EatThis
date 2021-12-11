@@ -56,7 +56,11 @@ namespace EatThisAPI.Services
 
         public async Task<int> Add(IngredientDto ingredientDto)
         {
-            var ingredient = mapper.Map<Ingredient>(ingredientDto);
+            var ingredient = new Ingredient
+            {
+                Name = ingredientDto.Name,
+                IngredientCategoryId = ingredientDto.IngredientCategory.Id
+            };
 
             ingredientValidator.IsNull(ingredient);
             await ingredientValidator.CheckIfAlreadyExists(ingredient);
@@ -74,7 +78,12 @@ namespace EatThisAPI.Services
 
         public async Task<IngredientDto> Update(IngredientDto ingredientDto)
         {
-            var ingredient = mapper.Map<Ingredient>(ingredientDto);
+            var ingredient = new Ingredient
+            {
+                Id = ingredientDto.Id,
+                Name = ingredientDto.Name,
+                IngredientCategoryId = ingredientDto.IngredientCategory.Id
+            };
             ingredientValidator.IsNull(ingredient);
             await ingredientValidator.CheckIfNotFound(ingredientDto.Id);
             ingredient = await ingredientRepository.Update(ingredient);

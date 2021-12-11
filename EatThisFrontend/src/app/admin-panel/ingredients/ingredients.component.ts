@@ -7,6 +7,9 @@ import { Ingredient } from 'src/app/models/ingredient.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { process } from "@progress/kendo-data-query";
 import { DeleteObject, WindowService } from 'src/app/services/window.service';
+import { IngredientCategoryService } from 'src/app/services/ingredient-category.service';
+import { ConfigStore } from 'src/app/app-config/config-store';
+import { IngredientCategory } from 'src/app/models/ingredient-category.model';
 
 @Component({
   selector: 'app-ingredients',
@@ -24,6 +27,8 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   public skip = 0;
   public isNew = false;
   public ingredient: Ingredient;
+  public selectedCategoryValue;
+  public ingredientCategories: IngredientCategory[]
 
   public formGroup: FormGroup;
   public loadingPanelVisible = false;
@@ -32,13 +37,21 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   private ingredientSaveListener: Subscription;
   private ingredientDeleteListener: Subscription;
 
-  constructor(private ingredientService: IngredientService, private windowService: WindowService) {
+  constructor(
+    private ingredientService: IngredientService, 
+    private windowService: WindowService, 
+    private ingredientCategoryService: IngredientCategoryService,
+    private configStore: ConfigStore) 
+    {
     this.addListeners();
   }
 
   public async ngOnInit(): Promise<void> {
+    this.configStore.startLoadingPanel();
     await this.getAll();
     await this.loadData();
+    await this.getIngredientCategories();
+    this.configStore.stopLoadingPanel();
   }
 
   async ngOnDestroy(): Promise<void> {
@@ -79,6 +92,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
 
   private async saveIngredient(ingredient: Ingredient){
     this.loadingPanelVisible = true;
+    console.log(ingredient);
     await this.ingredientService.add(ingredient);
     await this.ngOnInit();
     this.isCreateModalOpened = false;
@@ -97,19 +111,20 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   private async getAll(){
     this.loadingPanelVisible = true;
     this.ingredients = await this.ingredientService.getAll();
-    console.log('ingredients component:' + this.ingredients)
     this.loadingPanelVisible = false;
   }
 
   public addHandler() {
     this.isCreateModalOpened = true;
     this.isNew = true;
-    this.ingredient = {id: 0, name: ""}
+    this.ingredient = {id: 0, name: "", ingredientCategory: null}
+    this.selectedCategoryValue = this.ingredientCategories[0];
   }
 
   public editHandler({dataItem }: any) {
     this.isCreateModalOpened = true;
     this.ingredient = dataItem;
+    this.selectedCategoryValue = this.ingredient.ingredientCategory;
     this.isNew = false;
   }
 
@@ -131,6 +146,11 @@ export class IngredientsComponent implements OnInit, OnDestroy {
     }
     let event: any = { target: { value: "" } };
     this.onFilter(event);
+  }
+
+  async getIngredientCategories(){
+    this.ingredientCategories = await this.ingredientCategoryService.getAll();
+    this.selectedCategoryValue = this.ingredient?.ingredientCategory;
   }
 
   public onFilter(event: any): void {
