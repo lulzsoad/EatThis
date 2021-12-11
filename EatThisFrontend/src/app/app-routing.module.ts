@@ -6,7 +6,9 @@ import { CategoriesComponent } from './admin-panel/categories/categories.compone
 import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { UnitsComponent } from './admin-panel/units/units.component';
+import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { EmployeeGuard } from './guards/employee.guard';
 import { AccountComponent } from './user-panel/account/account.component';
 import { ActivateComponent } from './user-panel/account/activate/activate.component';
 import { ForgotPasswordComponent } from './user-panel/account/forgot-password/forgot-password.component';
@@ -31,12 +33,12 @@ const routes: Routes = [
     ]}
   ]},
   
-  {path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard], children: [
-    {path: 'ingredients', component: IngredientsComponent},
-    {path: 'ingredient-categories', component: IngredientCategoriesComponent},
-    {path: 'categories', component: CategoriesComponent},
-    {path: 'units', component: UnitsComponent},
-    {path: 'create-recipe', component: AdminRecipeCreateComponent}
+  {path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard, EmployeeGuard], children: [
+    {path: 'ingredients', component: IngredientsComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'ingredient-categories', component: IngredientCategoriesComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'units', component: UnitsComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'create-recipe', component: AdminRecipeCreateComponent, canActivate: [AuthGuard, AdminGuard]}
   ]}
 ];
 
