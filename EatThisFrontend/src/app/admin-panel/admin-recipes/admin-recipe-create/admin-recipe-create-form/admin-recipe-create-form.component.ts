@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { groupBy, GroupResult } from '@progress/kendo-data-query';
+import { Image } from "src/app/models/image.model";
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { Category } from 'src/app/models/category.model';
 import { IngredientQuantity } from 'src/app/models/ingredient-quantity.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
+import { Step } from 'src/app/models/step.model';
 import { Unit } from 'src/app/models/unit.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
@@ -24,7 +26,12 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   public ingredientsQuantity: IngredientQuantity[] = [];
   public categories: Category[];
   public units: Unit[];
-  public recipe: Recipe;
+  public steps: Step[] = [];
+  public stepImages: Array<any> = [];
+  public recipe: Recipe = new Recipe();
+  public uploadSaveUrl = "";
+  public uploadRemoveUrl = "";
+  public uploadFileRestrictions;
   constructor(
     private categorySerice: CategoryService,
     private ingredientService: IngredientService,
@@ -44,6 +51,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
       isVisivble: new FormControl(),
       ingredientQuantities: new FormControl(),
       steps: new FormControl(),
+      stepImages: new FormControl(),
       category: new FormControl(),
       image: new FormControl(),
       time: new FormControl(),
@@ -51,7 +59,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
     });
 
     await Promise.all([this.getIngredients(), this.getCategories(), this.getUnits()]);
-
+    this.uploadFileRestrictions = this.configStore.getImageUploadFileRestriction();
     this.configStore.stopLoadingPanel();
   }
 
@@ -77,5 +85,14 @@ export class AdminRecipeCreateFormComponent implements OnInit {
         this.ingredientsQuantity[i].unit = this.units[0];
       }
     }
+  }
+
+  addStep(){
+    this.steps.push(new Step());
+    this.stepImages.push()
+  }
+
+  addRecipe(){
+    this.form.markAllAsTouched();
   }
 }

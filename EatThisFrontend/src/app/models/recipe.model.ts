@@ -1,4 +1,4 @@
-import { Image } from "@progress/kendo-drawing";
+import { Image } from "./image.model";
 import { Category } from "./category.model";
 import { IngredientQuantity } from "./ingredient-quantity.model";
 import { Step } from "./step.model";

@@ -1,7 +1,7 @@
-import { Image } from "@progress/kendo-drawing";
-
+import { Image } from "./image.model";
 export class Step{
     id: number;
     description: string;
+    order: number;
     image: Image;
 }

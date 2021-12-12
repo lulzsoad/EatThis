@@ -48,12 +48,28 @@
                     <kendo-formerror>Błąd: Opis jest wymagany</kendo-formerror>
                 </kendo-formfield>
                 <kendo-formfield>
+                  <kendo-label>Obraz przepisu</kendo-label>
+                  <kendo-fileselect 
+                    [multiple]="false"
+                    [(ngModel)]="recipe.image"
+                    formControlName="image"
+                    [restrictions]="uploadFileRestrictions"
+                    required>
+                    <kendo-fileselect-messages
+                      dropFilesHere="Upuść obraz tutaj (max 2MB.)"
+                      select="Załaduj obraz">
+                    </kendo-fileselect-messages>
+                  </kendo-fileselect>
+                  <kendo-formhint>Załaduj obraz przepisu, który będzie widoczny jako główne zdjęcie (max. 2MB)</kendo-formhint>
+                  <kendo-formerror>Błąd: Zbyt duży plik lub zły format pliku</kendo-formerror>
+                </kendo-formfield>
+                <kendo-formfield>
                   <kendo-floatinglabel [text]="'Dla ilu osób przeznaczone jest danie?'">
                     <kendo-textbox
                       [formControlName]="'personQuantity'"
                     ></kendo-textbox>
                   </kendo-floatinglabel>
-                  <kendo-formhint>Wprowadź podnazwę przepisu</kendo-formhint>
+                  <kendo-formhint>Wprowadź opis przepisu</kendo-formhint>
               </kendo-formfield>
               <kendo-formfield>
                 <kendo-floatinglabel [text]="'Jak długo trwa przygotowanie dania? (min.)'">
@@ -61,7 +77,7 @@
                     [formControlName]="'time'"
                   ></kendo-numerictextbox>
                 </kendo-floatinglabel>
-                <kendo-formhint>Wprowadź podnazwę przepisu</kendo-formhint>
+                <kendo-formhint>Wprowadź liczbę w minutach</kendo-formhint>
             </kendo-formfield>
                 <kendo-formfield>
                     <kendo-label [text]="'Składniki'"></kendo-label>
@@ -107,6 +123,32 @@
                       </kendo-dropdownlist>
                     </div>
                 </div>
+                <button (click)="addStep()" look="clear">
+                  Dodaj krok
+                </button>
+                <div class="col-12 row d-flex flex-row m-1" *ngFor="let step of steps; let i = index">
+                  <div><h6>Krok {{i + 1}}</h6></div>
+                  <div class="col-12">
+                    <kendo-textarea [rows]="6">
+
+                    </kendo-textarea>
+                  </div>
+                  <div>
+                    <kendo-fileselect 
+                      [multiple]="false"
+                      [(ngModel)]="stepImages[i]"
+                      formControlName="stepImages"
+                      [restrictions]="uploadFileRestrictions">
+                    <kendo-fileselect-messages
+                      dropFilesHere="Upuść obraz tutaj (max 2MB.)"
+                      select="Załaduj obraz">
+                    </kendo-fileselect-messages>
+                    </kendo-fileselect>
+                    <kendo-formhint>Załaduj obraz kroku, który będzie widoczny jako zdjęcie obok opisu czynności (max. 2MB)</kendo-formhint>
+                  </div>
+                  <div></div>
+                </div>
+                <button (click)="addRecipe()">Dodaj przepis</button>
               </form>
         </div>
     </div>

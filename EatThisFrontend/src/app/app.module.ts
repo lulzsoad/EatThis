@@ -57,6 +57,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { ConfigStore } from './app-config/config-store';
+import { UploadsModule } from '@progress/kendo-angular-upload';
+
 
 
 @NgModule({
@@ -111,6 +113,7 @@ import { ConfigStore } from './app-config/config-store';
     LabelModule,
     DropDownsModule,
     ToastrModule.forRoot(),
+    UploadsModule,
   ],
   providers: [
     HttpClient,
