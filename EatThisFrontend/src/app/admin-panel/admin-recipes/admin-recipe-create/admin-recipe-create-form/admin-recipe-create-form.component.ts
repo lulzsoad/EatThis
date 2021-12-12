@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { groupBy, GroupResult } from '@progress/kendo-data-query';
+import { ConfigStore } from 'src/app/app-config/config-store';
 import { Category } from 'src/app/models/category.model';
 import { IngredientQuantity } from 'src/app/models/ingredient-quantity.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
@@ -16,21 +18,22 @@ import { UnitService } from 'src/app/services/unit.service';
 })
 export class AdminRecipeCreateFormComponent implements OnInit {
   public form: FormGroup
-  public ingredients: Ingredient[];
+  public ingredients: any[];
+  public groupedIngredients: GroupResult[];
   public chosenIngredients: Ingredient[] = [];
-  public ingredientsQuantity: IngredientQuantity[];
+  public ingredientsQuantity: IngredientQuantity[] = [];
   public categories: Category[];
   public units: Unit[];
-  public loadingPanelVisible = false;
   public recipe: Recipe;
   constructor(
     private categorySerice: CategoryService,
     private ingredientService: IngredientService,
-    private unitService: UnitService
+    private unitService: UnitService,
+    private configStore: ConfigStore
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.loadingPanelVisible = true;
+    this.configStore.startLoadingPanel();
 
     this.form = new FormGroup({
       id: new FormControl(),
@@ -47,15 +50,14 @@ export class AdminRecipeCreateFormComponent implements OnInit {
       personQuantity: new FormControl(),
     });
 
-    await this.getIngredients();
-    await this.getCategories();
-    await this.getUnits();
+    await Promise.all([this.getIngredients(), this.getCategories(), this.getUnits()]);
 
-    this.loadingPanelVisible = false;
+    this.configStore.stopLoadingPanel();
   }
 
   async getIngredients(){
     this.ingredients = await this.ingredientService.getAll();
+    this.groupedIngredients = groupBy(this.ingredients, [{field: "ingredientCategory.name"},]);
   }
 
   async getCategories(){
@@ -64,5 +66,16 @@ export class AdminRecipeCreateFormComponent implements OnInit {
 
   async getUnits(){
     this.units = await this.unitService.getAll();
+  }
+
+  ingredientsValueChange(value: any){
+    for(let i = 0; i < value.length; i++){
+      if(!this.ingredientsQuantity[i]){
+        this.ingredientsQuantity[i] = new IngredientQuantity();
+        this.ingredientsQuantity[i].description = "";
+        this.ingredientsQuantity[i].quantity = 0;
+        this.ingredientsQuantity[i].unit = this.units[0];
+      }
+    }
   }
 }

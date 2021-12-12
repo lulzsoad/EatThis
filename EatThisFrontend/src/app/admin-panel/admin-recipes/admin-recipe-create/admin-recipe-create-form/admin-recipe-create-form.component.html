@@ -48,25 +48,64 @@
                     <kendo-formerror>Błąd: Opis jest wymagany</kendo-formerror>
                 </kendo-formfield>
                 <kendo-formfield>
+                  <kendo-floatinglabel [text]="'Dla ilu osób przeznaczone jest danie?'">
+                    <kendo-textbox
+                      [formControlName]="'personQuantity'"
+                    ></kendo-textbox>
+                  </kendo-floatinglabel>
+                  <kendo-formhint>Wprowadź podnazwę przepisu</kendo-formhint>
+              </kendo-formfield>
+              <kendo-formfield>
+                <kendo-floatinglabel [text]="'Jak długo trwa przygotowanie dania? (min.)'">
+                  <kendo-numerictextbox
+                    [formControlName]="'time'"
+                  ></kendo-numerictextbox>
+                </kendo-floatinglabel>
+                <kendo-formhint>Wprowadź podnazwę przepisu</kendo-formhint>
+            </kendo-formfield>
+                <kendo-formfield>
                     <kendo-label [text]="'Składniki'"></kendo-label>
                       <kendo-multiselect
                       [ngModelOptions]="{standalone: true}"
-                        [data]="ingredients"
+                        [data]="groupedIngredients"
                         [(ngModel)]="chosenIngredients"
                         [valueField]="'id'"
                         [textField]="'name'"
+                        (valueChange)="ingredientsValueChange($event)"
                         required
                       ></kendo-multiselect>
                     <kendo-formhint>Wybierz składniki</kendo-formhint>
                     <kendo-formerror>Błąd: Składniki są wymagane!</kendo-formerror>
                 </kendo-formfield>
-                <div class="col-12 row" *ngFor="let ingredient of chosenIngredients">
-                    <div class="col-3">{{ingredient.name}}</div>
-                    <div class="col-3">
-                        
+                <div class="col-12 row d-flex flex-row m-1" *ngFor="let ingredient of chosenIngredients; let i = index">
+                    <div class="col-2 d-flex flex-row"><p class="m-auto">{{ingredient.name}}</p></div>
+                    <div class="col-6">
+                        <kendo-textbox
+                        placeholder="Opis"
+                        [clearButton]="true"
+                        [(ngModel)]="ingredientsQuantity[i].description"
+                        [ngModelOptions]="{standalone: true}"
+                      ></kendo-textbox>
                     </div>
-                    <div class="col-3"></div>
-                    <div class="col-3"></div>
+                    <div class="col-2">
+                      <kendo-numerictextbox
+                        [(ngModel)]="ingredientsQuantity[i].quantity"
+                        [ngModelOptions]="{standalone: true}"
+                      >
+                      </kendo-numerictextbox>
+                    </div>
+                    <div class="col-2">
+                      <kendo-dropdownlist
+                        [data]="units"
+                        textField="name"
+                        valueField="id"
+                        [value]="units[0]"
+                        [(ngModel)]="ingredientsQuantity[i].unit"
+                        [ngModelOptions]="{standalone: true}"
+                        required
+                      >
+                      </kendo-dropdownlist>
+                    </div>
                 </div>
               </form>
         </div>
@@ -75,19 +114,5 @@
         <app-admin-recipe-create-preview>
 
         </app-admin-recipe-create-preview>
-    </div>
-</div>
-
-
-<div class="k-loading-panel" *ngIf="loadingPanelVisible">
-    <div class="k-loading-panel-mask"></div>
-    <div class="k-loading-panel-wrapper">
-      <kendo-loader
-        type="infinite-spinner"
-        themeColor="primary"
-        size="large"
-      >
-      </kendo-loader>
-      <div class="k-loading-panel-text">Pobieram<br> dane...</div>
     </div>
 </div>

@@ -5,6 +5,9 @@ export class IngredientQuantity{
     id: number;
     quantity: number;
     description: string;
+    unitId: number;
     unit: Unit;
+    ingredientId: number;
     ingredient: Ingredient;
+    recipeId: number;
 }
