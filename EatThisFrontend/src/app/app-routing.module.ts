@@ -14,6 +14,7 @@ import { ActivateComponent } from './user-panel/account/activate/activate.compon
 import { ForgotPasswordComponent } from './user-panel/account/forgot-password/forgot-password.component';
 import { PasswordResetCodeComponent } from './user-panel/account/forgot-password/password-reset-code/password-reset-code.component';
 import { LoginComponent } from './user-panel/account/login/login.component';
+import { MyAccountComponent } from './user-panel/account/my-account/my-account.component';
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
 import { RegisterComponent } from './user-panel/account/register/register.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
       {path: 'activate', component: ActivateComponent},
       {path: 'forgot-password', component: ForgotPasswordComponent},
       {path: 'forgot-password/code', component: PasswordResetCodeComponent},
+      {path: 'my-account', component: MyAccountComponent}
     ]}
   ]},
   

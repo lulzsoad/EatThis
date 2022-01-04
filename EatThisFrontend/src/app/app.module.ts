@@ -58,6 +58,7 @@ import { EmployeeGuard } from './guards/employee.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { ConfigStore } from './app-config/config-store';
 import { UploadsModule } from '@progress/kendo-angular-upload';
+import { MyAccountComponent } from './user-panel/account/my-account/my-account.component';
 
 
 
@@ -91,7 +92,8 @@ import { UploadsModule } from '@progress/kendo-angular-upload';
     ForgotPasswordNewPasswordComponent,
     SpinnerComponent,
     AccountComponent,
-    UserNavigationComponent
+    UserNavigationComponent,
+    MyAccountComponent
   ],
   imports: [
     BrowserModule,

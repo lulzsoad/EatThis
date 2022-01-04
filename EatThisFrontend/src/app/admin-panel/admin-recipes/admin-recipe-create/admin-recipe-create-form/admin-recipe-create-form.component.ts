@@ -12,6 +12,7 @@ import { Unit } from 'src/app/models/unit.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { UnitService } from 'src/app/services/unit.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-admin-recipe-create-form',
@@ -36,7 +37,8 @@ export class AdminRecipeCreateFormComponent implements OnInit {
     private categorySerice: CategoryService,
     private ingredientService: IngredientService,
     private unitService: UnitService,
-    private configStore: ConfigStore
+    private configStore: ConfigStore,
+    private alertService: AlertService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -51,7 +53,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
       isVisivble: new FormControl(),
       ingredientQuantities: new FormControl(),
       steps: new FormControl(),
-      stepImages: new FormControl(),
+      stepImages: new FormControl([]),
       category: new FormControl(),
       image: new FormControl(),
       time: new FormControl(),
@@ -89,10 +91,28 @@ export class AdminRecipeCreateFormComponent implements OnInit {
 
   addStep(){
     this.steps.push(new Step());
-    this.stepImages.push()
+    this.stepImages.push({})
   }
 
   addRecipe(){
     this.form.markAllAsTouched();
+    
+    this.recipe = this.form.value;
+    for(let step in this.steps){
+      this.recipe.steps = [];
+      this.recipe.steps.push()
+    }
+    console.log(this.recipe);
+    console.log(this.stepImages);
+    if(this.ingredientsQuantity.length < 1){
+      this.alertService.showError("Nie podano składników");
+      return;
+    }
+    if(this.steps.length < 1){
+      this.alertService.showError("Nie podano kroków");
+      return;
+    }
+
+    
   }
 }

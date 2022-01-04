@@ -3,5 +3,5 @@ export class Step{
     id: number;
     description: string;
     order: number;
-    image: Image;
+    image: object;
 }

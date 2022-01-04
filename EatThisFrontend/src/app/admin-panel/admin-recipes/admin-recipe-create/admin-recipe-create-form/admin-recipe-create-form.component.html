@@ -101,12 +101,14 @@
                         [clearButton]="true"
                         [(ngModel)]="ingredientsQuantity[i].description"
                         [ngModelOptions]="{standalone: true}"
+                        required
                       ></kendo-textbox>
                     </div>
                     <div class="col-2">
                       <kendo-numerictextbox
                         [(ngModel)]="ingredientsQuantity[i].quantity"
                         [ngModelOptions]="{standalone: true}"
+                        required
                       >
                       </kendo-numerictextbox>
                     </div>

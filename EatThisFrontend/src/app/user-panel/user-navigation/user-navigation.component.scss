@@ -1,0 +1,10 @@
+.user-icon{
+    margin-left: 10px !important;
+}
+
+.fa-user{
+    cursor: pointer;
+    &:hover{
+        color: rgba(0, 0, 0, 0.644);
+    }
+}
