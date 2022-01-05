@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ConfigStore } from 'src/app/app-config/config-store';
+import { RoleEnum } from 'src/app/enums/role-enum.enum';
 import { Bookmark } from 'src/app/models/bookmark.model';
 import { UserDetails } from 'src/app/models/user-details.model';
+import { AlertService } from 'src/app/services/alert.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-my-account',
@@ -12,11 +16,20 @@ export class MyAccountComponent implements OnInit {
   public selectedBookmark: Bookmark;
   public userDetails: UserDetails;
 
-  constructor() { }
+  public role = RoleEnum;
 
-  ngOnInit(): void {
+  constructor(
+    private userService: UserService,
+    private configStore: ConfigStore,
+    private alertService: AlertService
+    ) { }
+
+  async ngOnInit(): Promise<void> {
+    this.configStore.startLoadingPanel();
+    await this.getUserDetails();
     this.initializeBookmarks();
     this.selectedBookmark = this.bookmarks.filter(x => x.isActive)[0];
+    this.configStore.stopLoadingPanel();
   }
 
   changeBookmark(bookmark: Bookmark){
@@ -34,14 +47,9 @@ export class MyAccountComponent implements OnInit {
     this.bookmarks.push(new Bookmark("AdditionalServices", "Usługi dodatkowe", false, true));
   }
 
-  getUserDetails(){
-    this.userDetails = new UserDetails();
-    this.userDetails.firstName = "Łukasz"
-    this.userDetails.lastName = "Łopata"
-    this.userDetails.email = "konieckoncuf@gmail.com"
-    this.userDetails.dateOfBirth = new Date("1996-07-01")
-    this.userDetails.firstName = "Łukasz"
-    
+  async getUserDetails(){
+    this.userDetails = await this.userService.getCurrentUserDetails().toPromise()
 
+    console.log(this.userDetails);
   }
 }

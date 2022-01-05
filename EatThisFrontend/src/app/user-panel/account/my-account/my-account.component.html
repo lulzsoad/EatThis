@@ -3,14 +3,23 @@
         <div class="col-12 m-10 row">
             <div class="col-3">
                 <div>
-                    <img class="rounded-100" src="../../../../assets/images/default.png" width="300" height="300" alt="default"/>
+                    <img 
+                        class="rounded-100" 
+                        [src]="userDetails.image ? userDetails?.image : '../../../../assets/images/default.png'"
+                        width="300"
+                        height="300"
+                    />
                 </div>
-                <div class="rounded-container">
-                    <h2>Łukasz Łopata</h2>
-                    <h6 class="muted">konieckoncuf@gmail.com</h6>
-                    <p>Jestem kucharzem od 10 lat, pracuję w gastronomi od 15 xDD. Jebać sześdziesiony</p>
-                    <p><b>Data ur.:</b> 01.07.1996r.<br>
-                    <b>Rola:</b> Użytkownik</p>
+                <div class="rounded-container" [ngSwitch]="userDetails.roleId">
+                    <h2>{{userDetails.firstName}} {{userDetails.lastName}}</h2>
+                    <h6 class="muted">{{userDetails.email}}</h6>
+                    <p>{{userDetails.description}}</p>
+                    <p><b>Data ur.:</b> {{userDetails.dateOfBirth}}<br>
+                    <b>Rola: </b> 
+                        <span *ngSwitchCase="role.ADMIN">Admin</span>
+                        <span *ngSwitchCase="role.USER">Użytkownik</span>
+                        <span *ngSwitchCase="role.EMPLOYEE">Pracownik serwisu</span>
+                    </p>
                     <button class="btn btn-warning">Edytuj profil</button>
                 </div>
             </div>
