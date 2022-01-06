@@ -19,8 +19,9 @@ export class HttpErrorInterceptorService implements HttpInterceptor{
         return next.handle(req).pipe(
             catchError(error => {
                 if(error instanceof HttpErrorResponse){
-                    if(error.error instanceof ErrorEvent){
-                        console.log("Error Event");
+                    console.log(error);
+                    if(error.error instanceof ErrorEvent || error.error instanceof ProgressEvent){
+                        this.alertService.showError("Brak połączenia z serwerem");
                     } else{
                         switch(error.status){
                             case 400:
