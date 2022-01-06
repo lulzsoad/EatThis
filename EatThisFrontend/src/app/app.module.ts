@@ -52,7 +52,7 @@ import { AccountComponent } from './user-panel/account/account.component';
 import { UserNavigationComponent } from './user-panel/user-navigation/user-navigation.component';
 import { AuthService } from './services/auth.service';
 import { AppInformationService } from './services/app-information.service';
-import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { AuthInterceptorService } from './services/interceptors/auth-interceptor.service';
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
 import { AdminGuard } from './guards/admin.guard';
@@ -60,6 +60,7 @@ import { ConfigStore } from './app-config/config-store';
 import { UploadsModule } from '@progress/kendo-angular-upload';
 import { MyAccountComponent } from './user-panel/account/my-account/my-account.component';
 import { UserService } from './services/user.service';
+import { HttpErrorInterceptorService } from './services/interceptors/http-error-interceptor.service';
 
 
 
@@ -134,7 +135,8 @@ import { UserService } from './services/user.service';
     AdminGuard,
     ConfigStore,
     UserService,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptorService, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
   ],
   bootstrap: [AppComponent]
 })

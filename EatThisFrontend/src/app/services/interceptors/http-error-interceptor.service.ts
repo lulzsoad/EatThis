@@ -1,0 +1,57 @@
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { ConfigStore } from "src/app/app-config/config-store";
+import { AlertService } from "../alert.service";
+
+@Injectable()
+export class HttpErrorInterceptorService implements HttpInterceptor{
+    constructor(
+        private router: Router, 
+        private alertService: AlertService,
+        private configStore: ConfigStore
+        )
+        { }
+
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
+        return next.handle(req).pipe(
+            catchError(error => {
+                if(error instanceof HttpErrorResponse){
+                    if(error.error instanceof ErrorEvent){
+                        console.log("Error Event");
+                    } else{
+                        switch(error.status){
+                            case 400:
+                                this.alertService.showError(error.error);
+                                break;
+                            case 401:
+                                this.alertService.showError("Nie zautoryzowano użytkownika");
+                                this.router.navigateByUrl("/login");
+                                break;
+                            case 402:
+                                this.alertService.showError("Wymagana płatność");
+                                break;
+                            case 403:
+                                this.alertService.showError("Brak dostępu do zasobu");
+                                this.router.navigateByUrl("");
+                                break;
+                            case 404:
+                                this.alertService.showError("Nie znaleziono zasobu");
+                                break;
+                            case 408:
+                                this.alertService.showError("Koniec czasu oczekiwania na żądanie");
+                                break;
+                            case 500:
+                                this.alertService.showError("Wystąpił wewnętrzny błąd serwera, spróbuj ponownie za kilka minut");
+                                break;
+                        }
+                    }
+                }
+                this.configStore.stopLoadingPanel();
+                return throwError(error.error);
+            })
+        )
+    }
+}

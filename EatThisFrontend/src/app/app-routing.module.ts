@@ -29,9 +29,9 @@ const routes: Routes = [
     ]},
     {path: 'account', component: AccountComponent, children: [
       {path: 'activate', component: ActivateComponent},
+      {path: 'my-account', component: MyAccountComponent, canActivate: [AuthGuard]},
       {path: 'forgot-password', component: ForgotPasswordComponent},
       {path: 'forgot-password/code', component: PasswordResetCodeComponent},
-      {path: 'my-account', component: MyAccountComponent}
     ]}
   ]},
   
