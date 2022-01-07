@@ -100,7 +100,9 @@ namespace EatThisAPI
             services.AddScoped<IUserHelper, UserHelper>();
 
             services.AddAutoMapper(this.GetType().Assembly);
-            services.AddControllers();
+
+            services.AddControllers().AddNewtonsoftJson();
+
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddSwaggerGen(c =>
             {

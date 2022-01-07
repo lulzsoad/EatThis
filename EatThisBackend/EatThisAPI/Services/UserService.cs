@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using EatThisAPI.Helpers;
+using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
 using EatThisAPI.Models.DTOs.User;
 using EatThisAPI.Repositories;
 using EatThisAPI.Validators;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ namespace EatThisAPI.Services
     {
         Task<UserDto> GetUserById(int id);
         Task<UserDetails> GetCurrentUserDetails();
+        Task<UserDetails> UpdateCurrentUser(JsonPatchDocument userDetails);
     }
     public class UserService : IUserService
     {
@@ -67,6 +70,16 @@ namespace EatThisAPI.Services
             var user = await userRepository.GetUserById(id);
             userValidator.UserExists(user);
             return mapper.Map<UserDto>(user);
+        }
+
+        public async Task<UserDetails> UpdateCurrentUser(JsonPatchDocument userDetailsDocument)
+        {
+            var user = await userHelper.GetCurrentUser();
+            validator.IsObjectNull(userDetailsDocument);
+            userValidator.UserExists(user);
+            user = await userRepository.UpdateUser(user, userDetailsDocument);
+            var userDetails = mapper.Map<UserDetails>(user);
+            return userDetails;
         }
     }
 }

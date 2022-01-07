@@ -62,7 +62,9 @@ namespace EatThisAPI.Helpers
                 .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
                 .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
                 .ForMember(x => x.BirthDate, y => y.MapFrom(z => z.BirthDate))
-                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role));
+                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role))
+                .ForMember(x => x.Description, y => y.MapFrom(z => z.Description))
+                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image));
 
             CreateMap<User, UserDto>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
@@ -70,8 +72,31 @@ namespace EatThisAPI.Helpers
                 .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
                 .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
                 .ForMember(x => x.BirthDate, y => y.MapFrom(z => z.BirthDate))
-                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role));
+                .ForMember(x => x.Role, y => y.MapFrom(z => z.Role))
+                .ForMember(x => x.Description, y => y.MapFrom(z => z.Description))
+                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image));
 
+            CreateMap<User, UserDetails>()
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.FirstName, y => y.MapFrom(z => z.FirstName))
+                .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
+                .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
+                .ForMember(x => x.DateOfBirth, y => y.MapFrom(z => z.BirthDate))
+                .ForMember(x => x.RegisterDate, y => y.MapFrom(z => z.RegisterDate))
+                .ForMember(x => x.RoleId, y => y.MapFrom(z => z.RoleId))
+                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image))
+                .ForMember(x => x.Description, y => y.MapFrom(z => z.Description));
+
+            CreateMap<UserDetails, User>()
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.FirstName, y => y.MapFrom(z => z.FirstName))
+                .ForMember(x => x.LastName, y => y.MapFrom(z => z.LastName))
+                .ForMember(x => x.Email, y => y.MapFrom(z => z.Email))
+                .ForMember(x => x.BirthDate, y => y.MapFrom(z => z.DateOfBirth))
+                .ForMember(x => x.RegisterDate, y => y.MapFrom(z => z.RegisterDate))
+                .ForMember(x => x.RoleId, y => y.MapFrom(z => z.RoleId))
+                .ForMember(x => x.Image, y => y.MapFrom(z => z.Image))
+                .ForMember(x => x.Description, y => y.MapFrom(z => z.Description));
         }
     }
 }

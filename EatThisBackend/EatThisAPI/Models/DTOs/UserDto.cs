@@ -13,5 +13,7 @@ namespace EatThisAPI.Models.DTOs
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
         public Role Role { get; set; }
+        public string Image { get; set; }
+        public string Description { get; set; }
     }
 }

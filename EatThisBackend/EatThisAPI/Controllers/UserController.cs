@@ -2,6 +2,7 @@
 using EatThisAPI.Models.DTOs.User;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,14 @@ namespace EatThisAPI.Controllers
         public async Task<ActionResult<UserDetails>> GetCurrentUserDetails()
         {
             return Ok(await userService.GetCurrentUserDetails());
+        }
+
+        [Authorize]
+        [HttpPatch]
+        [Route("currentUser")]
+        public async Task<ActionResult<UserDetails>> PatchCurrentUser([FromBody]JsonPatchDocument userDetails)
+        {
+            return Ok(await userService.UpdateCurrentUser(userDetails));
         }
     }
 }

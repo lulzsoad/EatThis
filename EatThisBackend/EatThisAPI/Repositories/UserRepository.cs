@@ -1,5 +1,7 @@
 ﻿using EatThisAPI.Database;
 using EatThisAPI.Models;
+using EatThisAPI.Models.DTOs.User;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace EatThisAPI.Repositories
         Task<bool> EmailExists(string email);
         Task<User> GetUserByEmail(string email);
         Task<User> GetUserById(int id);
+        Task<User> UpdateUser(User user, object updatedUser);
     }
     public class UserRepository : IUserRepository
     {
@@ -47,6 +50,17 @@ namespace EatThisAPI.Repositories
             return await context.Users
                 .Include(x => x.Role)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<User> UpdateUser(User user, object updatedUser)
+        {
+            var userFromDb = context.Users.FirstOrDefault(x => x.Id == user.Id);
+            if(userFromDb != null)
+            {
+                (updatedUser as JsonPatchDocument).ApplyTo(userFromDb);
+                await context.SaveChangesAsync();
+            }
+            return userFromDb;
         }
     }
 }
