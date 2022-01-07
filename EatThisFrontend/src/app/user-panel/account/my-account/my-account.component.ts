@@ -1,8 +1,11 @@
 import { Component, OnInit} from '@angular/core';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RoleEnum } from 'src/app/enums/role-enum.enum';
+import { Operation, OperationEnum} from 'src/app/models/app-models/patch-operations.model';
 import { Bookmark } from 'src/app/models/bookmark.model';
 import { UserDetails } from 'src/app/models/user-details.model';
+import { AlertService } from 'src/app/services/alert.service';
+import { DateFormat } from 'src/app/services/app-services/date.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -15,12 +18,15 @@ export class MyAccountComponent implements OnInit {
   public selectedBookmark: Bookmark;
   public userDetails: UserDetails;
   public userImage: string = "";
+  public editMode: boolean = false;
+  public DateFormat = DateFormat;
 
   public role = RoleEnum;
 
   constructor(
     private userService: UserService,
     private configStore: ConfigStore,
+    private alertService: AlertService
     ) { }
 
   async ngOnInit(): Promise<void> {
@@ -51,5 +57,31 @@ export class MyAccountComponent implements OnInit {
     this.userDetails = await this.userService.getCurrentUserDetails().toPromise()
     this.userImage = this.userDetails?.image != null ? this.userDetails?.image : "";
     console.log(this.userDetails);
+  }
+
+  editProfile(){
+    this.editMode = !this.editMode;
+  }
+
+  async saveProfile(){
+    if(this.userDetails.firstName.length < 1){
+      this.alertService.showError("Imię nie może być puste");
+    }else if(this.userDetails.lastName.length < 1){
+      this.alertService.showError("Nazwisko nie może być puste");
+    } else{
+      let patchOperations = [];
+
+      patchOperations.push(new Operation(OperationEnum.REPLACE, "firstName", this.userDetails.firstName));
+      patchOperations.push(new Operation(OperationEnum.REPLACE, "lastName", this.userDetails.lastName));
+      patchOperations.push(new Operation(OperationEnum.REPLACE, "description", this.userDetails.description));
+      patchOperations.push(new Operation(OperationEnum.REPLACE, "birthDate", this.userDetails.dateOfBirth));
+      
+      this.configStore.startLoadingPanel();
+      this.userDetails = await this.userService.patchCurrentUser(patchOperations).toPromise();
+      this.configStore.stopLoadingPanel();
+
+      this.editMode = false;
+      this.alertService.showSuccess("Zaktualizowano");
+    }
   }
 }

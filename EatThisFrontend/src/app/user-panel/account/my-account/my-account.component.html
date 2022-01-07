@@ -10,16 +10,46 @@
                     />
                 </div>
                 <div class="rounded-container" [ngSwitch]="userDetails?.roleId">
-                    <h2>{{userDetails?.firstName}} {{userDetails?.lastName}}</h2>
-                    <h6 class="muted">{{userDetails?.email}}</h6>
-                    <p>{{userDetails?.description}}</p>
-                    <p><b>Data ur.:</b> {{userDetails?.dateOfBirth}}<br>
-                    <b>Rola: </b> 
-                        <span *ngSwitchCase="role.ADMIN">Admin</span>
-                        <span *ngSwitchCase="role.USER">Użytkownik</span>
-                        <span *ngSwitchCase="role.EMPLOYEE">Pracownik serwisu</span>
-                    </p>
-                    <button class="btn btn-warning">Edytuj profil</button>
+                    <div *ngIf="!editMode">
+                        <h2>{{userDetails?.firstName}} {{userDetails?.lastName}}</h2>
+                        <h6 class="text-muted">{{userDetails?.email}}</h6>
+                        <p>{{userDetails?.description}}</p>
+                        <p><b>Data ur.:</b> {{DateFormat.formatDate(userDetails?.dateOfBirth)}}<br>
+                        <b>Rola: </b> 
+                            <span *ngSwitchCase="role.ADMIN">Admin</span>
+                            <span *ngSwitchCase="role.USER">Użytkownik</span>
+                            <span *ngSwitchCase="role.EMPLOYEE">Pracownik serwisu</span>
+                        </p>
+                    </div>
+                    <div *ngIf="editMode">
+                        <div class="form-group">
+                            <label><b>Imię</b></label>
+                            <input class="form-control" [(ngModel)]="userDetails.firstName"/>
+                        </div>
+                        <div class="form-group">
+                            <label><b>Nazwisko</b></label>
+                            <input class="form-control" [(ngModel)]="userDetails.lastName"/>
+                        </div>
+                        <div class="form-group">
+                            <label><b>Opis</b></label>
+                            <textarea class="form-control" [(ngModel)]="userDetails.description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><b>Data urodzenia</b></label>
+                            <input class="form-control" type="date" [(ngModel)]="userDetails.dateOfBirth"/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="btn-group">
+                        <button *ngIf="editMode" class="btn btn-success" (click)="saveProfile()">
+                            Zapisz
+                        </button>
+                        <button 
+                            [ngClass]="editMode ? 'btn btn-danger' : 'btn btn-warning'" 
+                            (click)="editProfile()">
+                                {{editMode ? 'Anuluj': 'Edytuj profil'}}
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col-9">
