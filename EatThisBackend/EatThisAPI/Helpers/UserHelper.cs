@@ -1,5 +1,6 @@
 ﻿using EatThisAPI.Models;
 using EatThisAPI.Repositories;
+using EatThisAPI.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,13 @@ namespace EatThisAPI.Helpers
     {
         private IHttpContextAccessor httpContextAccessor;
         private IUserRepository userRepository;
+        private IUserValidator userValidator;
 
-        public UserHelper(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public UserHelper(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository, IUserValidator userValidator)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userRepository = userRepository;
+            this.userValidator = userValidator;
         }
 
         public async Task<User> GetCurrentUser()
@@ -32,6 +35,7 @@ namespace EatThisAPI.Helpers
             var userId = userClaim.FindFirst(ClaimTypes.NameIdentifier).Value;
             int id = Convert.ToInt32(userId);
             var user = await userRepository.GetUserById(id);
+            userValidator.UserExists(user);
             return user;
         }
     }

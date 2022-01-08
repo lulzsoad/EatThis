@@ -5,7 +5,7 @@ import { ConfigStore } from 'src/app/app-config/config-store';
 import { PasswordResetCodeCheckModel } from 'src/app/models/password-reset-code-check.model';
 import { PasswordReset } from 'src/app/models/password-reset.model';
 import { AccountService } from 'src/app/services/account.service';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService } from 'src/app/services/app-services/alert.service';
 
 @Component({
   selector: 'app-password-reset-code',

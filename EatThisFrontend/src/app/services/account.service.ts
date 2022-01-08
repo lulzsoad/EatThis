@@ -9,7 +9,7 @@ import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-
 import { PasswordReset } from "../models/password-reset.model";
 import { RegisterUser } from "../models/register-user.model";
 import { User } from "../models/user.model";
-import { AlertService } from "./alert.service";
+import { AlertService } from "./app-services/alert.service";
 
 
 @Injectable()

@@ -12,7 +12,13 @@ import { Unit } from 'src/app/models/unit.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { UnitService } from 'src/app/services/unit.service';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService } from 'src/app/services/app-services/alert.service';
+import { Difficulty, RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
+import { FileService } from 'src/app/services/app-services/file.service';
+import { SelectEvent } from '@progress/kendo-angular-upload';
+import { convertTypeAcquisitionFromJson } from 'typescript';
+import { RecipeService } from 'src/app/services/recipe.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-admin-recipe-create-form',
@@ -25,20 +31,26 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   public groupedIngredients: GroupResult[];
   public chosenIngredients: Ingredient[] = [];
   public ingredientsQuantity: IngredientQuantity[] = [];
+
   public categories: Category[];
   public units: Unit[];
   public steps: Step[] = [];
-  public stepImages: Array<any> = [];
+  public stepImages = [];
   public recipe: Recipe = new Recipe();
+  public recipeImage = [];
   public uploadSaveUrl = "";
   public uploadRemoveUrl = "";
   public uploadFileRestrictions;
+  public difficulties: string[] = RecipeDifficulties.difficuilties;
+
+  private isValidationOk: boolean = true;
   constructor(
     private categorySerice: CategoryService,
     private ingredientService: IngredientService,
     private unitService: UnitService,
     private configStore: ConfigStore,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private recipeService: RecipeService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -52,8 +64,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
       difficulty: new FormControl(),
       isVisivble: new FormControl(),
       ingredientQuantities: new FormControl(),
-      steps: new FormControl(),
-      stepImages: new FormControl([]),
+      steps: new FormControl([]),
       category: new FormControl(),
       image: new FormControl(),
       time: new FormControl(),
@@ -78,41 +89,106 @@ export class AdminRecipeCreateFormComponent implements OnInit {
     this.units = await this.unitService.getAll();
   }
 
-  ingredientsValueChange(value: any){
+  ingredientsValueChange(value: Ingredient[]){
+    console.log(value);
     for(let i = 0; i < value.length; i++){
       if(!this.ingredientsQuantity[i]){
         this.ingredientsQuantity[i] = new IngredientQuantity();
         this.ingredientsQuantity[i].description = "";
         this.ingredientsQuantity[i].quantity = 0;
         this.ingredientsQuantity[i].unit = this.units[0];
+        this.ingredientsQuantity[i].ingredient = value[i];
       }
     }
   }
 
   addStep(){
-    this.steps.push(new Step());
+    let step = new Step();
+    step.description = "";
+    step.image = "";
+    step.order = 0;
+    this.steps.push(step);
     this.stepImages.push({})
   }
 
-  addRecipe(){
+  removeStep(index: number){
+    this.steps.splice(index, 1);
+  }
+
+  async addRecipe(){
     this.form.markAllAsTouched();
     
     this.recipe = this.form.value;
-    for(let step in this.steps){
-      this.recipe.steps = [];
-      this.recipe.steps.push()
-    }
     console.log(this.recipe);
+    console.log(this.recipeImage)
     console.log(this.stepImages);
+    this.validate();
+    this.isValidationOk = true;
+    
+    if(this.isValidationOk){
+      this.configStore.startLoadingPanel();
+
+      this.recipe.image = this.recipeImage[0] != null ? await FileService.ConvertToBase64(this.recipeImage[0]) as string : "";
+      this.recipe.ingredientQuantities = this.ingredientsQuantity;
+      this.recipe.isVisible= true;
+      for(let i = 0; i < this.steps.length; i++){
+        this.steps[i].order = i;
+      }
+      this.recipe.steps = this.steps;
+      delete this.recipe.id;
+      console.log(this.recipe);
+
+      await this.recipeService.addRecipe(this.recipe).toPromise();
+
+      this.configStore.stopLoadingPanel();
+      this.alertService.showSuccess("Dodano przepis");
+    } 
+  }
+
+  validate(){
     if(this.ingredientsQuantity.length < 1){
       this.alertService.showError("Nie podano składników");
+      this.isValidationOk = false;
+      return;
+    }else if(this.steps.length < 1){
+      this.alertService.showError("Nie podano kroków");
+      this.isValidationOk = false;
+      return;
+    }else if(this.recipe.category == null){
+      this.alertService.showError("Nie wybrano kategorii");
+      this.isValidationOk = false;
+      return;
+    }else if(this.recipe.name == null || this.recipe.name.length < 1){
+      this.alertService.showError("Nie podano nazwy");
+      this.isValidationOk = false;
+      return;
+    }else if(this.recipeImage == null || this.recipeImage.length < 1){
+      this.alertService.showError("Nie załadowano obrazu");
+      this.isValidationOk = false;
+      return;
+    } else if(this.recipe.difficulty == null || this.recipe.difficulty.length < 1){
+      this.alertService.showError("Nie wybrano trudności");
+      this.isValidationOk = false;
       return;
     }
-    if(this.steps.length < 1){
-      this.alertService.showError("Nie podano kroków");
-      return;
+    for(let x of this.steps){
+      if(x.description == null || x.description.length < 1){
+        this.alertService.showError("Nie uzupełniono opisu kroku");
+        this.isValidationOk = false;
+        return;
+      }
+    }
+    for(let x of this.ingredientsQuantity){
+      if(x.quantity == null || x.quantity == 0){
+        this.alertService.showError("Nie podano wszystkich ilości składników");
+        return;
+      }
     }
 
-    
+    this.isValidationOk = true;
+  }
+
+  async onSelectStepImageFile(event: SelectEvent, index: number){
+    this.steps[index].image = await FileService.ConvertToBase64(event.files[0].rawFile) as string;
   }
 }

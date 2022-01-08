@@ -33,7 +33,7 @@ import { UnitsComponent } from './admin-panel/units/units.component';
 import { UnitFormModalComponent } from './admin-panel/units/unit-form-modal/unit-form-modal.component';
 import { UnitService } from './services/unit.service';
 import { ToastrModule } from 'ngx-toastr';
-import { AlertService } from './services/alert.service';
+import { AlertService } from './services/app-services/alert.service';
 import { LoginComponent } from './user-panel/account/login/login.component';
 import { RegisterComponent } from './user-panel/account/register/register.component';
 import {RequiredFieldDirective } from './shared/directives/required-field.directive';
@@ -61,6 +61,7 @@ import { UploadsModule } from '@progress/kendo-angular-upload';
 import { MyAccountComponent } from './user-panel/account/my-account/my-account.component';
 import { UserService } from './services/user.service';
 import { HttpErrorInterceptorService } from './services/interceptors/http-error-interceptor.service';
+import { RecipeService } from './services/recipe.service';
 
 
 
@@ -135,6 +136,7 @@ import { HttpErrorInterceptorService } from './services/interceptors/http-error-
     AdminGuard,
     ConfigStore,
     UserService,
+    RecipeService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
   ],

@@ -4,14 +4,16 @@ using EatThisAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EatThisAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220107200121_UserRecipesReationship")]
+    partial class UserRecipesReationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,17 +150,12 @@ namespace EatThisAPI.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Difficulty")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsVisible")
@@ -190,6 +187,19 @@ namespace EatThisAPI.Migrations
                     b.ToTable("Recipes");
                 });
 
+            modelBuilder.Entity("EatThisAPI.Models.RecipeImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecipeImage");
+                });
+
             modelBuilder.Entity("EatThisAPI.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -217,9 +227,6 @@ namespace EatThisAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
@@ -231,6 +238,20 @@ namespace EatThisAPI.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("Steps");
+                });
+
+            modelBuilder.Entity("EatThisAPI.Models.StepImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.Unit", b =>
@@ -381,6 +402,17 @@ namespace EatThisAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EatThisAPI.Models.RecipeImage", b =>
+                {
+                    b.HasOne("EatThisAPI.Models.Recipe", "Recipe")
+                        .WithOne("RecipeImage")
+                        .HasForeignKey("EatThisAPI.Models.RecipeImage", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("EatThisAPI.Models.Step", b =>
                 {
                     b.HasOne("EatThisAPI.Models.Recipe", "Recipe")
@@ -390,6 +422,17 @@ namespace EatThisAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("EatThisAPI.Models.StepImage", b =>
+                {
+                    b.HasOne("EatThisAPI.Models.Step", "Step")
+                        .WithOne("StepImage")
+                        .HasForeignKey("EatThisAPI.Models.StepImage", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Step");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.User", b =>
@@ -433,7 +476,14 @@ namespace EatThisAPI.Migrations
                 {
                     b.Navigation("IngredientQuantities");
 
+                    b.Navigation("RecipeImage");
+
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("EatThisAPI.Models.Step", b =>
+                {
+                    b.Navigation("StepImage");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.Unit", b =>

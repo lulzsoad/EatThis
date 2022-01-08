@@ -15,11 +15,14 @@ namespace EatThisAPI.Models
         public bool IsVisible { get; set; }
         public int Time { get; set; }
         public int PersonQuantity { get; set; }
+        public string Image { get; set; }
+        public DateTime CreationDate { get; set; }
 
         public ICollection<IngredientQuantity> IngredientQuantities { get; set; }
         public ICollection<Step> Steps { get; set; }
-        public virtual RecipeImage RecipeImage { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

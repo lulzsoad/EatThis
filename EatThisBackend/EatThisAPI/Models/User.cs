@@ -20,5 +20,6 @@ namespace EatThisAPI.Models
         public int RoleId { get; set; }
         public virtual Role Role { get; set; }
         public virtual UserActivatingCode UserActivatingCode { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
     }
 }

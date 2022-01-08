@@ -41,7 +41,6 @@
                         [rows]="5"
                         [resizable]="'none'"
                         [formControlName]="'description'"
-                        required
                       ></kendo-textarea>
                     </kendo-floatinglabel>
                     <kendo-formhint>Wprowadź opis przepisu</kendo-formhint>
@@ -51,8 +50,8 @@
                   <kendo-label>Obraz przepisu</kendo-label>
                   <kendo-fileselect 
                     [multiple]="false"
-                    [(ngModel)]="recipe.image"
-                    formControlName="image"
+                    [(ngModel)]="recipeImage"
+                    [ngModelOptions]="{standalone: true}"
                     [restrictions]="uploadFileRestrictions"
                     required>
                     <kendo-fileselect-messages
@@ -65,11 +64,11 @@
                 </kendo-formfield>
                 <kendo-formfield>
                   <kendo-floatinglabel [text]="'Dla ilu osób przeznaczone jest danie?'">
-                    <kendo-textbox
+                    <kendo-numerictextbox
                       [formControlName]="'personQuantity'"
-                    ></kendo-textbox>
+                    ></kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formhint>Wprowadź opis przepisu</kendo-formhint>
+                  <kendo-formhint>Wprowadź liczbę osób</kendo-formhint>
               </kendo-formfield>
               <kendo-formfield>
                 <kendo-floatinglabel [text]="'Jak długo trwa przygotowanie dania? (min.)'">
@@ -78,6 +77,18 @@
                   ></kendo-numerictextbox>
                 </kendo-floatinglabel>
                 <kendo-formhint>Wprowadź liczbę w minutach</kendo-formhint>
+            </kendo-formfield>
+            <kendo-formfield>
+              <kendo-floatinglabel [text]="'Trudność'">
+                <kendo-dropdownlist
+                  [data]="difficulties"
+                  [formControlName]="'difficulty'"
+                  required
+                >
+                </kendo-dropdownlist>
+              </kendo-floatinglabel>
+              <kendo-formhint>Wybierz kategorię kuchni</kendo-formhint>
+              <kendo-formerror>Błąd: Kategoria jest wymagana</kendo-formerror>
             </kendo-formfield>
                 <kendo-formfield>
                     <kendo-label [text]="'Składniki'"></kendo-label>
@@ -101,7 +112,6 @@
                         [clearButton]="true"
                         [(ngModel)]="ingredientsQuantity[i].description"
                         [ngModelOptions]="{standalone: true}"
-                        required
                       ></kendo-textbox>
                     </div>
                     <div class="col-2">
@@ -125,22 +135,36 @@
                       </kendo-dropdownlist>
                     </div>
                 </div>
-                <button (click)="addStep()" look="clear">
-                  Dodaj krok
-                </button>
+                <p class="k-block">
+                  <button kendoButton (click)="addStep()" look="outline">
+                    Dodaj krok
+                  </button>
+                </p>
                 <div class="col-12 row d-flex flex-row m-1" *ngFor="let step of steps; let i = index">
-                  <div><h6>Krok {{i + 1}}</h6></div>
+                  <div class="col-12 row">
+                    <div class="col-11"><h6>Krok {{i + 1}}</h6></div>
+                    <div class="col-1">
+                      <p style="color: rgb(245, 56, 56);">
+                        <button kendoButton (click)="removeStep(i)" look="flat" >X</button>
+                      </p>
+                  </div>
+                  </div>
+                  
                   <div class="col-12">
-                    <kendo-textarea [rows]="6">
-
+                    <kendo-textarea 
+                      [rows]="6" 
+                      [(ngModel)]="steps[i].description"
+                      [ngModelOptions]="{standalone: true}">
                     </kendo-textarea>
                   </div>
                   <div>
                     <kendo-fileselect 
                       [multiple]="false"
                       [(ngModel)]="stepImages[i]"
-                      formControlName="stepImages"
-                      [restrictions]="uploadFileRestrictions">
+                      [ngModelOptions]="{standalone: true}"
+                      [restrictions]="uploadFileRestrictions"
+                      (select)="onSelectStepImageFile($event, i)">
+                      
                     <kendo-fileselect-messages
                       dropFilesHere="Upuść obraz tutaj (max 2MB.)"
                       select="Załaduj obraz">
@@ -148,9 +172,10 @@
                     </kendo-fileselect>
                     <kendo-formhint>Załaduj obraz kroku, który będzie widoczny jako zdjęcie obok opisu czynności (max. 2MB)</kendo-formhint>
                   </div>
-                  <div></div>
                 </div>
-                <button (click)="addRecipe()">Dodaj przepis</button>
+                <p class="k-block">
+                  <button kendoButton (click)="addRecipe()" [primary]="true">Dodaj przepis</button>
+                </p>
               </form>
         </div>
     </div>

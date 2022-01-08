@@ -4,7 +4,7 @@ import { AppConfig } from "../app-config/app.config";
 import { RegisterUser } from "../models/register-user.model";
 import { catchError } from "rxjs/operators";
 import { BehaviorSubject, Subject, throwError } from "rxjs";
-import { AlertService } from "./alert.service";
+import { AlertService } from "./app-services/alert.service";
 import { Login } from "../models/login.model";
 import { AuthToken } from "../models/auth-token.model";
 import { User } from "../models/user.model";

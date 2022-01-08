@@ -1,7 +1,7 @@
-import { Image } from "./image.model";
 export class Step{
     id: number;
     description: string;
+    image: string;
     order: number;
-    image: object;
+    recipeId: number;
 }

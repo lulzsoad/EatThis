@@ -10,7 +10,6 @@ namespace EatThisAPI.Database
     public class AppDbContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
-        public DbSet<StepImage> Images { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<IngredientQuantity> IngredientQuantities { get; set; }
         public DbSet<IngredientCategory> IngredientCategories { get; set; }
@@ -37,10 +36,6 @@ namespace EatThisAPI.Database
             modelBuilder.Entity<Category>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
-
-            modelBuilder.Entity<StepImage>()
-                .Property(x => x.Url)
-                .IsRequired();
 
             modelBuilder.Entity<Ingredient>()
                 .Property(x => x.Name)
@@ -77,9 +72,6 @@ namespace EatThisAPI.Database
             modelBuilder.Entity<Recipe>()
                 .Property(x => x.Name)
                 .HasMaxLength(75);
-            modelBuilder.Entity<Recipe>()
-                .Property(x => x.Description)
-                .IsRequired();
             modelBuilder.Entity<Recipe>()
                 .Property(x => x.IsVisible)
                 .IsRequired();

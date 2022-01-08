@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { ConfigStore } from "src/app/app-config/config-store";
-import { AlertService } from "../alert.service";
+import { AlertService } from "../app-services/alert.service";
 
 @Injectable()
 export class HttpErrorInterceptorService implements HttpInterceptor{

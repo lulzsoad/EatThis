@@ -4,7 +4,7 @@ import { RoleEnum } from 'src/app/enums/role-enum.enum';
 import { Operation, OperationEnum} from 'src/app/models/app-models/patch-operations.model';
 import { Bookmark } from 'src/app/models/bookmark.model';
 import { UserDetails } from 'src/app/models/user-details.model';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService } from 'src/app/services/app-services/alert.service';
 import { DateFormat } from 'src/app/services/app-services/date.service';
 import { FileService } from 'src/app/services/app-services/file.service';
 import { UserService } from 'src/app/services/user.service';

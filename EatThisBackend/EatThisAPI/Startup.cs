@@ -98,6 +98,8 @@ namespace EatThisAPI
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<IRecipeRepository, RecipeRepository>();
+            services.AddScoped<IRecipeService, RecipeService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
 

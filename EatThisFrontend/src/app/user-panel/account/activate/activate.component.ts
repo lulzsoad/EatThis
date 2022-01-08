@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService } from 'src/app/services/app-services/alert.service';
 
 @Component({
   selector: 'app-activate',

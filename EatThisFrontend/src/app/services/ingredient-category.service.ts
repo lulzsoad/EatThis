@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from "../app-config/app.config";
 import { Subject } from "rxjs";
-import { AlertService } from "./alert.service";
+import { AlertService } from "./app-services/alert.service";
 import { IngredientCategory } from "../models/ingredient-category.model";
 
 @Injectable()

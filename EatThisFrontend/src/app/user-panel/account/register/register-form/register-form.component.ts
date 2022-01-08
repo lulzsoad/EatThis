@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RegisterUser } from 'src/app/models/register-user.model';
 import { AccountService } from 'src/app/services/account.service';
-import { AlertService } from 'src/app/services/alert.service';
+import { AlertService } from 'src/app/services/app-services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({

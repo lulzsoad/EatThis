@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from "@a
 import { Observable } from "rxjs";
 import { map, take } from "rxjs/operators";
 import { RoleEnum } from "../enums/role-enum.enum";
-import { AlertService } from "../services/alert.service";
+import { AlertService } from "../services/app-services/alert.service";
 import { AuthService } from "../services/auth.service";
 
 @Injectable()
