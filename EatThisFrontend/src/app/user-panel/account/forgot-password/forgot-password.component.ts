@@ -22,7 +22,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   async sendResetRequest(){
     this.configStore.startLoadingPanel();
-    this.passwordReset = await this.accountService.sendPasswordResetRequest(this.email);
+    this.passwordReset = await this.accountService.sendPasswordResetRequest(this.email).toPromise();
     if(this.passwordReset.email != null){
       this.router.navigate(['code'], {queryParams: {email: this.passwordReset.email}, relativeTo: this.route})
     }

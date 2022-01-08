@@ -27,10 +27,8 @@ export class ActivateComponent implements OnInit {
   }
 
   private async activateAccount(activationCode: string){
-    let isActivated = await this.accountService.activateAccount(activationCode);
-    if(isActivated){
-      this.alertService.showSuccess("Konto zostało aktywowane");
-    }
+    await this.accountService.activateAccount(activationCode).toPromise();
+    this.alertService.showSuccess("Konto zostało aktywowane");
     this.router.navigate(['../../login'], {relativeTo: this.route})
   }
 }

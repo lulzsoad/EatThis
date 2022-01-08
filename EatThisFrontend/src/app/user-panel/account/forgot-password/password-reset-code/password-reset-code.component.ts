@@ -60,7 +60,7 @@ export class PasswordResetCodeComponent implements OnInit {
       this.configStore.startLoadingPanel();
       this.request.code = this.code;
       this.request.email = this.email;
-      this.response = await this.accountService.checkPasswordResetCode(this.request);
+      this.response = await this.accountService.checkPasswordResetCode(this.request).toPromise();
       if(this.response.email != null && this.response.securedRoute != null){
         this.isPasswordResetCodeCoreect = true;
         this.configStore.stopLoadingPanel();
@@ -78,6 +78,7 @@ export class PasswordResetCodeComponent implements OnInit {
   
     let response = await this.accountService.changePassword(this.response, this.changePasswordForm.value.newPassword);
     this.router.navigate(['../../']);
+    this.alertService.showSuccess("Zmieniono hasło");
     this.configStore.stopLoadingPanel();
   }
 
