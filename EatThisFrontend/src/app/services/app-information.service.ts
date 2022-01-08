@@ -13,9 +13,6 @@ export class AppInformationService{
     }
 
     getAppInformation(){
-        return this.authService.user.pipe(take(1), exhaustMap(user => {
             return this.http.get(this.apiPath);
-        }));
-        
     };
 }

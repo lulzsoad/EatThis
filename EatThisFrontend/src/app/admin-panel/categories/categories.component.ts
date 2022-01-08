@@ -7,6 +7,7 @@ import { Category } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { DeleteObject, WindowService } from 'src/app/services/window.service';
 import { process } from "@progress/kendo-data-query";
+import { AlertService } from 'src/app/services/app-services/alert.service';
 
 @Component({
   selector: 'app-categories',
@@ -32,7 +33,7 @@ export class CategoriesComponent implements OnInit {
   private categorySaveListener: Subscription;
   private categoryDeleteListener: Subscription;
 
-  constructor(private categoryService: CategoryService, private windowService: WindowService) {
+  constructor(private categoryService: CategoryService, private windowService: WindowService, private alertService: AlertService) {
     this.addListeners();
   }
 
@@ -59,7 +60,6 @@ export class CategoriesComponent implements OnInit {
     this.categorySaveListener = this.categoryService.createCategoryModalSaved.subscribe(async category => {
       if(this.isNew){
         await this.saveCategory(category);
-        console.log("Log");
       }else{
         await this.updateCategory(category);
       }
@@ -73,31 +73,34 @@ export class CategoriesComponent implements OnInit {
     this.loadingPanelVisible = true;
     this.category.id = deleteObject.id;
     this.category.name = deleteObject.name;
-    await this.categoryService.delete(this.category)
+    await this.categoryService.delete(this.category).toPromise();
     this.loadingPanelVisible = false;
+    this.alertService.showInfo("Usunięto");
     await this.ngOnInit();
   }
 
   private async saveCategory(category: Category){
     this.loadingPanelVisible = true;
-    await this.categoryService.add(category)
+    await this.categoryService.add(category).toPromise();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
+    this.alertService.showSuccess("Sukces");
     await this.ngOnInit();
   }
 
   private async updateCategory(category: Category){
     this.loadingPanelVisible = true;
     this.isNew = false;
-    await this.categoryService.update(category)
+    await this.categoryService.update(category).toPromise();
     this.isCreateModalOpened = false;
     this.loadingPanelVisible = false;
+    this.alertService.showInfo("Zaktualizowano");
     await this.ngOnInit();
   }
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.categories = await this.categoryService.getAll()
+    this.categories = await this.categoryService.getAll().toPromise();
     this.loadingPanelVisible = false;
   }
 

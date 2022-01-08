@@ -82,7 +82,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   }
 
   async getCategories(){
-    this.categories = await this.categorySerice.getAll();
+    this.categories = await this.categorySerice.getAll().toPromise();
   }
 
   async getUnits(){

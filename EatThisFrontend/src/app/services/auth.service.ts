@@ -22,35 +22,15 @@ export class AuthService{
 
     }
 
-    async signup(newUser: RegisterUser){
-        let isOk: Boolean = false;
-        await this.http.post<RegisterUser>(`${this.apiUrl}register`, newUser)
-            .toPromise()
-            .then(() => {
-                isOk = true;
-            })
-            .catch((err) => {
-                this.alertService.showError(err.error);
-                isOk = false;;
-            });
-        return isOk;
+    signup(newUser: RegisterUser){
+        return this.http.post<RegisterUser>(`${this.apiUrl}register`, newUser)
     }
 
-    async logIn(login: Login){
-        let isOk = false;
-        await this.http.post<AuthToken>(`${this.apiUrl}login`, login)
-            .toPromise()
-            .then((response) => {
-                const expirationDate = response.tokenExpirationDate;
-                this.handleAuthentication(response.email, response.userId, response.roleId, response.token, expirationDate)
-                this.alertService.showSuccess("Zalogowano pomyślnie");
-                isOk = true;
-            })
-            .catch((err) => this.alertService.showError(err.error));
-        return isOk;
+    logIn(login: Login){
+        return this.http.post<AuthToken>(`${this.apiUrl}login`, login);
     }
 
-    private handleAuthentication(email: string, userId: string, roleId: number, token: string, tokenExpirationDate: Date){
+    public handleAuthentication(email: string, userId: string, roleId: number, token: string, tokenExpirationDate: Date){
         const user = new User(email, userId, roleId, token, tokenExpirationDate)
         this.user.next(user);
         const expirationDuration = new Date(tokenExpirationDate).getTime() - new Date().getTime();
