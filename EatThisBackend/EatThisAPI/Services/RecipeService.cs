@@ -13,6 +13,7 @@ namespace EatThisAPI.Services
     public interface IRecipeService
     {
         Task<int> AddRecipe(RecipeDto recipeDto);
+        Task<List<RecipeDto>> GetRecipesByCategory(string categoryId, int skip, int take);
     }
     public class RecipeService : IRecipeService
     {
@@ -74,6 +75,39 @@ namespace EatThisAPI.Services
 
             int id = await recipeRepository.AddRecipe(recipe, ingredientQuantities, steps);
             return id;
+        }
+
+        public async Task<List<RecipeDto>> GetRecipesByCategory(string categoryId, int skip, int take)
+        {
+            List<RecipeDto> recipeDtos = new List<RecipeDto>();
+            List<Recipe> recipes = new List<Recipe>();
+
+            if (string.IsNullOrEmpty(categoryId))
+            {
+                recipes = await recipeRepository.GetAllVisibleRecipes(skip, take);
+            }
+            else
+            {
+                int id = Convert.ToInt32(categoryId);
+                recipes = await recipeRepository.GetAllVisibleRecipesByCategoryId(id, skip, take);
+            }
+
+            foreach(var recipe in recipes)
+            {
+                recipeDtos.Add(new RecipeDto
+                {
+                    Id = recipe.Id,
+                    Name = recipe.Name,
+                    SubName = recipe.SubName,
+                    Description = recipe.Description,
+                    Image = recipe.Image,
+                    Difficulty = recipe.Difficulty,
+                    PersonQuantity = recipe.PersonQuantity,
+                    Time = recipe.Time,
+                });
+            }
+
+            return recipeDtos;
         }
     }
 }

@@ -2,6 +2,7 @@
 using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace EatThisAPI.Repositories
     public interface IRecipeRepository
     {
         Task<int> AddRecipe(Recipe recipe, List<IngredientQuantity> ingredientQuantities, List<Step> steps);
+        Task<List<Recipe>> GetAllVisibleRecipes(int skip, int take);
+        Task<List<Recipe>> GetAllVisibleRecipesByCategoryId(int categoryId, int skip, int take);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -54,6 +57,24 @@ namespace EatThisAPI.Repositories
             }
 
             return recipe.Id;
+        }
+
+        public async Task<List<Recipe>> GetAllVisibleRecipes(int skip, int take)
+        {
+            return await context.Recipes
+                .Skip(skip)
+                .Take(take)
+                .Where(x => x.IsVisible == true)
+                .ToListAsync();
+        }
+
+        public async Task<List<Recipe>> GetAllVisibleRecipesByCategoryId(int categoryId, int skip, int take)
+        {
+            return await context.Recipes
+                .Skip(skip)
+                .Take(take)
+                .Where(x => x.IsVisible == true && x.CategoryId == categoryId)
+                .ToListAsync();
         }
     }
 }

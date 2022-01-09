@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\OtherModels\" />
     <Folder Include="wwwroot\images\users\" />
   </ItemGroup>
 

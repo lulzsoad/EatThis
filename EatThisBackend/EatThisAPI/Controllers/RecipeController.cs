@@ -26,5 +26,11 @@ namespace EatThisAPI.Controllers
         {
             return Ok(await recipeService.AddRecipe(recipeDto));
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<RecipeDto>>> GetRecipesByCategory([FromQuery] string categoryId, [FromQuery] int skip, [FromQuery] int take)
+        {
+            return Ok(await recipeService.GetRecipesByCategory(categoryId, skip, take));
+        }
     }
 }

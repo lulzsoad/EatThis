@@ -62,6 +62,7 @@ import { MyAccountComponent } from './user-panel/account/my-account/my-account.c
 import { UserService } from './services/user.service';
 import { HttpErrorInterceptorService } from './services/interceptors/http-error-interceptor.service';
 import { RecipeService } from './services/recipe.service';
+import { RecipesComponent } from './user-panel/recipes/recipes.component';
 
 
 
@@ -96,7 +97,8 @@ import { RecipeService } from './services/recipe.service';
     SpinnerComponent,
     AccountComponent,
     UserNavigationComponent,
-    MyAccountComponent
+    MyAccountComponent,
+    RecipesComponent
   ],
   imports: [
     BrowserModule,

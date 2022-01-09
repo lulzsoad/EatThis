@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #e7b343;">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #c99a36;">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -6,7 +6,9 @@
       <a class="navbar-brand" routerLink="./">Zjedz to</a>
       <div class="collapse navbar-collapse" >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
+          <li>
+            <a class="nav-link color-nav-black" routerLink="recipes">Przepisy</a>
+          </li>
         </ul>
         <div class="d-flex">
             <button  class="btn btn-primary text-white me-2" routerLink="admin-panel" 
@@ -22,7 +24,7 @@
           <button class="btn btn-success" type="submit">Szukaj</button>
         </form>
         <div class="d-flex user-icon">
-          <i class="fas fa-user fa-2x" routerLink="account/my-account"></i>
+          <i class="fas fa-user fa-2x" routerLink="account/my-account" *ngIf="authInfo.isAuthenticated"></i>
         </div>
       </div>
     </div>

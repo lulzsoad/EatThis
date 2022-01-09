@@ -13,4 +13,8 @@ export class RecipeService{
     addRecipe(recipe: Recipe){
         return this.httpClient.post<number>(this.apiUrl, recipe);
     }
+
+    getRecipesByCategory(categoryId: string, skip: number, take: number){
+        return this.httpClient.get<Recipe[]>(`${this.apiUrl}?categoryId=${categoryId}&skip=${skip}&take=${take}`)
+    }
 }

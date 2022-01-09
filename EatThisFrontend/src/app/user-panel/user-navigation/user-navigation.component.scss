@@ -8,3 +8,15 @@
         color: rgba(0, 0, 0, 0.644);
     }
 }
+
+.color-nav-black{
+    cursor: pointer;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+    color: rgb(231, 231, 231) !important;
+    border-radius: 12px;
+    border: 2px solid rgba(128, 128, 128, 0);
+    &:hover{
+        border: 2px solid rgb(185, 184, 184);
+    }
+}

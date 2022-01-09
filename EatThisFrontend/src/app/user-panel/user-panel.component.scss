@@ -3,3 +3,35 @@
     background-image: url('../img/background.jpg');
     overflow: auto;
 }
+
+::ng-deep .m-0{
+    margin: 0;
+}
+
+::ng-deep .m-10{
+    margin: 10px;
+}
+
+::ng-deep .m-30{
+    margin: 30px;
+}
+
+.rounded-100{
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+::ng-deep .rounded-container{
+    margin-top: 10px;
+    background-color: rgba(245, 241, 241, 0.801);
+    border: solid 1px gray;
+    border-radius: 10px;
+    padding: 10px;
+    > nav{
+        background-color: rgba(224, 221, 221, 0.801);
+    }
+}
+
+::ng-deep .mt-10{
+    margin-top: 10px;
+}

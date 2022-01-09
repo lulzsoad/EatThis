@@ -19,6 +19,7 @@ import { SelectEvent } from '@progress/kendo-angular-upload';
 import { convertTypeAcquisitionFromJson } from 'typescript';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { interval } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-recipe-create-form',
@@ -50,7 +51,9 @@ export class AdminRecipeCreateFormComponent implements OnInit {
     private unitService: UnitService,
     private configStore: ConfigStore,
     private alertService: AlertService,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -119,11 +122,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
     this.form.markAllAsTouched();
     
     this.recipe = this.form.value;
-    console.log(this.recipe);
-    console.log(this.recipeImage)
-    console.log(this.stepImages);
     this.validate();
-    this.isValidationOk = true;
     
     if(this.isValidationOk){
       this.configStore.startLoadingPanel();
@@ -142,6 +141,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
 
       this.configStore.stopLoadingPanel();
       this.alertService.showSuccess("Dodano przepis");
+      this.router.navigate(['admin-panel']);
     } 
   }
 
