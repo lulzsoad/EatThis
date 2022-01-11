@@ -2,6 +2,7 @@
 using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
+using EatThisAPI.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace EatThisAPI.Repositories
     public interface IRecipeRepository
     {
         Task<int> AddRecipe(Recipe recipe, List<IngredientQuantity> ingredientQuantities, List<Step> steps);
-        Task<List<Recipe>> GetAllVisibleRecipes(int skip, int take);
-        Task<List<Recipe>> GetAllVisibleRecipesByCategoryId(int categoryId, int skip, int take);
+        Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipes(int skip, int take);
+        Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipesByCategoryId(int categoryId, int skip, int take);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -59,22 +60,36 @@ namespace EatThisAPI.Repositories
             return recipe.Id;
         }
 
-        public async Task<List<Recipe>> GetAllVisibleRecipes(int skip, int take)
+        public async Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipes(int skip, int take)
         {
-            return await context.Recipes
+            var query = context.Recipes
+                .AsNoTracking()
+                .Where(x => x.IsVisible == true)
+                .AsQueryable();
+
+            var count = await query.CountAsync();
+            var data = await query
                 .Skip(skip)
                 .Take(take)
-                .Where(x => x.IsVisible == true)
                 .ToListAsync();
+
+            return new DataChunkViewModel<Recipe> {Data = data, Total = count };
         }
 
-        public async Task<List<Recipe>> GetAllVisibleRecipesByCategoryId(int categoryId, int skip, int take)
+        public async Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipesByCategoryId(int categoryId, int skip, int take)
         {
-            return await context.Recipes
+            var query = context.Recipes
+                .AsNoTracking()
+                .Where(x => x.IsVisible == true && x.CategoryId == categoryId)
+                .AsQueryable();
+
+            var count = await query.CountAsync();
+            var data = await query
                 .Skip(skip)
                 .Take(take)
-                .Where(x => x.IsVisible == true && x.CategoryId == categoryId)
                 .ToListAsync();
+
+            return new DataChunkViewModel<Recipe> { Data = data, Total = count };
         }
     }
 }

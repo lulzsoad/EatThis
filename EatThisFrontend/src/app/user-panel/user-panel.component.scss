@@ -33,5 +33,13 @@
 }
 
 ::ng-deep .mt-10{
-    margin-top: 10px;
+    margin-top: 10px !important;
+}
+
+::ng-deep .mt-50{
+    margin-top: 50px !important;
+}
+
+::ng-deep .mb-50{
+    margin-bottom: 50px !important;
 }

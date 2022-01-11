@@ -1,4 +1,5 @@
 ﻿using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,9 +29,9 @@ namespace EatThisAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<RecipeDto>>> GetRecipesByCategory([FromQuery] string categoryId, [FromQuery] int skip, [FromQuery] int take)
+        public async Task<ActionResult<DataChunkViewModel<RecipeDto>>> GetRecipesByCategory([FromQuery] string categoryId, [FromQuery] int skip, [FromQuery] int take)
         {
-            return Ok(await recipeService.GetRecipesByCategory(categoryId, skip, take));
+            return Ok(await recipeService.GetChunkOfRecipesByCategory(categoryId, skip, take));
         }
     }
 }

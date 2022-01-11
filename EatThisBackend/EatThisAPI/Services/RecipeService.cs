@@ -1,6 +1,7 @@
 ﻿using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Repositories;
 using EatThisAPI.Validators;
 using System;
@@ -13,7 +14,7 @@ namespace EatThisAPI.Services
     public interface IRecipeService
     {
         Task<int> AddRecipe(RecipeDto recipeDto);
-        Task<List<RecipeDto>> GetRecipesByCategory(string categoryId, int skip, int take);
+        Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take);
     }
     public class RecipeService : IRecipeService
     {
@@ -77,22 +78,22 @@ namespace EatThisAPI.Services
             return id;
         }
 
-        public async Task<List<RecipeDto>> GetRecipesByCategory(string categoryId, int skip, int take)
+        public async Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take)
         {
+            var vm = new DataChunkViewModel<Recipe>();
             List<RecipeDto> recipeDtos = new List<RecipeDto>();
-            List<Recipe> recipes = new List<Recipe>();
 
-            if (string.IsNullOrEmpty(categoryId))
+            if (string.IsNullOrEmpty(categoryId) || categoryId == "0")
             {
-                recipes = await recipeRepository.GetAllVisibleRecipes(skip, take);
+                vm = await recipeRepository.GetChunkOfVisibleRecipes(skip, take);
             }
             else
             {
                 int id = Convert.ToInt32(categoryId);
-                recipes = await recipeRepository.GetAllVisibleRecipesByCategoryId(id, skip, take);
+                vm = await recipeRepository.GetChunkOfVisibleRecipesByCategoryId(id, skip, take);
             }
 
-            foreach(var recipe in recipes)
+            foreach(var recipe in vm.Data)
             {
                 recipeDtos.Add(new RecipeDto
                 {
@@ -107,7 +108,11 @@ namespace EatThisAPI.Services
                 });
             }
 
-            return recipeDtos;
+            return new DataChunkViewModel<RecipeDto>
+            {
+                Data = recipeDtos,
+                Total = vm.Total
+            };
         }
     }
 }
