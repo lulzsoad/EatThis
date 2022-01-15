@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EatThisAPI.Models
+namespace EatThisAPI.Models.ProposedRecipe
 {
-    public class Category
+    public class ProposedCategory
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
-        //public ICollection<Recipe> Recipes { get; set; }
+        public int ProposedRecipeId { get; set; }
+        public ProposedRecipe ProposedRecipe { get; set; }
     }
 }

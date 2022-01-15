@@ -1,4 +1,5 @@
 ﻿using EatThisAPI.Models;
+using EatThisAPI.Models.ProposedRecipe;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,10 @@ namespace EatThisAPI.Database
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserActivatingCode> UserActivatingCodes { get; set; }
         public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+        public DbSet<ProposedRecipe> ProposedRecipes { get; set; }
+        public DbSet<ProposedIngredient> ProposedIngredients { get; set; }
+        public DbSet<ProposedIngredientQuantity> ProposedIngredientQuantities { get; set; }
+        public DbSet<ProposedCategory> ProposedCategories { get; set; }
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
