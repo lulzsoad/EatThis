@@ -16,9 +16,13 @@
     margin: 30px;
 }
 
-.rounded-100{
+::ng-deep .rounded-100{
     border-radius: 100%;
     cursor: pointer;
+}
+
+::ng-deep .rounded-25px{
+    border-radius: 25px;
 }
 
 ::ng-deep .rounded-container{
@@ -32,6 +36,32 @@
     }
 }
 
+::ng-deep .rounded-container-white{
+    margin-top: 10px;
+    background-color: rgb(255, 255, 255);
+    border: solid 1px gray;
+    border-radius: 10px;
+    padding: 10px;
+    > nav{
+        background-color: rgba(224, 221, 221, 0.801);
+    }
+}
+
+::ng-deep .border-container{
+    border: 2px gray solid;
+    border-radius: 10px;
+    margin-top: 15px;
+    padding: 15px;
+}
+
+::ng-deep .pl-30{
+    padding-left: 30px;
+}
+
+::ng-deep .pb-10{
+    padding-bottom: 10px;
+}
+
 ::ng-deep .mt-10{
     margin-top: 10px !important;
 }
@@ -40,6 +70,30 @@
     margin-top: 50px !important;
 }
 
+::ng-deep .mb-10{
+    margin-bottom: 10px !important;
+}
+
 ::ng-deep .mb-50{
     margin-bottom: 50px !important;
+}
+
+::ng-deep .ml-30{
+    margin-bottom: 30px !important;
+}
+
+::ng-deep .header-orange{
+    color: rgb(206, 148, 39);
+}
+
+::ng-deep .description-container{
+    margin: 50px;
+}
+
+::ng-deep a{
+    font-style: none;
+}
+
+::ng-deep a:active{
+    font-style: none;
 }

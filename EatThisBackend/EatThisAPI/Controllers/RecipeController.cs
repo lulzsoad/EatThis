@@ -3,6 +3,7 @@ using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,20 @@ namespace EatThisAPI.Controllers
         public async Task<ActionResult<DataChunkViewModel<RecipeDto>>> GetRecipesByCategory([FromQuery] string categoryId, [FromQuery] int skip, [FromQuery] int take)
         {
             return Ok(await recipeService.GetChunkOfRecipesByCategory(categoryId, skip, take));
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<RecipeDto>> GetRecipe([FromRoute] int id)
+        {
+            return Ok(await recipeService.GetRecipeById(id));
+        }
+
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<ActionResult<RecipeDto>> PatchRecipe([FromBody]JsonPatchDocument recipeDto, [FromRoute]int id)
+        {
+            return Ok();
         }
     }
 }

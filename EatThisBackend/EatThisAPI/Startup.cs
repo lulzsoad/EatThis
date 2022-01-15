@@ -80,6 +80,7 @@ namespace EatThisAPI
             services.AddScoped<IIngredientCategoryValidator, IngredientCategoryValidator>();
             services.AddScoped<IUnitValidator, UnitValidator>();
             services.AddScoped<IUserValidator, UserValidator>();
+            services.AddScoped<IRecipeValidator, RecipeValidator>();
 
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
@@ -100,6 +101,8 @@ namespace EatThisAPI
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IIngredientQuantityRepository, IngredientQuantityRepository>();
+            services.AddScoped<IStepRepository, StepRepository>();
 
             services.AddAutoMapper(this.GetType().Assembly);
 

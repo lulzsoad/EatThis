@@ -16,6 +16,7 @@ namespace EatThisAPI.Repositories
         Task<int> AddRecipe(Recipe recipe, List<IngredientQuantity> ingredientQuantities, List<Step> steps);
         Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipes(int skip, int take);
         Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipesByCategoryId(int categoryId, int skip, int take);
+        Task<Recipe> GetRecipeById(int id);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -90,6 +91,21 @@ namespace EatThisAPI.Repositories
                 .ToListAsync();
 
             return new DataChunkViewModel<Recipe> { Data = data, Total = count };
+        }
+
+        public async Task<Recipe> GetRecipeById(int id)
+        {
+            return await context.Recipes
+                .AsNoTracking()
+                .Include(x => x.Steps)
+                .Include(x => x.User)
+                .Include(x => x.Category)
+                .Include(x => x.IngredientQuantities)
+                    .ThenInclude(x => x.Ingredient)
+                    .ThenInclude(x => x.IngredientCategory)
+                .Include(x => x.IngredientQuantities)
+                    .ThenInclude(x => x.Unit)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

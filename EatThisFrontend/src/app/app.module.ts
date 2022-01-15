@@ -62,7 +62,9 @@ import { MyAccountComponent } from './user-panel/account/my-account/my-account.c
 import { UserService } from './services/user.service';
 import { HttpErrorInterceptorService } from './services/interceptors/http-error-interceptor.service';
 import { RecipeService } from './services/recipe.service';
-import { RecipesComponent } from './user-panel/recipes/recipes.component';
+import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.component';
+import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
+import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
 
 
 
@@ -98,7 +100,9 @@ import { RecipesComponent } from './user-panel/recipes/recipes.component';
     AccountComponent,
     UserNavigationComponent,
     MyAccountComponent,
-    RecipesComponent
+    RecipesComponent,
+    RecipeComponent,
+    RecipesMainComponent
   ],
   imports: [
     BrowserModule,

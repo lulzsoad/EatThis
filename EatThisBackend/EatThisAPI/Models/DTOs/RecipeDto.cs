@@ -14,9 +14,9 @@ namespace EatThisAPI.Models.DTOs
         public string Description { get; set; }
         public string Difficulty { get; set; }
         public bool IsVisible { get; set; }
-        public List<IngredientQuantity> IngredientQuantities { get; set; }
+        public List<IngredientQuantityDto> IngredientQuantities { get; set; }
 
-        public List<Step> Steps { get; set; }
+        public List<StepDto> Steps { get; set; }
         public CategoryDto Category { get; set; }
         public string Image { get; set; }
         public int Time { get; set; }

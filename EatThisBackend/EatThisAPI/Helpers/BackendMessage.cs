@@ -61,5 +61,10 @@ namespace EatThisAPI.Helpers
         {
             public static string USER_NOT_FOUND = "Nie znaleziono użytkownika";
         }
+
+        public static class Recipe
+        {
+            public static string RECIPE_NOT_FOUND = "Nie znaleziono przepisu";
+        }
     }
 }

@@ -17,5 +17,5 @@ export class Recipe{
     image: string;
     time: number;
     personQuantity: number;
-    user: UserDetails
+    userDetails: UserDetails
 }

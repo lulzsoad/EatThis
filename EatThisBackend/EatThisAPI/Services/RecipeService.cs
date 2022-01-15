@@ -1,9 +1,11 @@
 ﻿using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.DTOs.User;
 using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Repositories;
 using EatThisAPI.Validators;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,21 +17,25 @@ namespace EatThisAPI.Services
     {
         Task<int> AddRecipe(RecipeDto recipeDto);
         Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take);
+        Task<RecipeDto> GetRecipeById(int recipeId);
     }
     public class RecipeService : IRecipeService
     {
         private readonly IRecipeRepository recipeRepository;
         private readonly IValidator validator;
         private readonly IUserHelper userHelper;
+        private readonly IRecipeValidator recipeValidator;
         public RecipeService(
             IRecipeRepository recipeRepository,
             IValidator validator,
-            IUserHelper userHelper
+            IUserHelper userHelper,
+            IRecipeValidator recipeValidator
             )
         {
             this.recipeRepository = recipeRepository;
             this.validator = validator;
             this.userHelper = userHelper;
+            this.recipeValidator = recipeValidator;
         }
 
         public async Task<int> AddRecipe(RecipeDto recipeDto)
@@ -56,9 +62,20 @@ namespace EatThisAPI.Services
             {
                 ingredientQuantities.Add(new IngredientQuantity
                 {
-                    IngredientId = item.Ingredient.Id,
+                    Ingredient = new Ingredient 
+                    {
+                        Id = item.Ingredient.Id, 
+                        Name = item.Ingredient.Name, 
+                        IngredientCategoryId = 
+                        item.Ingredient.IngredientCategory.Id
+                    },
+
                     Description = item.Description,
-                    UnitId = item.Unit.Id,
+                    Unit = new Unit
+                    {
+                        Id = item.Unit.Id,
+                        Name = item.Unit.Name
+                    },
                     Quantity = item.Quantity
                 });
             }
@@ -114,5 +131,85 @@ namespace EatThisAPI.Services
                 Total = vm.Total
             };
         }
+
+        public async Task<RecipeDto> GetRecipeById(int recipeId)
+        {
+            validator.IsObjectNull(recipeId);
+            var recipe = await recipeRepository.GetRecipeById(recipeId);
+            recipeValidator.DoesRecipeExists(recipe);
+
+            var recipeDto = new RecipeDto
+            {
+                Id = recipe.Id,
+                Category = new CategoryDto 
+                { 
+                    Id = recipe.Category.Id,
+                    Name = recipe.Category.Name
+                },
+                Difficulty = recipe.Difficulty,
+                Name = recipe.Name,
+                Description = recipe.Description,
+                Image = recipe.Image,
+                IngredientQuantities = new List<IngredientQuantityDto>(),
+                IsVisible = recipe.IsVisible,
+                PersonQuantity = recipe.PersonQuantity,
+                Steps = new List<StepDto>(),
+                SubName = recipe.SubName,
+                Time = recipe.Time,
+                UserDetails = new UserDetails
+                {
+                    Id = recipe.User.Id,
+                    FirstName = recipe.User.FirstName,
+                    LastName = recipe.User.LastName,
+                    Image = recipe.User.Image
+                }
+                
+            };
+
+            foreach(var ingredientQuantity in recipe.IngredientQuantities)
+            {
+                recipeDto.IngredientQuantities.Add(new IngredientQuantityDto
+                {
+                    Id = ingredientQuantity.Id,
+                    Description = ingredientQuantity.Description,
+                    Quantity = ingredientQuantity.Quantity,
+                    Ingredient = new IngredientDto
+                    {
+                        Id = ingredientQuantity.Ingredient.Id,
+                        Name = ingredientQuantity.Ingredient.Name,
+                        IngredientCategory = new IngredientCategoryDto
+                        {
+                            Id = ingredientQuantity.Ingredient.IngredientCategory.Id,
+                            Name = ingredientQuantity.Ingredient.IngredientCategory.Name
+                        },
+                    },
+                    Unit = new UnitDto
+                    {
+                        Id = ingredientQuantity.Unit.Id,
+                        Name = ingredientQuantity.Unit.Name
+                    }
+                });
+            }
+
+            foreach(var step in recipe.Steps)
+            {
+                recipeDto.Steps.Add(new StepDto
+                {
+                    Id = step.Id,
+                    Description = step.Description,
+                    Image = step.Image,
+                    Order = step.Order
+                });
+            }
+
+            recipeDto.Steps = recipeDto.Steps.OrderBy(x => x.Order).ToList();
+
+            return recipeDto;
+        }
+
+        public async Task<RecipeDto> PatchRecipe(JsonPatchDocument recipeDto, int id)
+        {
+            return new RecipeDto();
+;        }
     }
 }

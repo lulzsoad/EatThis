@@ -1,0 +1,110 @@
+<div class="container">
+    <div class="rounded-container">
+        <div class="col-12 row">
+            <div class="col-4">
+                <img 
+                    class="rounded-25px" 
+                    width="400" 
+                    height="300"
+                    [src]="recipe?.image"
+                    >
+            </div>
+            <div class="col-8 d-flex flex-column justify-content-between">
+                <div class="col-12 row align-items-between">
+                    <div class="col-6">
+                        <div class="col-12 row">
+                            <div class="col-2">
+                                <div class="text-center">
+                                    <i class="fas fa-users fa-2x"></i>
+                                </div>
+                                <div class="text-center">
+                                    {{recipe?.personQuantity}}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="text-center">
+                                    <i class="fas fa-clock fa-2x"></i>
+                                </div>
+                                <div class="text-center">
+                                    {{recipe?.time}} min.
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="text-center" [ngSwitch]="recipe?.difficulty">
+                                    <i *ngSwitchCase="'Łatwy'" class="fas fa-circle fa-2x" style="color: green;"></i>
+                                    <i *ngSwitchCase="'Normalny'" class="fas fa-circle fa-2x" style="color: orange;"></i>
+                                    <i *ngSwitchCase="'Trudny'" class="fas fa-circle fa-2x" style="color: orangered;"></i>
+                                </div>
+                                <div class="text-center">
+                                    Poziom
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <a class="d-flex flex-column align-items-center">
+                            <img 
+                                class="rounded-100 text-center" 
+                                width="50"
+                                height="50"
+                                [src]="recipe?.userDetails?.image"
+                            >
+                            <strong class="header-orange">{{recipe?.userDetails?.firstName}} {{recipe?.userDetails?.lastName}}</strong>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="header-orange">Zjedz to przedstawia:</h4>
+                    <h2>{{recipe?.name}}</h2>
+                    <h3 class="text-muted">{{recipe?.subName}}</h3>
+                    <hr width="100%">
+                </div>
+            </div>
+        </div>
+        <div class="description-container" *ngIf="recipe?.description?.length > 0">
+            <h2>Opis</h2>
+            <p>{{recipe?.description}}</p>
+        </div>
+        <div class="col-12 row">
+            <div class="col-6">
+                <div class="rounded-container-white">
+                    <h2 class="header-orange pl-30 mb-10">Składniki</h2>
+                    <ul>
+                        <li style="list-style: none;" *ngFor="let ingredientQuantity of recipe?.ingredientQuantities">
+                            <div class="col-12 d-flex justify-content-between">
+                                <div>
+                                    <strong style="color: green;">{{ingredientQuantity?.ingredient?.name}}</strong>
+                                    <span class="text-muted font-italic" *ngIf="ingredientQuantity?.description?.length > 0">
+                                        ({{ingredientQuantity?.description}})
+                                    </span>
+                                </div>
+                                <div>
+                                    {{ingredientQuantity?.quantity}} {{ingredientQuantity?.unit?.name}}
+                                </div>
+                            </div>
+                            <hr style="margin: 2px" width="100%">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <div class="border-container" *ngFor="let step of recipe?.steps">
+                        <h5 class="header-orange pl-30 mb-10">Krok {{step?.order + 1}}</h5>
+                        <div class="d-flex justify-content-center">
+                            <div class="col-12 row rounded-container-white">
+                                <div>
+                                    {{step?.description}}
+                                </div>
+                                <div *ngIf="step?.image">
+                                    <img width=100% height=auto [src]="step?.image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div></div>
+    </div>
+</div>

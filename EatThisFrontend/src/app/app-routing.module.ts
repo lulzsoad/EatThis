@@ -18,7 +18,9 @@ import { MyAccountComponent } from './user-panel/account/my-account/my-account.c
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
 import { RegisterComponent } from './user-panel/account/register/register.component';
-import { RecipesComponent } from './user-panel/recipes/recipes.component';
+import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
+import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
+import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 
 const routes: Routes = [
@@ -34,7 +36,12 @@ const routes: Routes = [
       {path: 'forgot-password', component: ForgotPasswordComponent},
       {path: 'forgot-password/code', component: PasswordResetCodeComponent},
     ]},
-    {path: 'recipes', component: RecipesComponent}
+    {path: 'recipes', component: RecipesMainComponent, children:
+    [
+      {path: '', component: RecipesComponent},
+      {path: ':id', component: RecipeComponent}
+    ]}
+  
   ]},
   
   {path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard, EmployeeGuard], children: [
