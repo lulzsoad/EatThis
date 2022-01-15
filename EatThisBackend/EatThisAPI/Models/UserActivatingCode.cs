@@ -11,6 +11,6 @@ namespace EatThisAPI.Models
         public int UserId { get; set; }
         public string ActivatingCode { get; set; }
 
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
     }
 }
