@@ -80,7 +80,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   }
 
   async getIngredients(){
-    this.ingredients = await this.ingredientService.getAll();
+    this.ingredients = await this.ingredientService.getAll().toPromise();
     this.groupedIngredients = groupBy(this.ingredients, [{field: "ingredientCategory.name"},]);
   }
 

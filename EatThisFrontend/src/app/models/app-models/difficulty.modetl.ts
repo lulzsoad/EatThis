@@ -1,5 +1,3 @@
-import { DifficultyEnum } from "src/app/enums/difficulty.enum";
-
 export class Difficulty{
     public text: string;
     public value: number;

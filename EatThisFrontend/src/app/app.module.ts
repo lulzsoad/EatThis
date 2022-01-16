@@ -65,6 +65,7 @@ import { RecipeService } from './services/recipe.service';
 import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.component';
 import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
 import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
+import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-add.component';
 
 
 
@@ -102,7 +103,8 @@ import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.com
     MyAccountComponent,
     RecipesComponent,
     RecipeComponent,
-    RecipesMainComponent
+    RecipesMainComponent,
+    RecipeAddComponent
   ],
   imports: [
     BrowserModule,

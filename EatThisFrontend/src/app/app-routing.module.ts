@@ -18,6 +18,7 @@ import { MyAccountComponent } from './user-panel/account/my-account/my-account.c
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
 import { RegisterComponent } from './user-panel/account/register/register.component';
+import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-add.component';
 import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
 import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
 import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.component';
@@ -39,9 +40,10 @@ const routes: Routes = [
     {path: 'recipes', component: RecipesMainComponent, children:
     [
       {path: '', component: RecipesComponent},
-      {path: ':id', component: RecipeComponent}
+      {path: 'add', component: RecipeAddComponent, canActivate: [AuthGuard]},
+      {path: ':id', component: RecipeComponent},
+      
     ]}
-  
   ]},
   
   {path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard, EmployeeGuard], children: [

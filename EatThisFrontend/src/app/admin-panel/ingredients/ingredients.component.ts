@@ -110,7 +110,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.ingredients = await this.ingredientService.getAll();
+    this.ingredients = await this.ingredientService.getAll().toPromise();
     this.loadingPanelVisible = false;
   }
 

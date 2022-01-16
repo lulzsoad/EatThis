@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="rounded-container">
+      <div class="col-12 row">
+        <div class="col-6">
+          <h1 class="header-orange">Dodaj przepis</h1>
+        </div>
+        <div class="col-6 d-flex justify-content-end align-items-start">
+          <div class="btn-group">
+            <button class="btn btn-success">Dodaj składniki</button>
+            <button class="btn btn-primary">Zaproponuj składnik</button>
+            <button class="btn btn-dark">Zaproponuj kategorię</button>
+          </div>
+        </div>
+        
+      </div>
+        <form autocomplete="off">
+            <div class="form-group">
+                <label for="category">Kategoria</label>
+                <select class="form-control" id="category">
+                  <option *ngFor="let category of categories" [value]="category">{{category.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">Nazwa</label>
+                <input class="form-control" id="name" type="text" placeholder="Nazwa"/>
+            </div>
+            <div class="form-group">
+                <label for="subName">Podnazwa</label>
+                <input class="form-control" id="subName" type="text" placeholder="Podnazwa"/>
+            </div>
+            <div class="form-group">
+                <label for="description">Opis</label>
+                <textarea class="form-control" id="description" placeholder="Opis" rows="5"></textarea>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="image">Obraz główny</label><br>
+                <input type="file" class="form-control-file" id="image">
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="time">Czas przygotowania (w min.)</label>
+                <input class="form-control" id="time" type="number" placeholder="Jak długo potrwa przygotowanie dania (min.)"/>
+            </div>
+            <div class="form-group">
+                <label for="personQuantity">Ilość osób</label>
+                <input class="form-control" id="personQuantity" type="text" placeholder="Dla ilu osób wystarczy przygotowana porcja"/>
+            </div>
+            <div class="form-group">
+                <label for="difficulty">Trudność</label>
+                <select id="difficulty" class="form-control">
+                  <option *ngFor="let difficulty of difficulties" [value]="difficulty">{{difficulty}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
