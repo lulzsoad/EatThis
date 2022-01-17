@@ -66,6 +66,7 @@ import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.comp
 import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
 import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
 import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-add.component';
+import { IngredientsModalComponent } from './user-panel/recipes-main/recipe-add/ingredients-modal/ingredients-modal.component';
 
 
 
@@ -104,7 +105,8 @@ import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-
     RecipesComponent,
     RecipeComponent,
     RecipesMainComponent,
-    RecipeAddComponent
+    RecipeAddComponent,
+    IngredientsModalComponent
   ],
   imports: [
     BrowserModule,

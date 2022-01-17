@@ -4,10 +4,12 @@ import { AppConfig } from "../app-config/app.config";
 import { Ingredient } from "../models/ingredient.model";
 import { Subject } from "rxjs";
 import { AlertService } from "./app-services/alert.service";
+import { IngredientPosition } from "../models/app-models/ingredient-position.model";
 
 @Injectable()
 export class IngredientService{
     public createIngredientModalSaved: Subject<Ingredient> = new Subject<Ingredient>();
+    public addIngredient: Subject<IngredientPosition> = new Subject<IngredientPosition>();
 
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/ingredient/`;

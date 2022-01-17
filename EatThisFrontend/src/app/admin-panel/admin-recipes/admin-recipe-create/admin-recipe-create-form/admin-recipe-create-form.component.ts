@@ -89,7 +89,7 @@ export class AdminRecipeCreateFormComponent implements OnInit {
   }
 
   async getUnits(){
-    this.units = await this.unitService.getAll();
+    this.units = await this.unitService.getAll().toPromise();
   }
 
   ingredientsValueChange(value: Ingredient[]){

@@ -95,7 +95,7 @@ export class UnitsComponent implements OnInit {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.units = await this.unitService.getAll()
+    this.units = await this.unitService.getAll().toPromise();
     this.loadingPanelVisible = false;
   }
 

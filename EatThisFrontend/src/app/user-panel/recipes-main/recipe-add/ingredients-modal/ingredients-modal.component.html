@@ -1,0 +1,39 @@
+<kendo-window 
+    title="Wybierz składniki"
+    (close)="close()"
+    [width]="1200"
+    [height]="700">
+    <div class="container">
+        <div class="rounded-container">
+            <input class="form-control" type="text" [(ngModel)]="filter" (keyup)="filterValueChange()">
+        </div>
+        <div class="grid">
+            <div *ngFor="let ingredientCategory of ingredientCategories">
+                <div class="rounded-container">
+                    <div class="scrollable">
+                        <h1 class="text-center">{{ingredientCategory?.name}}</h1>
+                        <div>
+                            <ul>
+                                <li style="list-style: none;" *ngFor="let ingredientPosition of filterIngredientsByCategory(ingredientCategory)">
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <div>
+                                            {{ingredientPosition?.ingredient.name}}
+                                        </div> 
+                                        <div>
+                                            <button 
+                                                [ngClass]="ingredientPosition.isSelected ? 'btn-success' : 'btn-outline-success'" 
+                                                (click)="selectIngredient(ingredientPosition)">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+</kendo-window>
