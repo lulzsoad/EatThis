@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+import { stringify } from 'querystring';
 import { Subscription } from 'rxjs';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
@@ -18,6 +19,7 @@ import { FileService } from 'src/app/services/app-services/file.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { IngredientCategoryService } from 'src/app/services/ingredient-category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
+import { RecipeService } from 'src/app/services/recipe.service';
 import { UnitService } from 'src/app/services/unit.service';
 import { WindowService } from 'src/app/services/window.service';
 
@@ -65,7 +67,8 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
     private ingredientCategoryService: IngredientCategoryService,
     private unitService: UnitService,
     private windowService: WindowService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private recipeService: RecipeService
     ) { }
 
 
@@ -207,7 +210,7 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
     }
   }
 
-  submit(){
+  async submit(){
     if(this.validate()){
       this.configStore.startLoadingPanel();
 
@@ -218,7 +221,9 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
       this.setStepsOrder();
       this.proposedRecipe.steps = this.steps;
 
+      await this.recipeService.addProposedRecipe(this.proposedRecipe).toPromise();
       console.log(this.proposedRecipe);
+      console.log(JSON.stringify(this.proposedRecipe));
 
       this.configStore.stopLoadingPanel();
     }

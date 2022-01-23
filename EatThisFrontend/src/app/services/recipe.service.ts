@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AppConfig } from "../app-config/app.config";
 import { DataChunk } from "../models/app-models/data-chunk.model";
+import { ProposedRecipe } from "../models/proposed-recipe/proposed-recipe.model";
 import { Recipe } from "../models/recipe.model";
 
 @Injectable()
@@ -21,5 +22,9 @@ export class RecipeService{
 
     getRecipeById(id: number){
         return this.httpClient.get<Recipe>(`${this.apiUrl}/${id}`)
+    }
+
+    addProposedRecipe(proposedRecipe: ProposedRecipe){
+        return this.httpClient.post<number>(`${this.apiUrl}/addProposedRecipe`, proposedRecipe);
     }
 }

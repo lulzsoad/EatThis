@@ -1,4 +1,5 @@
 ﻿using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.DTOs.ProposedRecipe;
 using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,14 @@ namespace EatThisAPI.Controllers
         [HttpPatch]
         [Route("{id}")]
         public async Task<ActionResult<RecipeDto>> PatchRecipe([FromBody]JsonPatchDocument recipeDto, [FromRoute]int id)
+        {
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("addProposedRecipe")]
+        public async Task<ActionResult<int>> AddProposedRecipe([FromBody] ProposedRecipeDto proposedRecipeDto)
         {
             return Ok();
         }
