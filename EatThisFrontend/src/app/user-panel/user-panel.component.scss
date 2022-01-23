@@ -4,6 +4,10 @@
     overflow: auto;
 }
 
+::ng-deep .pointer{
+    cursor: pointer;
+}
+
 ::ng-deep .m-0{
     margin: 0;
 }

@@ -67,6 +67,8 @@ import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.compone
 import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
 import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-add.component';
 import { IngredientsModalComponent } from './user-panel/recipes-main/recipe-add/ingredients-modal/ingredients-modal.component';
+import { ProposeIngredientModalComponent } from './user-panel/recipes-main/recipe-add/propose-ingredient-modal/propose-ingredient-modal.component';
+import { ProposeCategoryModalComponent } from './user-panel/recipes-main/recipe-add/propose-category-modal/propose-category-modal.component';
 
 
 
@@ -106,7 +108,9 @@ import { IngredientsModalComponent } from './user-panel/recipes-main/recipe-add/
     RecipeComponent,
     RecipesMainComponent,
     RecipeAddComponent,
-    IngredientsModalComponent
+    IngredientsModalComponent,
+    ProposeIngredientModalComponent,
+    ProposeCategoryModalComponent
   ],
   imports: [
     BrowserModule,

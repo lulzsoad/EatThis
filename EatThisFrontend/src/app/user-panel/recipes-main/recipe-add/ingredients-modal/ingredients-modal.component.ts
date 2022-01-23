@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IngredientPosition } from 'src/app/models/app-models/ingredient-position.model';
+import { Window } from 'src/app/models/app-models/window.model';
 import { IngredientCategory } from 'src/app/models/ingredient-category.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { IngredientService } from 'src/app/services/ingredient.service';
@@ -15,6 +16,8 @@ export class IngredientsModalComponent implements OnInit {
   @Input() public ingredientCategories: IngredientCategory[];
   public ingredientsCopy: IngredientPosition[];
   public filter: string;
+
+  private windowId = "addIngredients";
 
   constructor(
     private windowService: WindowService,
@@ -39,6 +42,6 @@ export class IngredientsModalComponent implements OnInit {
 
   selectIngredient(ingredientPosition: IngredientPosition){
     ingredientPosition.isSelected = !ingredientPosition.isSelected;
-    this.ingredientService.addIngredient.next(ingredientPosition);
+    this.ingredientService.addIngredientModal.next(ingredientPosition);
   }
 }

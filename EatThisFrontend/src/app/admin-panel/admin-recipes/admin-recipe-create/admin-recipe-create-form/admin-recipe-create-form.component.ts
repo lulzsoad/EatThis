@@ -13,12 +13,10 @@ import { CategoryService } from 'src/app/services/category.service';
 import { IngredientService } from 'src/app/services/ingredient.service';
 import { UnitService } from 'src/app/services/unit.service';
 import { AlertService } from 'src/app/services/app-services/alert.service';
-import { Difficulty, RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
+import { RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
 import { FileService } from 'src/app/services/app-services/file.service';
 import { SelectEvent } from '@progress/kendo-angular-upload';
-import { convertTypeAcquisitionFromJson } from 'typescript';
 import { RecipeService } from 'src/app/services/recipe.service';
-import { interval } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

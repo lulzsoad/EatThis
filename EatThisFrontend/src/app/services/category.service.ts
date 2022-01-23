@@ -4,10 +4,13 @@ import { AppConfig } from "../app-config/app.config";
 import { Subject } from "rxjs";
 import { Category } from "../models/category.model";
 import { AlertService } from "./app-services/alert.service";
+import { ProposedCategory } from "../models/proposed-recipe/proposed-category.model";
 
 @Injectable()
 export class CategoryService{
     public createCategoryModalSaved: Subject<Category> = new Subject<Category>();
+    public proposeCategoryModal: Subject<ProposedCategory> = new Subject<ProposedCategory>();
+    public proposeCategoryModalCancel: Subject<ProposedCategory> = new Subject<ProposedCategory>();
 
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/category/`;

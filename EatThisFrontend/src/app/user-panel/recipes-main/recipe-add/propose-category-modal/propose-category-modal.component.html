@@ -1,0 +1,23 @@
+<kendo-window
+    [title]="'Zaproponuj kategorię'"
+    (close)="cancel()"
+>
+    <div class="col-12 d-flex flex-column align-items-center">
+        <div class="col-12 d-flex flex-column">
+            <kendo-label>
+                Nazwa
+            </kendo-label>
+            <kendo-textbox
+                [placeholder]="'Nazwa'"
+                [(ngModel)]="proposedCategory.name"
+                style="width: 100%;"
+            >
+            </kendo-textbox>
+        </div>
+        <br>
+        <div class="col-12 d-flex flex-row justify-content-between align-items-center">
+            <button class="btn btn-success" (click)="submit()">Dodaj</button>
+            <button class="btn btn-danger" (click)="cancel()">Anuluj</button>
+        </div>
+    </div>
+</kendo-window>

@@ -1,0 +1,30 @@
+<kendo-window
+      [title]="'Zaproponuj składnik'"
+      (close)="close()"
+      [minWidth]="250"
+      [width]="450"
+    >
+      <div class="d-flex flex-column justify-content-center align-items-center">
+          <div class="d-flex flex-column">
+            <kendo-label>Kategoria</kendo-label>
+            <kendo-dropdownlist
+                [data]="ingredientCategories"
+                textField="name"
+                [valueField]="'id'"
+                [(ngModel)]="selectedCategory"
+            >
+            </kendo-dropdownlist>
+            <br>
+            <kendo-textbox
+                [placeholder]="'Nazwa'"
+                [(ngModel)]="ingredientPosition.ingredient.name"
+            >
+            </kendo-textbox>
+            <br>
+          </div>
+        <div class="d-flex flex-row justify-content-between">
+            <button content class="btn btn-success" (click)="submit()">{{ingredientPosition.isNew ? 'Dodaj' : 'Aktualizuj'}}</button>
+            <button class="btn btn-danger" (click)="close()">Anuluj</button>
+        </div>
+      </div>
+</kendo-window>

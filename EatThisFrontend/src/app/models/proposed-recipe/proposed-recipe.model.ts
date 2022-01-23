@@ -21,4 +21,21 @@ export class ProposedRecipe{
     category: Category;
     proposedCategory: ProposedCategory;
     userDetails: UserDetails;
+
+    constructor(name: string = null, subName: string = null, description: string = null, difficulty: string = null, note: string = null, image: string = null, time: number = null, personQuantity: number = null, ingredientQuantities: IngredientQuantity[] = [], proposedIngredientQuantities: ProposedIngredientQuantity[] = [], steps: Step[] = [], category: Category = null, proposedCategory: ProposedCategory = null, userDetails: UserDetails = null){
+        this.name = name;
+        this.subName = subName;
+        this.description = description;
+        this.difficulty = difficulty;
+        this.note = note;
+        this.image = image;
+        this.time = time;
+        this.personQuantity = personQuantity;
+        this.ingredientQuantities = ingredientQuantities;
+        this.proposedIngredientQuantities = proposedIngredientQuantities;
+        this.steps = steps;
+        this.category = category;
+        this.proposedCategory = proposedCategory;
+        this.userDetails = userDetails;
+    }
 }

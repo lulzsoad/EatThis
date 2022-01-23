@@ -19,53 +19,56 @@
             <div class="text-center mt-10" *ngIf="recipes?.length < 1">
                 Brak
             </div>
-            <div class="mt-10 grid-5-columns">
-                <div *ngFor="let recipe of recipes">
-                    <div class="card" style="width: 18rem; margin-top: 10px;">
-                        <img class="card-img-top" [src]="recipe?.image" alt="Card image cap" height="200">
-                        <div class="card-body">
-                            <div style="height: 5rem;">
-                                <h5 class="card-title m-0">{{recipe?.name}}</h5>
-                                <span class="card-text text-muted">{{recipe?.subName?.length > 50 ? recipe?.subName.slice(0, 50) + '...' : recipe?.subName}}</span>
-                                <br>
-                            </div>
-                            <div style="height: 4rem;">
-                                <div class="col-12 row">
-                                    <div class="col-4">
-                                        <div class="text-center">
-                                            <i class="fas fa-users fa-2x"></i>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="mt-10 grid-5-columns">
+                    <div *ngFor="let recipe of recipes">
+                        <div class="card" style="width: 100%; margin-top: 10px;">
+                            <img class="card-img-top" [src]="recipe?.image" alt="Card image cap" width="100%" height="150px">
+                            <div class="card-body">
+                                <div style="height: 7rem">
+                                    <h5 class="card-title m-0">{{recipe?.name}}</h5>
+                                    <span class="card-text text-muted">{{recipe?.subName?.length > 50 ? recipe?.subName.slice(0, 50) + '...' : recipe?.subName}}</span>
+                                    <br>
+                                </div>
+                                <div style="height: auto">
+                                    <div class="col-12 row">
+                                        <div class="col-4">
+                                            <div class="text-center">
+                                                <i class="fas fa-users fa-2x"></i>
+                                            </div>
+                                            <div class="text-center">
+                                                {{recipe?.personQuantity}}
+                                            </div>
                                         </div>
-                                        <div class="text-center">
-                                            {{recipe?.personQuantity}}
+                                        <div class="col-4">
+                                            <div class="text-center">
+                                                <i class="fas fa-clock fa-2x"></i>
+                                            </div>
+                                            <div class="text-center">
+                                                {{recipe?.time}} min.
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="text-center">
-                                            <i class="fas fa-clock fa-2x"></i>
-                                        </div>
-                                        <div class="text-center">
-                                            {{recipe?.time}} min.
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="text-center" [ngSwitch]="recipe?.difficulty">
-                                            <i *ngSwitchCase="'Łatwy'" class="fas fa-circle fa-2x" style="color: green;"></i>
-                                            <i *ngSwitchCase="'Normalny'" class="fas fa-circle fa-2x" style="color: orange;"></i>
-                                            <i *ngSwitchCase="'Trudny'" class="fas fa-circle fa-2x" style="color: orangered;"></i>
-                                        </div>
-                                        <div class="text-center">
-                                            Poziom
+                                        <div class="col-4">
+                                            <div class="text-center" [ngSwitch]="recipe?.difficulty">
+                                                <i *ngSwitchCase="'Łatwy'" class="fas fa-circle fa-2x" style="color: green;"></i>
+                                                <i *ngSwitchCase="'Normalny'" class="fas fa-circle fa-2x" style="color: orange;"></i>
+                                                <i *ngSwitchCase="'Trudny'" class="fas fa-circle fa-2x" style="color: orangered;"></i>
+                                            </div>
+                                            <div class="text-center">
+                                                Poziom
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div>
+                                    <a [routerLink]="[recipe?.id]" class="btn btn-warning">Sprawdź</a>
+                                </div>
                             </div>
-                            <div>
-                                <a [routerLink]="[recipe?.id]" class="btn btn-warning">Sprawdź</a>
-                            </div>
-                        </div>
-                      </div>
+                          </div>
+                    </div>
                 </div>
             </div>
+            
             <div class="text-center mt-50 mb-50">
                 <span *ngFor="let page of pages">
                     <a class="page-number" [ngClass]="selectedPage?.name == page?.name ? 'background-yellow' : ''" (click)="changePage(page)">{{page.label}}</a>

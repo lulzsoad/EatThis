@@ -6,8 +6,7 @@
                         <img 
                             class="rounded-100" 
                             [src]="isImageUploading ? '../../../../assets/images/loading-image.gif' : (userImage.length > 0 ? userDetails?.image : '../../../../assets/images/default.png')"
-                            width="300"
-                            height="300"
+                            width="100%"
                         />
                     </label>
                     <input id="file-input" type="file" style="display: none;" (change)="uploadImage($event)">

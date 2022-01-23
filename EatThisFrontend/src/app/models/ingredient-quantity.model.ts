@@ -10,4 +10,13 @@ export class IngredientQuantity{
     ingredientId: number;
     ingredient: Ingredient;
     recipeId: number;
+
+    constructor(ingredient: Ingredient = null, quantity: number = null, description: string = null, unit: Unit = null){
+        this.ingredient = ingredient;
+        this.ingredientId = ingredient?.id;
+        this.quantity = quantity;
+        this.description = description;
+        this.unit = unit;
+        this.unitId = unit?.id;
+    }
 }

@@ -9,7 +9,8 @@ import { IngredientPosition } from "../models/app-models/ingredient-position.mod
 @Injectable()
 export class IngredientService{
     public createIngredientModalSaved: Subject<Ingredient> = new Subject<Ingredient>();
-    public addIngredient: Subject<IngredientPosition> = new Subject<IngredientPosition>();
+    public addIngredientModal: Subject<IngredientPosition> = new Subject<IngredientPosition>();
+    public proposeIngredientModal: Subject<IngredientPosition> = new Subject<IngredientPosition>();
 
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/ingredient/`;
