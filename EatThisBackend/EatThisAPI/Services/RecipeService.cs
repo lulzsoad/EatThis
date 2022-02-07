@@ -1,7 +1,9 @@
 ﻿using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.DTOs.ProposedRecipe;
 using EatThisAPI.Models.DTOs.User;
+using EatThisAPI.Models.ProposedRecipe;
 using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Repositories;
 using EatThisAPI.Validators;
@@ -16,6 +18,7 @@ namespace EatThisAPI.Services
     public interface IRecipeService
     {
         Task<int> AddRecipe(RecipeDto recipeDto);
+        Task<int> AddProposedRecipe(ProposedRecipeDto proposedRecipeDto);
         Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take);
         Task<RecipeDto> GetRecipeById(int recipeId);
     }
@@ -66,8 +69,7 @@ namespace EatThisAPI.Services
                     {
                         Id = item.Ingredient.Id, 
                         Name = item.Ingredient.Name, 
-                        IngredientCategoryId = 
-                        item.Ingredient.IngredientCategory.Id
+                        IngredientCategoryId = item.Ingredient.IngredientCategory.Id
                     },
 
                     Description = item.Description,
@@ -92,6 +94,88 @@ namespace EatThisAPI.Services
             }
 
             int id = await recipeRepository.AddRecipe(recipe, ingredientQuantities, steps);
+            return id;
+        }
+
+        public async Task<int> AddProposedRecipe(ProposedRecipeDto proposedRecipeDto)
+        {
+            validator.IsObjectNull(proposedRecipeDto);
+            var user = await this.userHelper.GetCurrentUser();
+            
+            var proposedRecipe = new ProposedRecipe() 
+            { 
+                Name = proposedRecipeDto.Name,
+                SubName = proposedRecipeDto.SubName,
+                Description = proposedRecipeDto.SubName,
+                Image = proposedRecipeDto.Image,
+                Time = proposedRecipeDto.Time,
+                PersonQuantity = proposedRecipeDto.PersonQuantity,
+                Difficulty = proposedRecipeDto.Difficulty,
+                CategoryId = proposedRecipeDto.Category.Id,
+                CreationDate = DateTime.UtcNow,
+                Note = proposedRecipeDto.Note,
+                UserId = user.Id,
+            };
+
+            ProposedCategory proposedCategory = null;
+            if (proposedRecipeDto.ProposedCategory != null)
+            {
+                proposedCategory = new ProposedCategory(proposedRecipeDto.ProposedCategory.Name);
+            }
+
+            var proposedIngredients = new List<ProposedIngredient>();
+            var proposedIngredientQuantities = new List<ProposedIngredientQuantity>();
+            var proposedSteps = new List<ProposedStep>();
+
+            if(proposedRecipeDto.IngredientQuantities.Count > 0)
+            {
+                foreach(var ingredientQuantity in proposedRecipeDto.IngredientQuantities)
+                {
+                    proposedIngredientQuantities.Add(new ProposedIngredientQuantity
+                    {
+                        IngredientId = ingredientQuantity.Ingredient.Id,
+                        Description = ingredientQuantity.Description,
+                        UnitId = ingredientQuantity.Unit.Id,
+                        Quantity = ingredientQuantity.Quantity
+                    });
+                }
+                
+            }
+
+            if(proposedRecipeDto.ProposedIngredientQuantities.Count > 0)
+            {
+                foreach (var proposedIngredientQuantity in proposedRecipeDto.ProposedIngredientQuantities)
+                {
+                    var reference = Guid.NewGuid().ToString();
+                    proposedIngredients.Add(new ProposedIngredient 
+                    { 
+                        Name = proposedIngredientQuantity.ProposedIngredient.Name,
+                        IngredientCategoryId = proposedIngredientQuantity.ProposedIngredient.IngredientCategory.Id,
+                        Reference = reference
+                    });
+                    proposedIngredientQuantities.Add(new ProposedIngredientQuantity 
+                    {
+                        Description = proposedIngredientQuantity.Description,
+                        Quantity = proposedIngredientQuantity.Quantity,
+                        UnitId = proposedIngredientQuantity.Unit.Id,
+                        Reference = reference
+                    });
+                }
+            }
+
+            foreach(var proposedStep in proposedRecipeDto.ProposedSteps)
+            {
+                proposedSteps.Add(new ProposedStep
+                {
+                    Description = proposedStep.Description,
+                    Image = proposedStep.Image,
+                    Order = proposedStep.Order,
+                });
+            }
+
+            int id = await recipeRepository.AddProposedRecipe(proposedRecipe, proposedCategory, proposedIngredients, 
+                proposedIngredientQuantities, proposedSteps);
+
             return id;
         }
 
@@ -210,6 +294,6 @@ namespace EatThisAPI.Services
         public async Task<RecipeDto> PatchRecipe(JsonPatchDocument recipeDto, int id)
         {
             return new RecipeDto();
-;        }
+;       }
     }
 }

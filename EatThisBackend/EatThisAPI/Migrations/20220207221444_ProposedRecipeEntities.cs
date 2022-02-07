@@ -3,21 +3,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EatThisAPI.Migrations
 {
-    public partial class ProposedRecipeAdd : Migration
+    public partial class ProposedRecipeEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ProposedRecipeId",
-                table: "Steps",
-                type: "int",
-                nullable: true);
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserActivatingCodes_Users_UserId",
+                table: "UserActivatingCodes");
 
-            migrationBuilder.AddColumn<int>(
-                name: "ProposedRecipeId",
-                table: "IngredientQuantities",
-                type: "int",
-                nullable: true);
+            migrationBuilder.DropIndex(
+                name: "IX_UserActivatingCodes_UserId",
+                table: "UserActivatingCodes");
 
             migrationBuilder.CreateTable(
                 name: "ProposedIngredients",
@@ -26,6 +22,7 @@ namespace EatThisAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reference = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IngredientCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -102,6 +99,7 @@ namespace EatThisAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Reference = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                     ProposedIngredientId = table.Column<int>(type: "int", nullable: false),
                     ProposedRecipeId = table.Column<int>(type: "int", nullable: false)
@@ -129,15 +127,27 @@ namespace EatThisAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Steps_ProposedRecipeId",
-                table: "Steps",
-                column: "ProposedRecipeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IngredientQuantities_ProposedRecipeId",
-                table: "IngredientQuantities",
-                column: "ProposedRecipeId");
+            migrationBuilder.CreateTable(
+                name: "ProposedSteps",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    ProposedRecipeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProposedSteps", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProposedSteps_ProposedRecipes_ProposedRecipeId",
+                        column: x => x.ProposedRecipeId,
+                        principalTable: "ProposedRecipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProposedCategories_ProposedRecipeId",
@@ -174,33 +184,14 @@ namespace EatThisAPI.Migrations
                 table: "ProposedRecipes",
                 column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_IngredientQuantities_ProposedRecipes_ProposedRecipeId",
-                table: "IngredientQuantities",
-                column: "ProposedRecipeId",
-                principalTable: "ProposedRecipes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Steps_ProposedRecipes_ProposedRecipeId",
-                table: "Steps",
-                column: "ProposedRecipeId",
-                principalTable: "ProposedRecipes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.CreateIndex(
+                name: "IX_ProposedSteps_ProposedRecipeId",
+                table: "ProposedSteps",
+                column: "ProposedRecipeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_IngredientQuantities_ProposedRecipes_ProposedRecipeId",
-                table: "IngredientQuantities");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Steps_ProposedRecipes_ProposedRecipeId",
-                table: "Steps");
-
             migrationBuilder.DropTable(
                 name: "ProposedCategories");
 
@@ -208,26 +199,27 @@ namespace EatThisAPI.Migrations
                 name: "ProposedIngredientQuantities");
 
             migrationBuilder.DropTable(
+                name: "ProposedSteps");
+
+            migrationBuilder.DropTable(
                 name: "ProposedIngredients");
 
             migrationBuilder.DropTable(
                 name: "ProposedRecipes");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Steps_ProposedRecipeId",
-                table: "Steps");
+            migrationBuilder.CreateIndex(
+                name: "IX_UserActivatingCodes_UserId",
+                table: "UserActivatingCodes",
+                column: "UserId",
+                unique: true);
 
-            migrationBuilder.DropIndex(
-                name: "IX_IngredientQuantities_ProposedRecipeId",
-                table: "IngredientQuantities");
-
-            migrationBuilder.DropColumn(
-                name: "ProposedRecipeId",
-                table: "Steps");
-
-            migrationBuilder.DropColumn(
-                name: "ProposedRecipeId",
-                table: "IngredientQuantities");
+            migrationBuilder.AddForeignKey(
+                name: "FK_UserActivatingCodes_Users_UserId",
+                table: "UserActivatingCodes",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

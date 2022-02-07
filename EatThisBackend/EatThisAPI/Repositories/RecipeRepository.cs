@@ -2,6 +2,7 @@
 using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
+using EatThisAPI.Models.ProposedRecipe;
 using EatThisAPI.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,6 +18,12 @@ namespace EatThisAPI.Repositories
         Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipes(int skip, int take);
         Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipesByCategoryId(int categoryId, int skip, int take);
         Task<Recipe> GetRecipeById(int id);
+        Task<int> AddProposedRecipe(
+            ProposedRecipe proposedRecipe,
+            ProposedCategory proposedCategory,
+            List<ProposedIngredient> proposedIngredients,
+            List<ProposedIngredientQuantity> proposedIngredientQuantities,
+            List<ProposedStep> proposedSteps);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -59,6 +66,29 @@ namespace EatThisAPI.Repositories
             }
 
             return recipe.Id;
+        }
+
+        public async Task<int> AddProposedRecipe(
+            ProposedRecipe proposedRecipe, 
+            List<ProposedIngredientQuantity> proposedIngredientQuantities, 
+            List<ProposedIngredient> proposedIngredients,
+            List<ProposedStep> proposedSteps, 
+            ProposedCategory proposedCategory)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return 1;
         }
 
         public async Task<DataChunkViewModel<Recipe>> GetChunkOfVisibleRecipes(int skip, int take)
@@ -106,6 +136,58 @@ namespace EatThisAPI.Repositories
                 .Include(x => x.IngredientQuantities)
                     .ThenInclude(x => x.Unit)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<int> AddProposedRecipe(ProposedRecipe proposedRecipe, ProposedCategory proposedCategory, 
+            List<ProposedIngredient> proposedIngredients, List<ProposedIngredientQuantity> proposedIngredientQuantities, 
+            List<ProposedStep> proposedSteps)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    context.ProposedRecipes.Add(proposedRecipe);
+                    await context.SaveChangesAsync();
+                    if (proposedCategory != null)
+                    {
+                        proposedCategory.ProposedRecipeId = proposedRecipe.Id;
+                        context.ProposedCategories.Add(proposedCategory);
+                        await context.SaveChangesAsync();
+                    }
+
+                    context.ProposedIngredients.AddRange(proposedIngredients);
+                    await context.SaveChangesAsync();
+
+                    foreach (var proposedIngredientQuantity in proposedIngredientQuantities)
+                    {
+                        proposedIngredientQuantity.ProposedRecipeId = proposedRecipe.Id;
+                        if (proposedIngredientQuantity.Reference != null)
+                        {
+                            proposedIngredientQuantity.ProposedIngredientId = proposedIngredients
+                                .FirstOrDefault(x => x.Reference.Equals(proposedIngredientQuantity.Reference)).Id;
+                        }
+                    }
+                    context.ProposedIngredientQuantities.AddRange(proposedIngredientQuantities);
+                    await context.SaveChangesAsync();
+
+                    foreach (var proposedStep in proposedSteps)
+                    {
+                        proposedStep.ProposedRecipeId = proposedRecipe.Id;
+                    }
+
+                    context.ProposedSteps.AddRange(proposedSteps);
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new CustomException(BackendMessage.Transaction.TRANSACTION_ERROR);
+                }
+            }
+
+            return proposedRecipe.Id;
         }
     }
 }

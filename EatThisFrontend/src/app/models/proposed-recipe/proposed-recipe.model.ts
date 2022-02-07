@@ -4,6 +4,7 @@ import { Step } from "../step.model";
 import { UserDetails } from "../user-details.model";
 import { ProposedCategory } from "./proposed-category.model";
 import { ProposedIngredientQuantity } from "./proposed-ingredient-quantity.model";
+import { ProposedStep } from "./proposed-step.model";
 
 export class ProposedRecipe{
     id: number;
@@ -17,25 +18,40 @@ export class ProposedRecipe{
     personQuantity: number;
     ingredientQuantities: IngredientQuantity[];
     proposedIngredientQuantities: ProposedIngredientQuantity[];
-    steps: Step[];
+    proposedSteps: ProposedStep[];
     category: Category;
     proposedCategory: ProposedCategory;
     userDetails: UserDetails;
 
-    constructor(name: string = null, subName: string = null, description: string = null, difficulty: string = null, note: string = null, image: string = null, time: number = null, personQuantity: number = null, ingredientQuantities: IngredientQuantity[] = [], proposedIngredientQuantities: ProposedIngredientQuantity[] = [], steps: Step[] = [], category: Category = null, proposedCategory: ProposedCategory = null, userDetails: UserDetails = null){
-        this.name = name;
-        this.subName = subName;
-        this.description = description;
-        this.difficulty = difficulty;
-        this.note = note;
-        this.image = image;
-        this.time = time;
-        this.personQuantity = personQuantity;
-        this.ingredientQuantities = ingredientQuantities;
-        this.proposedIngredientQuantities = proposedIngredientQuantities;
-        this.steps = steps;
-        this.category = category;
-        this.proposedCategory = proposedCategory;
-        this.userDetails = userDetails;
+    constructor(
+        name: string = null, 
+        subName: string = null, 
+        description: string = null, 
+        difficulty: string = null, 
+        note: string = null, 
+        image: string = null, 
+        time: number = null, 
+        personQuantity: number = null, 
+        ingredientQuantities: IngredientQuantity[] = [], 
+        proposedIngredientQuantities: ProposedIngredientQuantity[] = [], 
+        steps: ProposedStep[] = [], 
+        category: Category = null, 
+        proposedCategory: ProposedCategory = null, 
+        userDetails: UserDetails = null
+        ) {
+            this.name = name;
+            this.subName = subName;
+            this.description = description;
+            this.difficulty = difficulty;
+            this.note = note;
+            this.image = image;
+            this.time = time;
+            this.personQuantity = personQuantity;
+            this.ingredientQuantities = ingredientQuantities;
+            this.proposedIngredientQuantities = proposedIngredientQuantities;
+            this.proposedSteps = steps;
+            this.category = category;
+            this.proposedCategory = proposedCategory;
+            this.userDetails = userDetails;
     }
 }

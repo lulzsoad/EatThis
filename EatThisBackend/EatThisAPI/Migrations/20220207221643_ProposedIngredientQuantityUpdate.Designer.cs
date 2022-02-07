@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EatThisAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220115214546_ProposedRecipeAdd")]
-    partial class ProposedRecipeAdd
+    [Migration("20220207221643_ProposedIngredientQuantityUpdate")]
+    partial class ProposedIngredientQuantityUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,9 +99,6 @@ namespace EatThisAPI.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProposedRecipeId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
@@ -114,8 +111,6 @@ namespace EatThisAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IngredientId");
-
-                    b.HasIndex("ProposedRecipeId");
 
                     b.HasIndex("RecipeId");
 
@@ -178,6 +173,9 @@ namespace EatThisAPI.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Reference")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IngredientCategoryId");
@@ -195,6 +193,9 @@ namespace EatThisAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IngredientId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProposedIngredientId")
                         .HasColumnType("int");
 
@@ -204,10 +205,15 @@ namespace EatThisAPI.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Reference")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
 
                     b.HasIndex("ProposedIngredientId");
 
@@ -265,6 +271,32 @@ namespace EatThisAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ProposedRecipes");
+                });
+
+            modelBuilder.Entity("EatThisAPI.Models.ProposedRecipe.ProposedStep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProposedRecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProposedRecipeId");
+
+                    b.ToTable("ProposedSteps");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.Recipe", b =>
@@ -352,15 +384,10 @@ namespace EatThisAPI.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProposedRecipeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProposedRecipeId");
 
                     b.HasIndex("RecipeId");
 
@@ -452,9 +479,6 @@ namespace EatThisAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("UserActivatingCodes");
                 });
 
@@ -477,25 +501,19 @@ namespace EatThisAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", null)
-                        .WithMany("IngredientQuantities")
-                        .HasForeignKey("ProposedRecipeId");
-
-                    b.HasOne("EatThisAPI.Models.Recipe", "Recipe")
+                    b.HasOne("EatThisAPI.Models.Recipe", null)
                         .WithMany("IngredientQuantities")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EatThisAPI.Models.Unit", "Unit")
-                        .WithMany("IngredientQuantities")
+                        .WithMany()
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Ingredient");
-
-                    b.Navigation("Recipe");
 
                     b.Navigation("Unit");
                 });
@@ -524,14 +542,18 @@ namespace EatThisAPI.Migrations
 
             modelBuilder.Entity("EatThisAPI.Models.ProposedRecipe.ProposedIngredientQuantity", b =>
                 {
+                    b.HasOne("EatThisAPI.Models.Ingredient", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId");
+
                     b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedIngredient", "ProposedIngredient")
                         .WithMany()
                         .HasForeignKey("ProposedIngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", "Recipe")
-                        .WithMany()
+                    b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", "ProposedRecipe")
+                        .WithMany("ProposedIngredientQuantities")
                         .HasForeignKey("ProposedRecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -542,9 +564,11 @@ namespace EatThisAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Ingredient");
+
                     b.Navigation("ProposedIngredient");
 
-                    b.Navigation("Recipe");
+                    b.Navigation("ProposedRecipe");
 
                     b.Navigation("Unit");
                 });
@@ -568,6 +592,15 @@ namespace EatThisAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EatThisAPI.Models.ProposedRecipe.ProposedStep", b =>
+                {
+                    b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", null)
+                        .WithMany("ProposedSteps")
+                        .HasForeignKey("ProposedRecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EatThisAPI.Models.Recipe", b =>
                 {
                     b.HasOne("EatThisAPI.Models.Category", "Category")
@@ -577,7 +610,7 @@ namespace EatThisAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("EatThisAPI.Models.User", "User")
-                        .WithMany("Recipes")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -589,17 +622,11 @@ namespace EatThisAPI.Migrations
 
             modelBuilder.Entity("EatThisAPI.Models.Step", b =>
                 {
-                    b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", null)
-                        .WithMany("Steps")
-                        .HasForeignKey("ProposedRecipeId");
-
-                    b.HasOne("EatThisAPI.Models.Recipe", "Recipe")
+                    b.HasOne("EatThisAPI.Models.Recipe", null)
                         .WithMany("Steps")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.User", b =>
@@ -613,17 +640,6 @@ namespace EatThisAPI.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("EatThisAPI.Models.UserActivatingCode", b =>
-                {
-                    b.HasOne("EatThisAPI.Models.User", "User")
-                        .WithOne("UserActivatingCode")
-                        .HasForeignKey("EatThisAPI.Models.UserActivatingCode", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("EatThisAPI.Models.IngredientCategory", b =>
                 {
                     b.Navigation("Ingredients");
@@ -631,9 +647,9 @@ namespace EatThisAPI.Migrations
 
             modelBuilder.Entity("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", b =>
                 {
-                    b.Navigation("IngredientQuantities");
+                    b.Navigation("ProposedIngredientQuantities");
 
-                    b.Navigation("Steps");
+                    b.Navigation("ProposedSteps");
                 });
 
             modelBuilder.Entity("EatThisAPI.Models.Recipe", b =>
@@ -641,18 +657,6 @@ namespace EatThisAPI.Migrations
                     b.Navigation("IngredientQuantities");
 
                     b.Navigation("Steps");
-                });
-
-            modelBuilder.Entity("EatThisAPI.Models.Unit", b =>
-                {
-                    b.Navigation("IngredientQuantities");
-                });
-
-            modelBuilder.Entity("EatThisAPI.Models.User", b =>
-                {
-                    b.Navigation("Recipes");
-
-                    b.Navigation("UserActivatingCode");
                 });
 #pragma warning restore 612, 618
         }

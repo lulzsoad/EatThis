@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
-import { stringify } from 'querystring';
 import { Subscription } from 'rxjs';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
@@ -12,7 +11,7 @@ import { Ingredient } from 'src/app/models/ingredient.model';
 import { ProposedCategory } from 'src/app/models/proposed-recipe/proposed-category.model';
 import { ProposedIngredientQuantity } from 'src/app/models/proposed-recipe/proposed-ingredient-quantity.model';
 import { ProposedRecipe } from 'src/app/models/proposed-recipe/proposed-recipe.model';
-import { Step } from 'src/app/models/step.model';
+import { ProposedStep } from 'src/app/models/proposed-recipe/proposed-step.model';
 import { Unit } from 'src/app/models/unit.model';
 import { AlertService } from 'src/app/services/app-services/alert.service';
 import { FileService } from 'src/app/services/app-services/file.service';
@@ -36,7 +35,7 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
   public units: Unit[];
   public ingredientQuantities: IngredientQuantity[] = [];
   public proposedIngredientQuantities: ProposedIngredientQuantity[] = [];
-  public steps: Step[] = [];
+  public steps: ProposedStep[] = [];
   public difficulties = RecipeDifficulties.difficuilties;
   public ingredientPosition: IngredientPosition;
   public proposedCategory: ProposedCategory;
@@ -166,7 +165,7 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
   }
 
   addStep(){
-    let step: Step = new Step();
+    let step: ProposedStep = new ProposedStep();
     this.steps.push(step);
   }
 
@@ -219,7 +218,7 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
       this.proposedRecipe.category = this.selectedCategory;
       this.proposedRecipe.proposedCategory = this.proposedCategory;
       this.setStepsOrder();
-      this.proposedRecipe.steps = this.steps;
+      this.proposedRecipe.proposedSteps = this.steps;
 
       await this.recipeService.addProposedRecipe(this.proposedRecipe).toPromise();
       console.log(this.proposedRecipe);

@@ -9,6 +9,7 @@ namespace EatThisAPI.Models.ProposedRecipe
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Reference { get; set; }
 
         public int IngredientCategoryId { get; set; }
         public IngredientCategory IngredientCategory { get; set; }

@@ -18,8 +18,8 @@ namespace EatThisAPI.Models.ProposedRecipe
         public DateTime CreationDate { get; set; }
         public string Note { get; set; }
 
-        public ICollection<IngredientQuantity> IngredientQuantities { get; set; }
-        public ICollection<Step> Steps { get; set; }
+        public ICollection<ProposedIngredientQuantity> ProposedIngredientQuantities { get; set; }
+        public ICollection<ProposedStep> ProposedSteps { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public int UserId { get; set; }

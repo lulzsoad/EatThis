@@ -55,7 +55,7 @@ namespace EatThisAPI.Controllers
         [Route("addProposedRecipe")]
         public async Task<ActionResult<int>> AddProposedRecipe([FromBody] ProposedRecipeDto proposedRecipeDto)
         {
-            return Ok();
+            return Ok(await recipeService.AddProposedRecipe(proposedRecipeDto));
         }
     }
 }

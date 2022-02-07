@@ -25,6 +25,7 @@ namespace EatThisAPI.Database
         public DbSet<ProposedIngredient> ProposedIngredients { get; set; }
         public DbSet<ProposedIngredientQuantity> ProposedIngredientQuantities { get; set; }
         public DbSet<ProposedCategory> ProposedCategories { get; set; }
+        public DbSet<ProposedStep> ProposedSteps { get; set; }
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -34,6 +35,10 @@ namespace EatThisAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProposedIngredientQuantity>()
+                .Property(x => x.ProposedRecipeId)
+                .IsRequired();
+
             modelBuilder.Entity<Category>()
                 .Property(x => x.Name)
                 .IsRequired()

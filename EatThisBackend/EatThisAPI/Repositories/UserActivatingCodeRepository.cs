@@ -16,7 +16,6 @@ namespace EatThisAPI.Repositories
     public class UserActivatingCodeRepository : IUserActivatingCodeRepository
     {
         private readonly AppDbContext context;
-        private readonly IUserRepository userRepository;
         public UserActivatingCodeRepository(AppDbContext context)
         {
             this.context = context;

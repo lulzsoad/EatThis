@@ -4,14 +4,16 @@ using EatThisAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EatThisAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220207221444_ProposedRecipeEntities")]
+    partial class ProposedRecipeEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,10 +193,7 @@ namespace EatThisAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("IngredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProposedIngredientId")
+                    b.Property<int>("ProposedIngredientId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProposedRecipeId")
@@ -210,8 +209,6 @@ namespace EatThisAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IngredientId");
 
                     b.HasIndex("ProposedIngredientId");
 
@@ -540,13 +537,11 @@ namespace EatThisAPI.Migrations
 
             modelBuilder.Entity("EatThisAPI.Models.ProposedRecipe.ProposedIngredientQuantity", b =>
                 {
-                    b.HasOne("EatThisAPI.Models.Ingredient", "Ingredient")
-                        .WithMany()
-                        .HasForeignKey("IngredientId");
-
                     b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedIngredient", "ProposedIngredient")
                         .WithMany()
-                        .HasForeignKey("ProposedIngredientId");
+                        .HasForeignKey("ProposedIngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("EatThisAPI.Models.ProposedRecipe.ProposedRecipe", "ProposedRecipe")
                         .WithMany("ProposedIngredientQuantities")
@@ -559,8 +554,6 @@ namespace EatThisAPI.Migrations
                         .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Ingredient");
 
                     b.Navigation("ProposedIngredient");
 

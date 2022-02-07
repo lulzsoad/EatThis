@@ -19,7 +19,7 @@ namespace EatThisAPI.Models.DTOs.ProposedRecipe
         public int PersonQuantity { get; set; }
 
         public List<IngredientQuantityDto> IngredientQuantities { get; set; }
-        public List<StepDto> Steps { get; set; }
+        public List<StepDto> ProposedSteps { get; set; }
         public CategoryDto Category { get; set; }
         public UserDetails UserDetails { get; set; }
         public List<ProposedIngredientQuantityDto> ProposedIngredientQuantities { get; set; }
