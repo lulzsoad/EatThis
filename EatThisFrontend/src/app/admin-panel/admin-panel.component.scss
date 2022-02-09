@@ -2,3 +2,7 @@
     height: 100vh;
     overflow: auto;
 }
+
+::ng-deep .pointer{
+    cursor: pointer;
+}

@@ -21,6 +21,7 @@ namespace EatThisAPI.Services
         Task<int> AddProposedRecipe(ProposedRecipeDto proposedRecipeDto);
         Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take);
         Task<RecipeDto> GetRecipeById(int recipeId);
+        Task<DataChunkViewModel<ProposedRecipeDto>> GetChunkOfProposedRecipes(int skip, int take);
     }
     public class RecipeService : IRecipeService
     {
@@ -173,10 +174,8 @@ namespace EatThisAPI.Services
                 });
             }
 
-            int id = await recipeRepository.AddProposedRecipe(proposedRecipe, proposedCategory, proposedIngredients, 
-                proposedIngredientQuantities, proposedSteps);
-
-            return id;
+            return await recipeRepository.AddProposedRecipe(proposedRecipe, proposedCategory, proposedIngredients,
+                proposedIngredientQuantities, proposedSteps); ;
         }
 
         public async Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take)
@@ -295,5 +294,37 @@ namespace EatThisAPI.Services
         {
             return new RecipeDto();
 ;       }
+
+        public async Task<DataChunkViewModel<ProposedRecipeDto>> GetChunkOfProposedRecipes(int skip, int take)
+        {
+            var proposedRecipes = await recipeRepository.GetChunkOfProposedRecipes(skip, take);
+            List<ProposedRecipeDto> proposedRecipesDto = new List<ProposedRecipeDto>();
+            foreach(var proposedRecipe in proposedRecipes.Data)
+            {
+                proposedRecipesDto.Add(new ProposedRecipeDto
+                {
+                    Id = proposedRecipe.Id,
+                    Name = proposedRecipe.Name,
+                    ProposedCategory = proposedRecipe.ProposedCategory != null ? new ProposedCategoryDto
+                    {
+                        Id = proposedRecipe.ProposedCategory.Id,
+                        Name = proposedRecipe.ProposedCategory.Name
+                    } : null,
+                    Category = new CategoryDto 
+                    { 
+                        Id = proposedRecipe.Category.Id,
+                        Name = proposedRecipe.Category.Name
+                    },
+                    UserDetails = new UserDetails
+                    {
+                        Id = proposedRecipe.User.Id,
+                        FirstName = proposedRecipe.User.FirstName,
+                        LastName = proposedRecipe.User.LastName
+                    }
+                });
+            }
+
+            return new DataChunkViewModel<ProposedRecipeDto> { Data = proposedRecipesDto, Total = proposedRecipes.Total };
+        }
     }
 }

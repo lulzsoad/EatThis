@@ -27,4 +27,8 @@ export class RecipeService{
     addProposedRecipe(proposedRecipe: ProposedRecipe){
         return this.httpClient.post<number>(`${this.apiUrl}/addProposedRecipe`, proposedRecipe);
     }
+
+    getChunkOfProposedRecipes(skip: number, take: number){
+        return this.httpClient.get<DataChunk<ProposedRecipe>>(`${this.apiUrl}/proposedRecipes?skip=${skip}&take=${take}`)
+    }
 }

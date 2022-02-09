@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminRecipeCreateComponent } from './admin-panel/admin-recipes/admin-recipe-create/admin-recipe-create.component';
+import { AdminRecipeToAcceptComponent } from './admin-panel/admin-recipes/admin-recipe-to-accept/admin-recipe-to-accept.component';
+import { AdminRecipesToAcceptMainComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept-main.component';
+import { AdminRecipesToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept/admin-recipes-to-accept.component';
 import { CategoriesComponent } from './admin-panel/categories/categories.component';
 import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
@@ -51,7 +54,11 @@ const routes: Routes = [
     {path: 'ingredient-categories', component: IngredientCategoriesComponent, canActivate: [AuthGuard, AdminGuard]},
     {path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard, AdminGuard]},
     {path: 'units', component: UnitsComponent, canActivate: [AuthGuard, AdminGuard]},
-    {path: 'create-recipe', component: AdminRecipeCreateComponent, canActivate: [AuthGuard, AdminGuard]}
+    {path: 'create-recipe', component: AdminRecipeCreateComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'recipes-to-accept', component: AdminRecipesToAcceptMainComponent, canActivate: [AuthGuard, EmployeeGuard], children: [
+      {path: '', component: AdminRecipesToAcceptComponent, canActivate: [AuthGuard, EmployeeGuard]},
+      {path: ':id', component: AdminRecipeToAcceptComponent, canActivate: [AuthGuard, EmployeeGuard]}
+    ]}
   ]}
 ];
 

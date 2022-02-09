@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+import { Router } from '@angular/router';
+import { FileInfo, FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { Subscription } from 'rxjs';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RecipeDifficulties } from 'src/app/models/app-models/difficulty.modetl';
@@ -67,7 +68,8 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
     private unitService: UnitService,
     private windowService: WindowService,
     private alertService: AlertService,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private router: Router
     ) { }
 
 
@@ -211,8 +213,6 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
 
   async submit(){
     if(this.validate()){
-      this.configStore.startLoadingPanel();
-
       this.proposedRecipe.ingredientQuantities = this.ingredientQuantities;
       this.proposedRecipe.proposedIngredientQuantities = this.proposedIngredientQuantities;
       this.proposedRecipe.category = this.selectedCategory;
@@ -220,11 +220,12 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
       this.setStepsOrder();
       this.proposedRecipe.proposedSteps = this.steps;
 
+      this.configStore.startLoadingPanel();
       await this.recipeService.addProposedRecipe(this.proposedRecipe).toPromise();
-      console.log(this.proposedRecipe);
-      console.log(JSON.stringify(this.proposedRecipe));
-
       this.configStore.stopLoadingPanel();
+
+      this.alertService.showSuccess("Dodano przepis");
+      this.router.navigate(['../']);
     }
   }
 
@@ -288,10 +289,22 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
   }
 
   async onSelectRecipeImageFile(event: SelectEvent){
-    if(event.files[0].size < this.uploadFileRestrictions.maxFileSize){
+    if(this.validateFile(event.files[0])){
       this.proposedRecipe.image = await FileService.ConvertToBase64(event.files[0].rawFile) as string;
     } else{
       this.proposedRecipe.image = null;
     }
+
+    console.log(this.proposedRecipe.image);
+  }
+
+  validateFile(file: FileInfo){
+    if(file.size > this.uploadFileRestrictions.maxFileSize || 
+      !this.uploadFileRestrictions.allowedExtensions.includes(file.extension)){
+        this.alertService.showError("Błędny plik");
+        return false;
+      }
+
+      return true;
   }
 }

@@ -1,0 +1,38 @@
+<kendo-grid
+    [data]="proposedRecipes"
+    [pageSize]="take"
+    [skip]="skip"
+    [pageable]="pageableConfig"
+    (pageChange)="pageChange($event)"
+>
+    <kendo-grid-column
+        field="id"
+        title="ID"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="name"
+        title="Nazwa"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="category.name"
+        title="Kategoria"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="proposedCategory.name"
+        title="Proponowana kategoria"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="userDetails.fullName"
+        title="Utworzył"
+    >
+    </kendo-grid-column>
+    <kendo-grid-command-column>
+        <ng-template kendoGridCellTemplate>
+            <a><i class="fas fa-search pointer"></i></a>
+        </ng-template>
+    </kendo-grid-command-column>
+</kendo-grid>

@@ -16,5 +16,6 @@ namespace EatThisAPI.Models.DTOs.User
         public int RoleId { get; set; }
         public string Image { get; set; }
         public string Description { get; set; }
+        public string FullName { get => FirstName + " " + LastName; }
     }
 }

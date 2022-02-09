@@ -88,8 +88,6 @@
             <div class="form-group">
               <kendo-fileselect 
                 [multiple]="false"
-                [(ngModel)]="recipeImage"
-                [ngModelOptions]="{standalone: true}"
                 [restrictions]="uploadFileRestrictions"
                 (select)="onSelectRecipeImageFile($event)"
                 required>

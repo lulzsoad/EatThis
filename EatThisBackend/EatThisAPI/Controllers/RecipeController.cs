@@ -45,7 +45,7 @@ namespace EatThisAPI.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<ActionResult<RecipeDto>> PatchRecipe([FromBody]JsonPatchDocument recipeDto, [FromRoute]int id)
+        public async Task<ActionResult<RecipeDto>> PatchRecipe([FromBody] JsonPatchDocument recipeDto, [FromRoute] int id)
         {
             return Ok();
         }
@@ -56,6 +56,14 @@ namespace EatThisAPI.Controllers
         public async Task<ActionResult<int>> AddProposedRecipe([FromBody] ProposedRecipeDto proposedRecipeDto)
         {
             return Ok(await recipeService.AddProposedRecipe(proposedRecipeDto));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
+        [Route("proposedRecipes")]
+        public async Task<ActionResult<List<ProposedRecipeDto>>> GetProposedRecipes([FromQuery]int skip, [FromQuery]int take)
+        {
+            return Ok(await recipeService.GetChunkOfProposedRecipes(skip, take));
         }
     }
 }
