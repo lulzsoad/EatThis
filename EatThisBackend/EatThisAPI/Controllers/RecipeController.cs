@@ -65,5 +65,13 @@ namespace EatThisAPI.Controllers
         {
             return Ok(await recipeService.GetChunkOfProposedRecipes(skip, take));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
+        [Route("proposedRecipes/{id}")]
+        public async Task<ActionResult<List<ProposedRecipeDto>>> GetProposedRecipeById([FromRoute] int id)
+        {
+            return Ok(await recipeService.GetProposedRecipeById(id));
+        }
     }
 }

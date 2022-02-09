@@ -22,6 +22,7 @@ namespace EatThisAPI.Services
         Task<DataChunkViewModel<RecipeDto>> GetChunkOfRecipesByCategory(string categoryId, int skip, int take);
         Task<RecipeDto> GetRecipeById(int recipeId);
         Task<DataChunkViewModel<ProposedRecipeDto>> GetChunkOfProposedRecipes(int skip, int take);
+        Task<ProposedRecipeDto> GetProposedRecipeById(int id);
     }
     public class RecipeService : IRecipeService
     {
@@ -325,6 +326,94 @@ namespace EatThisAPI.Services
             }
 
             return new DataChunkViewModel<ProposedRecipeDto> { Data = proposedRecipesDto, Total = proposedRecipes.Total };
+        }
+
+        public async Task<ProposedRecipeDto> GetProposedRecipeById(int id)
+        {
+            validator.IsObjectNull(id);
+            var proposedRecipe = await recipeRepository.GetProposedRecipeById(id);
+            recipeValidator.DoesRecipeExists(proposedRecipe);
+            var proposedRecipeDto = new ProposedRecipeDto
+            {
+                Id = proposedRecipe.Id,
+                Name = proposedRecipe.Name,
+                SubName = proposedRecipe.SubName,
+                Description = proposedRecipe.Description,
+                Difficulty = proposedRecipe.Difficulty,
+                Image = proposedRecipe.Image,
+                Note = proposedRecipe.Note,
+                PersonQuantity = proposedRecipe.PersonQuantity,
+                Time = proposedRecipe.Time,
+                ProposedCategory = proposedRecipe.ProposedCategory != null ? new ProposedCategoryDto
+                {
+                    Id = proposedRecipe.ProposedCategory.Id,
+                    Name = proposedRecipe.ProposedCategory.Name
+                } : null,
+                Category = new CategoryDto
+                {
+                    Id = proposedRecipe.Category.Id,
+                    Name = proposedRecipe.Category.Name
+                },
+                UserDetails = new UserDetails
+                {
+                    Id = proposedRecipe.User.Id,
+                    FirstName = proposedRecipe.User.FirstName,
+                    LastName = proposedRecipe.User.LastName,
+                    Email = proposedRecipe.User.Email,
+                    Image = proposedRecipe.User.Image
+                },
+                ProposedIngredientQuantities = proposedRecipe.ProposedIngredientQuantities.Where(y => y.ProposedIngredient != null).Select(x => new ProposedIngredientQuantityDto
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    Quantity = x.Quantity,
+                    Unit = new UnitDto
+                    {
+                        Id = x.Unit.Id,
+                        Name = x.Unit.Name
+                    },
+                    ProposedIngredient = new ProposedIngredientDto
+                    {
+                        Id = x.ProposedIngredient.Id,
+                        Name = x.ProposedIngredient.Name,
+                        IngredientCategory = new IngredientCategoryDto
+                        {
+                            Id = x.ProposedIngredient.IngredientCategory.Id,
+                            Name = x.ProposedIngredient.IngredientCategory.Name
+                        },
+                    }
+                }).ToList(),
+                IngredientQuantities = proposedRecipe.ProposedIngredientQuantities.Where(y => y.Ingredient != null).Select(x => new IngredientQuantityDto
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    Quantity = x.Quantity,
+                    Unit = new UnitDto
+                    {
+                        Id = x.Unit.Id,
+                        Name = x.Unit.Name
+                    },
+                    Ingredient = new IngredientDto
+                    {
+                        Id = x.Ingredient.Id,
+                        Name = x.Ingredient.Name,
+                        IngredientCategory = new IngredientCategoryDto
+                        {
+                            Id = x.Ingredient.IngredientCategory.Id,
+                            Name = x.Ingredient.IngredientCategory.Name
+                        },
+                    }
+                }).Where(x => x != null).ToList(),
+                ProposedSteps = proposedRecipe.ProposedSteps.Select(x => new StepDto
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    Image = x.Image,
+                    Order = x.Order
+                }).ToList()
+            };
+
+            return proposedRecipeDto;
         }
     }
 }

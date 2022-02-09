@@ -31,8 +31,8 @@
     >
     </kendo-grid-column>
     <kendo-grid-command-column>
-        <ng-template kendoGridCellTemplate>
-            <a><i class="fas fa-search pointer"></i></a>
+        <ng-template kendoGridCellTemplate let-proposedRecipe>
+            <a (click)="navigateToRecipe(proposedRecipe.id)"><i class="fas fa-search pointer"></i></a>
         </ng-template>
     </kendo-grid-command-column>
 </kendo-grid>

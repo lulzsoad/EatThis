@@ -69,8 +69,8 @@ import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-
 import { IngredientsModalComponent } from './user-panel/recipes-main/recipe-add/ingredients-modal/ingredients-modal.component';
 import { ProposeIngredientModalComponent } from './user-panel/recipes-main/recipe-add/propose-ingredient-modal/propose-ingredient-modal.component';
 import { ProposeCategoryModalComponent } from './user-panel/recipes-main/recipe-add/propose-category-modal/propose-category-modal.component';
-import { AdminRecipesToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept/admin-recipes-to-accept.component';
-import { AdminRecipeToAcceptComponent } from './admin-panel/admin-recipes/admin-recipe-to-accept/admin-recipe-to-accept.component';
+import { AdminRecipesToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept/admin-recipes-to-accept.component';
+import { AdminRecipeToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipe-to-accept/admin-recipe-to-accept.component';
 import { AdminRecipesToAcceptMainComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept-main.component';
 
 

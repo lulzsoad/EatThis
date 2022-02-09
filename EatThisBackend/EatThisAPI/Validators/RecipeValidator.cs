@@ -10,12 +10,12 @@ namespace EatThisAPI.Validators
 {
     public interface IRecipeValidator
     {
-        void DoesRecipeExists(Recipe recipe);
+        void DoesRecipeExists(object recipe);
         void ValidateRecipe(Recipe recipe);
     }
     public class RecipeValidator : IRecipeValidator
     {
-        public void DoesRecipeExists(Recipe recipe)
+        public void DoesRecipeExists(object recipe)
         {
             if(recipe == null)
             {

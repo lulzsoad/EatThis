@@ -25,6 +25,7 @@ namespace EatThisAPI.Repositories
             List<ProposedIngredientQuantity> proposedIngredientQuantities,
             List<ProposedStep> proposedSteps);
         Task<DataChunkViewModel<ProposedRecipe>> GetChunkOfProposedRecipes(int skip, int take);
+        Task<ProposedRecipe> GetProposedRecipeById(int id);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -195,6 +196,25 @@ namespace EatThisAPI.Repositories
             var data = query.Skip(skip).Take(take).ToList();
 
             return new DataChunkViewModel<ProposedRecipe> { Total = total, Data = data };
+        }
+
+        public async Task<ProposedRecipe> GetProposedRecipeById(int id)
+        {
+            return await context.ProposedRecipes
+                .AsNoTracking()
+                .Include(x => x.ProposedSteps)
+                .Include(x => x.User)
+                .Include(x => x.Category)
+                .Include(x => x.ProposedCategory)
+                .Include(x => x.ProposedIngredientQuantities)
+                    .ThenInclude(x => x.Ingredient)
+                    .ThenInclude(x => x.IngredientCategory)
+                .Include(x => x.ProposedIngredientQuantities)
+                    .ThenInclude(x => x.Unit)
+                .Include(x => x.ProposedIngredientQuantities)
+                    .ThenInclude(x => x.ProposedIngredient)
+                    .ThenInclude(x => x.IngredientCategory)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

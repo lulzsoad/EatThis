@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PagerSettings } from '@progress/kendo-angular-grid';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { DataChunk } from 'src/app/models/app-models/data-chunk.model';
@@ -23,8 +24,9 @@ export class AdminRecipesToAcceptComponent implements OnInit {
   }
 
   constructor(
-    private configStore: ConfigStore,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private router: Router,
+    private route: ActivatedRoute
     ) { }
 
   async ngOnInit(): Promise<void> {
@@ -41,5 +43,9 @@ export class AdminRecipesToAcceptComponent implements OnInit {
     this.skip = event.skip;
     this.getProposedRecipes();
     console.log(this.proposedRecipes);
+  }
+
+  navigateToRecipe(id){
+    this.router.navigate([`${id}`], {relativeTo: this.route});
   }
 }
