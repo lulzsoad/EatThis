@@ -1,6 +1,7 @@
 ﻿using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
+using EatThisAPI.Models.ProposedRecipe;
 using EatThisAPI.Repositories;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace EatThisAPI.Validators
     {
         void IsNull(Ingredient ingredient);
         Task CheckIfAlreadyExists(Ingredient ingredient);
-        Task CheckIfNotFound(int id);
+        Task CheckIfNotFound(Ingredient ingredient);
+        Task CheckIfNotFound(ProposedIngredient proposedIngredient);
     }
 
     public class IngredientValidator : IIngredientValidator
@@ -32,9 +34,17 @@ namespace EatThisAPI.Validators
             }
         }
 
-        public async Task CheckIfNotFound(int id)
+        public async Task CheckIfNotFound(Ingredient ingredient)
         {
-            if (!await ingredientRepository.CheckIfExistsById(id))
+            if (!await ingredientRepository.CheckIfExistsById(ingredient.Id))
+            {
+                throw new CustomException(BackendMessage.Ingredient.INGREDIENT_NOT_FOUND);
+            }
+        }
+
+        public async Task CheckIfNotFound(ProposedIngredient proposedIngredient)
+        {
+            if (!await ingredientRepository.CheckIfExists(proposedIngredient))
             {
                 throw new CustomException(BackendMessage.Ingredient.INGREDIENT_NOT_FOUND);
             }

@@ -72,6 +72,7 @@ import { ProposeCategoryModalComponent } from './user-panel/recipes-main/recipe-
 import { AdminRecipesToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept/admin-recipes-to-accept.component';
 import { AdminRecipeToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipe-to-accept/admin-recipe-to-accept.component';
 import { AdminRecipesToAcceptMainComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept-main.component';
+import { ChangeProposedIngredientToIngredientModalComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/modals/change-proposed-ingredient-to-ingredient-modal/change-proposed-ingredient-to-ingredient-modal.component';
 
 
 
@@ -116,7 +117,8 @@ import { AdminRecipesToAcceptMainComponent } from './admin-panel/admin-recipes/a
     ProposeCategoryModalComponent,
     AdminRecipesToAcceptComponent,
     AdminRecipeToAcceptComponent,
-    AdminRecipesToAcceptMainComponent
+    AdminRecipesToAcceptMainComponent,
+    ChangeProposedIngredientToIngredientModalComponent
   ],
   imports: [
     BrowserModule,

@@ -69,11 +69,7 @@ export class RegisterFormComponent implements OnInit {
     }
     this.configStore.startLoadingPanel();
     let registerUser: RegisterUser = this.formGroup.value;
-    let registerSucceed = await this.authService.signup(registerUser);
-    if(!registerSucceed){
-      this.configStore.stopLoadingPanel();
-      return;
-    }
+    await this.authService.signup(registerUser).toPromise();
     this.configStore.stopLoadingPanel();
     this.router.navigate(['./success'], {relativeTo: this.route, queryParams: {email: registerUser.email}});
   }

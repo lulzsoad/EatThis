@@ -1,4 +1,6 @@
 ﻿using EatThisAPI.Models.DTOs;
+using EatThisAPI.Models.DTOs.ProposedRecipe;
+using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +54,31 @@ namespace EatThisAPI.Controllers
         public async Task<ActionResult<IngredientDto>> Update([FromBody] IngredientDto ingredientDto)
         {
             return Ok(await ingredientService.Update(ingredientDto));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
+        [Route("accept/{id}")]
+        public async Task<ActionResult<IngredientQuantityDto>> AcceptProposedIngredient([FromRoute]int id)
+        {
+            return Ok(await ingredientService.AcceptProposedIngredient(id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Employee")]
+        [Route("proposedRecipeIngredientQuantities/{id}")]
+        public async Task<ActionResult<IngredientQuantitiesVM>> GetIngredientQuantitiesByProposedRecipeId([FromRoute]int id)
+        {
+            return Ok(await ingredientService.GetProposedIngredientQuantitiesByProposedRecipeId(id));
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "Admin,Employee")]
+        [Route("proposedIngredient/{id}")]
+        public async Task<ActionResult> DeleteProposedIngredient([FromRoute]int id)
+        {
+            await ingredientService.DeleteProposedIngredient(id);
+            return Ok();
         }
     }
 }

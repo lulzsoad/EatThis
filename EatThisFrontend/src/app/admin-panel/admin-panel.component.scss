@@ -6,3 +6,18 @@
 ::ng-deep .pointer{
     cursor: pointer;
 }
+
+::ng-deep .green-bordered-container{
+    border-top: solid 2px rgb(66, 160, 66);
+    border-radius: 10px;
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+::ng-deep .gray-container{
+    border-radius: 10px;
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin-bottom: 15px;
+}

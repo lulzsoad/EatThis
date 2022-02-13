@@ -5,6 +5,8 @@ import { Ingredient } from "../models/ingredient.model";
 import { Subject } from "rxjs";
 import { AlertService } from "./app-services/alert.service";
 import { IngredientPosition } from "../models/app-models/ingredient-position.model";
+import { IngredientQuantity } from "../models/ingredient-quantity.model";
+import { IngredientQuantitiesVM } from "../models/app-models/ingredient-quantities-vm.model";
 
 @Injectable()
 export class IngredientService{
@@ -54,5 +56,18 @@ export class IngredientService{
             .toPromise()
             .then(() => this.alertService.showSuccess("Sukces"))
             .catch(err => this.alertService.showError(err.error));
+    }
+
+    acceptProposedIngredient(id: number){
+        return this.httpClient.get<IngredientQuantity>(`${this.apiUrl}accept/${id}`)
+    }
+
+    getIngredientQuantietiesByProposedRecipeId(id: number){
+        return this.httpClient.get<IngredientQuantitiesVM>(`${this.apiUrl}proposedRecipeIngredientQuantities/${id}`);
+    }
+
+    deleteProposedIngredient(id:number){
+        console.log(id);
+        return this.httpClient.delete(`${this.apiUrl}proposedIngredient/${id}`);
     }
 }

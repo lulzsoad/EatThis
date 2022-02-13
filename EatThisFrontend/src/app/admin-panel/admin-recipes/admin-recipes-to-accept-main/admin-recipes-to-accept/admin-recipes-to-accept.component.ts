@@ -22,6 +22,7 @@ export class AdminRecipesToAcceptComponent implements OnInit {
     previousNext: true,
     position: "bottom"
   }
+  public loading: boolean = false;
 
   constructor(
     private recipeService: RecipeService,
@@ -34,8 +35,9 @@ export class AdminRecipesToAcceptComponent implements OnInit {
   }
 
   private async getProposedRecipes(){
+    this.loading = true;
     this.proposedRecipes = await this.recipeService.getChunkOfProposedRecipes(this.skip, this.take).toPromise();
-    console.log(this.proposedRecipes);
+    this.loading = false;
   }
 
   async pageChange(event){

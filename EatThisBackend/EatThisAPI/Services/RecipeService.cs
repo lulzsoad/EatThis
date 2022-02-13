@@ -108,7 +108,7 @@ namespace EatThisAPI.Services
             { 
                 Name = proposedRecipeDto.Name,
                 SubName = proposedRecipeDto.SubName,
-                Description = proposedRecipeDto.SubName,
+                Description = proposedRecipeDto.Description,
                 Image = proposedRecipeDto.Image,
                 Time = proposedRecipeDto.Time,
                 PersonQuantity = proposedRecipeDto.PersonQuantity,

@@ -1,1 +1,136 @@
-<p>admin-recipe-to-accept works!</p>
+<div class="container">
+    <div class="col-12 row m-10">
+        <div class="col-6">
+            <div class="col-12 green-bordered-container">
+                <h3>Informacje</h3>
+                <div class="col-12 row">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Kategoria:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.category?.name}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Nazwa:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.name}}</div>
+                </div>
+                <div class="col-12 row" *ngIf="proposedRecipe?.subName">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Podnazwa:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.subName}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Czas:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.time}} min.</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Dla:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.personQuantity}} osób</div>
+                </div>
+                <div class="col-12 row" *ngIf="proposedRecipe?.description">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Trudność:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.difficulty}}</div>
+                </div>
+                <div class="col-12 row" *ngIf="proposedRecipe?.description">
+                    <div class="col-6 col-sm-5 col-md-4 col-lg-3 col-xl-2"><strong>Opis:</strong></div>
+                    <div class="col-6 col-sm-7 col-md-8 col-lg-9 col-xl-10">{{proposedRecipe?.description}}</div>
+                </div>
+            </div>
+            
+            <div class="col-12 gray-container">
+                <h3>Składniki</h3>
+                <div class="col-12">
+                    <div *ngFor="let ingredientQuantity of proposedRecipe?.ingredientQuantities">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div>
+                                <strong>{{ingredientQuantity?.ingredient?.name}}</strong>&nbsp;
+                                <span *ngIf="ingredientQuantity?.description">({{ingredientQuantity?.description}})</span>
+                            </div>
+                            <div>
+                                <span>{{ingredientQuantity?.quantity}}</span>&nbsp;
+                                <span>{{ingredientQuantity?.unit?.name}}</span>
+                            </div>
+                        </div>
+                        <hr width="100%" style="margin: 2px;">
+                    </div>
+                    <div *ngFor="let proposedIngredientQuantity of proposedRecipe?.proposedIngredientQuantities">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div>
+                                <strong style="color: green;">{{proposedIngredientQuantity?.proposedIngredient?.name}}</strong>&nbsp;
+                                <span *ngIf="proposedIngredientQuantity?.description">({{proposedIngredientQuantity?.description}})</span>
+                            </div>
+                            <div>
+                                <span>{{proposedIngredientQuantity?.quantity}}</span>&nbsp;
+                                <span>{{proposedIngredientQuantity?.unit?.name}}</span>
+                            </div>
+                        </div>
+                        <hr width="100%" style="margin: 2px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-6">
+            <div class="col-12">
+                <div class="green-bordered-container">
+                    <h3 class="text-center">Zaproponowane składniki</h3>
+                    <p class="text-muted text-center"
+                        *ngIf="proposedRecipe?.proposedIngredientQuantities?.length < 1">
+                        Brak
+                    </p>
+                    <div *ngFor="let proposedIngredientQuantity of proposedRecipe?.proposedIngredientQuantities">
+                        <div class="d-flex flex-row justify-content-between" >
+                                <strong>
+                                    {{proposedIngredientQuantity?.proposedIngredient?.name}}
+                                </strong>
+                                <div class="btn-group">
+                                    <button 
+                                        style="color: green;" 
+                                        (click)="acceptIngredient(proposedIngredientQuantity?.proposedIngredient)"
+                                        >
+                                        <i class="fas fa-check-square"></i>
+                                    </button>
+                                    <button 
+                                        (click)="removeIngredient(proposedIngredientQuantity?.proposedIngredient)" 
+                                        style="color: red;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                        </div>
+                        
+                        <hr width="100%" style="padding: 0; margin: 2px;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 gray-container">
+                <h3 class="text-center">Zaproponowana kategoria</h3>
+                <p *ngIf="!proposedRecipe?.proposedCategory" class="text-muted text-center">Brak</p>
+                <div *ngIf="proposedRecipe?.proposedCategory" class="d-flex flex-row justify-content-between" >
+                    <strong>{{proposedRecipe?.proposedCategory?.name}}</strong>
+                    <div class="btn-group">
+                        <button style="color: green;"><i class="fas fa-check-square"></i></button>
+                        <button style="color: red;"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 gray-container">
+                <img [src]="proposedRecipe?.image" width="100%" height="auto"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 gray-container">
+        <div *ngFor="let proposedStep of proposedRecipe?.proposedSteps">
+            <h5>Krok {{proposedStep?.order + 1}}</h5>
+            <div class="col-12 row">
+                <div class="col-3" *ngIf="proposedStep?.image">
+                    <img [src]="proposedStep?.image" width="100%" height="auto"/>
+                </div>
+                <div class="col-9">
+                    <p>{{proposedStep?.description}}</p>
+                </div>
+            </div>
+            <hr width="100%">
+        </div>
+    </div>
+    <div class="col-12 gray-container" *ngIf="proposedRecipe?.note">
+        <h3>Notatka od użytkownika</h3>
+        <p>{{proposedRecipe?.note}}</p>
+    </div>
+</div>
+<div kendoDialogContainer></div>

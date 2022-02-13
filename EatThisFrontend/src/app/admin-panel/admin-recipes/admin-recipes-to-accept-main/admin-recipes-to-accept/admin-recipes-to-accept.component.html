@@ -1,8 +1,9 @@
-<kendo-grid
+<kendo-grid style="height: 90%;"
     [data]="proposedRecipes"
     [pageSize]="take"
     [skip]="skip"
     [pageable]="pageableConfig"
+    [loading]="loading"
     (pageChange)="pageChange($event)"
 >
     <kendo-grid-column
