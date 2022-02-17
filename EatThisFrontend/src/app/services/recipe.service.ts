@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { AppConfig } from "../app-config/app.config";
 import { DataChunk } from "../models/app-models/data-chunk.model";
 import { ProposedRecipe } from "../models/proposed-recipe/proposed-recipe.model";
+import { RecipeByIngredient } from "../models/recipe-by-ingredient.model";
 import { Recipe } from "../models/recipe.model";
 
 @Injectable()
@@ -34,5 +35,13 @@ export class RecipeService{
 
     getProposedRecipeById(id: number){
         return this.httpClient.get<ProposedRecipe>(`${this.apiUrl}/proposedRecipes/${id}`);
+    }
+
+    getRecipesByIngredients(ingredientsJson: string, skip: number = null, take: number = null){
+        return this.httpClient.get<DataChunk<RecipeByIngredient>>(`${this.apiUrl}/byIngredients?ingredientsJson=${ingredientsJson}&skip=${skip}&take=${take}`);
+    }
+
+    getCurrentUserRecipes(){
+        return this.httpClient.get<Recipe[]>(`${this.apiUrl}/currentUserRecipes`);
     }
 }

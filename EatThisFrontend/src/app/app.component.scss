@@ -1,3 +1,9 @@
+::ng-deep body{
+    font-family: 'Open Sans', Roboto, Oxygen, Ubuntu, Cantarell, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+::ng-deep .font-size-12{
+    font-size: 12px;
+}
 ::ng-deep .pointer{
     cursor: pointer;
 }
@@ -33,6 +39,11 @@
     > nav{
         background-color: rgba(224, 221, 221, 0.801);
     }
+}
+
+::ng-deep .bg-color-orange{
+    color: rgb(7, 7, 7) !important;
+    background-color: rgb(250, 178, 45) !important;
 }
 
 ::ng-deep .rounded-container-white{

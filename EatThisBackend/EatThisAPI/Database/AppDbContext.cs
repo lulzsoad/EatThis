@@ -3,6 +3,7 @@ using EatThisAPI.Models.ProposedRecipe;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,11 +27,13 @@ namespace EatThisAPI.Database
         public DbSet<ProposedIngredientQuantity> ProposedIngredientQuantities { get; set; }
         public DbSet<ProposedCategory> ProposedCategories { get; set; }
         public DbSet<ProposedStep> ProposedSteps { get; set; }
+        public DbSet<ReportStatus> ReportStatuses { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="rounded-container-white">
+        <div class="col-12 row" *ngFor="let recipeDetails of recipes?.data">
+            <div class="col-6">
+                <h2 class="header-orange pointer" (click)="navigateToRecipe(recipeDetails?.recipe.id)">{{recipeDetails?.recipe.name}}</h2>
+                <h6 class="text-muted">{{recipeDetails?.recipe.subName}}</h6>
+                <img class="rounded-25px" [src]="recipeDetails?.recipe.image" width="100%" height="auto">
+            </div>
+            <div class="col-6">
+                <div class="col-12 row">
+                    <div class="col-4">
+                        <div class="text-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <div class="text-center">
+                            {{recipeDetails?.recipe?.personQuantity}}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <div class="text-center">
+                            {{recipeDetails?.recipe?.time}} min.
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-center" [ngSwitch]="recipeDetails?.recipe?.difficulty">
+                            <i *ngSwitchCase="'Łatwy'" class="fas fa-circle fa-2x" style="color: green;"></i>
+                            <i *ngSwitchCase="'Normalny'" class="fas fa-circle fa-2x" style="color: orange;"></i>
+                            <i *ngSwitchCase="'Trudny'" class="fas fa-circle fa-2x" style="color: orangered;"></i>
+                        </div>
+                        <div class="text-center">
+                            Poziom
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div>
+                    <div class="col-12 d-flex flex-row justify-content-between">
+                        <h6>Posiadane składniki</h6>
+                        <span>{{recipeDetails?.includedIngredientsCount}}/{{recipeDetails?.recipe.ingredientQuantities?.length}}</span>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let includedIngredient of recipeDetails.includedIngredients">
+                            <strong style="color: green;">{{includedIngredient?.ingredient?.name}}</strong>
+                        </li>
+                    </ul>
+                </div>
+                <br>
+                <div>
+                    <div class="col-12 d-flex flex-row justify-content-between">
+                        <h6>Brakujące składniki</h6>
+                        <span>{{recipeDetails?.missingIngredientsCount}}/{{recipeDetails?.recipe.ingredientQuantities?.length}}</span>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let missingIngredient of recipeDetails.missingIngredients">
+                            <strong style="color: red;">{{missingIngredient?.ingredient?.name}}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <hr width="100%">
+            <br>
+        </div>
+    </div>
+</div>

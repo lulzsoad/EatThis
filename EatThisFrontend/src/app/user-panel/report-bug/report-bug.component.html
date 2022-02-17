@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="rounded-container-white">
+        <h1 class="header-orange">Zgłoś błąd</h1>
+        <div class="col-12">
+            <label for="title">Tytuł</label>
+            <input [(ngModel)]="report.title" class="form-control" type="text" id="title">
+        </div>
+        <br>
+        <div class="col-12">
+            <label for="description">Opis</label>
+            <textarea [(ngModel)]="report.description" class="form-control" [rows]="6" id="description"></textarea>
+        </div>
+        <br>
+        <button (click)="addReport()" class="btn btn-warning">Dodaj zgłoszenie</button>
+    </div>
+</div>

@@ -1,13 +1,23 @@
 import { Component, OnInit} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DialogCloseResult, DialogService } from '@progress/kendo-angular-dialog';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { RoleEnum } from 'src/app/enums/role-enum.enum';
+import { ChangePassword } from 'src/app/models/app-models/change-password.model';
+import { DataChunk } from 'src/app/models/app-models/data-chunk.model';
 import { Operation, OperationEnum} from 'src/app/models/app-models/patch-operations.model';
 import { Bookmark } from 'src/app/models/bookmark.model';
+import { Recipe } from 'src/app/models/recipe.model';
+import { Report } from 'src/app/models/report.model';
 import { UserDetails } from 'src/app/models/user-details.model';
+import { AccountService } from 'src/app/services/account.service';
 import { AlertService } from 'src/app/services/app-services/alert.service';
 import { DateFormat } from 'src/app/services/app-services/date.service';
 import { FileService } from 'src/app/services/app-services/file.service';
+import { RecipeService } from 'src/app/services/recipe.service';
+import { ReportService } from 'src/app/services/report.service';
 import { UserService } from 'src/app/services/user.service';
+import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
 
 @Component({
   selector: 'app-my-account',
@@ -16,6 +26,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyAccountComponent implements OnInit {
   public bookmarks: Bookmark[] = [];
+  public myRecipes: Recipe[];
+  public myReports: Report[];
   public selectedBookmark: Bookmark;
   public userDetails: UserDetails;
   public userImage: string = "";
@@ -28,7 +40,13 @@ export class MyAccountComponent implements OnInit {
   constructor(
     private userService: UserService,
     private configStore: ConfigStore,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private recipeService: RecipeService,
+    private reportService: ReportService,
+    private dialogService: DialogService,
+    private accountService: AccountService,
+    private router: Router,
+    private route: ActivatedRoute
     ) { }
 
   async ngOnInit(): Promise<void> {
@@ -36,7 +54,7 @@ export class MyAccountComponent implements OnInit {
     this.selectedBookmark = this.bookmarks.filter(x => x.isActive)[0];
     
     this.configStore.startLoadingPanel();
-    await this.getUserDetails();
+    await Promise.all([this.getUserDetails(), this.getMyRecipes(), this.getMyReports()]);
     this.configStore.stopLoadingPanel();
   }
 
@@ -58,7 +76,6 @@ export class MyAccountComponent implements OnInit {
   async getUserDetails(){
     this.userDetails = await this.userService.getCurrentUserDetails().toPromise()
     this.userImage = this.userDetails?.image != null ? this.userDetails?.image : "";
-    console.log(this.userDetails);
   }
 
   editProfile(){
@@ -112,6 +129,65 @@ export class MyAccountComponent implements OnInit {
 
       this.alertService.showSuccess("Zaktualizowano zdjęcie profilowe");
     }
-    
+  }
+
+  async getMyRecipes(){
+    this.myRecipes = await this.recipeService.getCurrentUserRecipes().toPromise();
+  }
+
+  navigateToRecipe(recipeId: number){
+    this.router.navigate(['../../recipes', recipeId], {relativeTo: this.route});
+  }
+
+  async getMyReports(){
+    this.myReports = await this.reportService.getCurrentUserReports().toPromise();
+    console.log(this.myReports);
+  }
+
+  changePasswordClick(){
+    const dialogRef = this.dialogService.open({
+      content: ChangePasswordModalComponent,
+      title: "Zmień hasło",
+      actions: [{ text: "Anuluj" }, { text: "Zmień hasło", themeColor: "primary" }],
+      preventAction: (ev: any, dialog): boolean => {
+        const formGroup = dialog.content.instance.formGroup;
+        
+        if(ev.text == "Anuluj"){
+          dialog.close();
+          return true;
+        }
+
+        if (!formGroup.valid) {
+          return !formGroup.valid;
+        }
+
+        if(formGroup.value.newPassword != formGroup.value.confirmPassword){
+          this.alertService.showError("Hasła nie zgadzają się ze sobą");
+          return false;
+        }
+
+        if(formGroup.value.newPassword.length < 6){
+          this.alertService.showError("Hasła nie zgadzają się ze sobą");
+          return false;
+        }
+        
+        let isOk = this.changePassword(new ChangePassword(formGroup.value.oldPassword, formGroup.value.newPassword));
+
+        if(isOk){
+          dialog.close();
+        }
+
+        return true;
+      },
+    });
+  }
+
+  async changePassword(changePasswordVm: ChangePassword){
+    this.configStore.startLoadingPanel();
+        await this.accountService
+          .changePasswordModal(changePasswordVm).toPromise();
+        this.configStore.stopLoadingPanel();
+        this.alertService.showInfo("Zmieniono hasło");
+        return true;
   }
 }

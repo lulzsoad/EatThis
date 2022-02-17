@@ -1,21 +1,29 @@
 ﻿using EatThisAPI.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EatThisAPI.Database
 {
     public class Seeder
     {
         private readonly AppDbContext context;
-        public Seeder(AppDbContext context)
+        public Seeder(AppDbContext context, IConfiguration configuration)
         {
             this.context = context;
+            Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         public void Seed()
         {
+            
+
             if (context.Database.CanConnect())
             {
                 if (!context.Roles.Any())
@@ -31,12 +39,19 @@ namespace EatThisAPI.Database
                     context.Units.AddRange(units);
                     context.SaveChanges();
                 }
-                //if (!context.Ingredients.Any())
-                //{
-                //    var ingredients = GetIngredients();
-                //    context.Ingredients.AddRange(ingredients);
-                //    context.SaveChanges();
-                //}
+
+                if (!context.ReportStatuses.Any())
+                {
+                    context.Database.ExecuteSqlRaw(@"SET IDENTITY_INSERT ReportStatuses ON");
+                    context.Database.ExecuteSqlRaw(@"
+SET IDENTITY_INSERT ReportStatuses ON; 
+INSERT INTO ReportStatuses(Id, Name) VALUES(1, 'Zgłoszono'), (2, 'W trakcie rozpatrywania'), (3, 'Zakończono')
+SET IDENTITY_INSERT ReportStatuses OFF; 
+");
+                    context.SaveChanges();
+                    context.Database.ExecuteSqlRaw(@"SET IDENTITY_INSERT [dbo].[ReportStatuses] OFF");
+
+                }
             }
         }
 
@@ -172,14 +187,17 @@ namespace EatThisAPI.Database
             {
                 new Role
                 {
+                    Id = 1,
                     Name = "Admin"
                 },
                 new Role
                 {
+                    Id = 2,
                     Name = "Employee"
                 },
                 new Role
                 {
+                    Id = 3,
                     Name = "User"
                 }
             };

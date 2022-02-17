@@ -103,7 +103,7 @@ export class RecipeAddComponent implements OnInit, OnDestroy {
   }
 
   async getIngredientCategories(){
-    this.ingredientCategories = await this.ingredientCategoryService.getAll();
+    this.ingredientCategories = await this.ingredientCategoryService.getAll().toPromise();
   }
 
   async getUnits(){

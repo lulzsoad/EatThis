@@ -15,6 +15,7 @@ namespace EatThisAPI.Helpers
     public interface IUserHelper
     {
         Task<User> GetCurrentUser();
+        int GetCurrentUserId();
     }
     public class UserHelper : ControllerBase, IUserHelper
     {
@@ -37,6 +38,13 @@ namespace EatThisAPI.Helpers
             var user = await userRepository.GetUserById(id);
             userValidator.UserExists(user);
             return user;
+        }
+
+        public int GetCurrentUserId()
+        {
+            var userClaim = httpContextAccessor.HttpContext?.User;
+            var userId = userClaim.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return Convert.ToInt32(userId);
         }
     }
 }

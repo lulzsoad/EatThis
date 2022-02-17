@@ -14,13 +14,8 @@ export class IngredientCategoryService{
     
     constructor(private httpClient: HttpClient, private alertService: AlertService){}
     
-    async getAll(): Promise<IngredientCategory[]>{
-        let result: IngredientCategory[] = [];
-        await this.httpClient.get<IngredientCategory[]>(`${this.apiUrl}`)
-            .toPromise()
-            .then(data => result = data)
-            .catch((err) => this.alertService.showError(err.error));
-        return result;
+    getAll(){
+        return this.httpClient.get<IngredientCategory[]>(`${this.apiUrl}`);
     }
 
     async getById(id: number){

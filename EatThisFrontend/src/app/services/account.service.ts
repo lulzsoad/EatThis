@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subject } from "rxjs";
 import { AppConfig } from "../app-config/app.config";
+import { ChangePassword } from "../models/app-models/change-password.model";
 import { PasswordResetCodeCheckModel } from "../models/password-reset-code-check.model";
 import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-password.model";
 import { PasswordReset } from "../models/password-reset.model";
@@ -39,5 +40,9 @@ export class AccountService{
         request.password = newPassword;
 
         return this.httpClient.post(`${this.apiUrl}change-password-reset-code`, request);
+    }
+
+    changePasswordModal(changePasswordVm: ChangePassword){
+        return this.httpClient.put(`${this.apiUrl}change-password`, changePasswordVm);
     }
 }

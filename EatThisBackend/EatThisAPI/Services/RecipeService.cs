@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EatThisAPI.Services
@@ -23,6 +24,8 @@ namespace EatThisAPI.Services
         Task<RecipeDto> GetRecipeById(int recipeId);
         Task<DataChunkViewModel<ProposedRecipeDto>> GetChunkOfProposedRecipes(int skip, int take);
         Task<ProposedRecipeDto> GetProposedRecipeById(int id);
+        Task<DataChunkViewModel<RecipeDtoByIngredientsViewModel>> GetRecipesByIngredients(string ingredientsJson, int? skip, int? take);
+        Task<List<RecipeDto>> GetCurrentUsersRecipe();
     }
     public class RecipeService : IRecipeService
     {
@@ -414,6 +417,88 @@ namespace EatThisAPI.Services
             };
 
             return proposedRecipeDto;
+        }
+
+        public async Task<DataChunkViewModel<RecipeDtoByIngredientsViewModel>> GetRecipesByIngredients(string ingredientsJson, int? skip, int? take)
+        {
+            var ingredientsDto = JsonSerializer.Deserialize<List<IngredientDto>>(ingredientsJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
+            var ingredients = new List<Ingredient>();
+            foreach(var ingredientDto in ingredientsDto)
+            {
+                ingredients.Add(new Ingredient
+                {
+                    Id = ingredientDto.Id,
+                    Name = ingredientDto.Name
+                });
+            }
+
+            var recipes = await recipeRepository.GetRecipesByIngredients(ingredients, skip, take);
+            var recipesDto = new DataChunkViewModel<RecipeDtoByIngredientsViewModel>() 
+            { 
+                Data = new List<RecipeDtoByIngredientsViewModel>(),
+                Total = 0
+            };
+
+            foreach(var data in recipes.Data)
+            {
+                recipesDto.Data.Add(new RecipeDtoByIngredientsViewModel
+                {
+                    Recipe = new RecipeDto
+                    {
+                        Id = data.Recipe.Id,
+                        Name = data.Recipe.Name,
+                        SubName = data.Recipe.SubName,
+                        Description = data.Recipe.Description,
+                        Difficulty = data.Recipe.Difficulty,
+                        Time = data.Recipe.Time,
+                        PersonQuantity = data.Recipe.PersonQuantity,
+                        Image = data.Recipe.Image,
+                        Category = new CategoryDto
+                        {
+                            Id = data.Recipe.Category.Id,
+                            Name = data.Recipe.Category.Name
+                        },
+                        IngredientQuantities = new List<IngredientQuantityDto>()
+                    },
+
+                    IncludedIngredientsCount = data.IncludedIngredientsCount,
+                    MissingIngredientsCount = data.MissingIngredientsCount
+                });
+
+                foreach (var ingredientQuantity in data.Recipe.IngredientQuantities)
+                {
+                    recipesDto.Data.FirstOrDefault(x => x.Recipe.Id == data.Recipe.Id).Recipe.IngredientQuantities.Add(new IngredientQuantityDto 
+                    { 
+                        Ingredient = new IngredientDto
+                        {
+                            Id = ingredientQuantity.Ingredient.Id,
+                            Name = ingredientQuantity.Ingredient.Name
+                        }
+                    });
+                }
+            }
+
+            
+
+            recipesDto.Total = recipes.Total;
+            return recipesDto;
+        }
+
+        public async Task<List<RecipeDto>> GetCurrentUsersRecipe()
+        {
+            var userId = userHelper.GetCurrentUserId();
+            var recipes = await recipeRepository.GetRecipesByUserId(userId);
+            var recipesDto = new List<RecipeDto>();
+            foreach(var recipe in recipes)
+            {
+                recipesDto.Add(new RecipeDto
+                {
+                    Id = recipe.Id,
+                    Name = recipe.Name
+                });
+            };
+
+            return recipesDto;
         }
     }
 }

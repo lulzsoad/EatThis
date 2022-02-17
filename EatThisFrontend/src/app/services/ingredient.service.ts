@@ -69,5 +69,5 @@ export class IngredientService{
     deleteProposedIngredient(id:number){
         console.log(id);
         return this.httpClient.delete(`${this.apiUrl}proposedIngredient/${id}`);
-    }
+    } 
 }

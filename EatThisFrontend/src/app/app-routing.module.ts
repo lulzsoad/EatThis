@@ -9,6 +9,8 @@ import { CategoriesComponent } from './admin-panel/categories/categories.compone
 import { IngredientCategoriesComponent } from './admin-panel/ingredient-categories/ingredient-categories.component';
 import { IngredientsComponent } from './admin-panel/ingredients/ingredients.component';
 import { UnitsComponent } from './admin-panel/units/units.component';
+import { ReportsListComponent } from './admin-panel/users/reports-list/reports-list.component';
+import { UsersListComponent } from './admin-panel/users/users-list/users-list.component';
 import { AdminGuard } from './guards/admin.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { EmployeeGuard } from './guards/employee.guard';
@@ -21,14 +23,21 @@ import { MyAccountComponent } from './user-panel/account/my-account/my-account.c
 import { RegisterFormComponent } from './user-panel/account/register/register-form/register-form.component';
 import { RegisterSuccessComponent } from './user-panel/account/register/register-success/register-success.component';
 import { RegisterComponent } from './user-panel/account/register/register.component';
+import { EnterIngredientsComponent } from './user-panel/enter-ingredients/enter-ingredients.component';
 import { RecipeAddComponent } from './user-panel/recipes-main/recipe-add/recipe-add.component';
 import { RecipeComponent } from './user-panel/recipes-main/recipe/recipe.component';
+import { RecipesByIngredientsComponent } from './user-panel/recipes-main/recipes-by-ingredients/recipes-by-ingredients.component';
 import { RecipesMainComponent } from './user-panel/recipes-main/recipes-main.component';
 import { RecipesComponent } from './user-panel/recipes-main/recipes/recipes.component';
+import { ReportBugComponent } from './user-panel/report-bug/report-bug.component';
+import { UserPanelMainPageComponent } from './user-panel/user-panel-main-page/user-panel-main-page.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 
 const routes: Routes = [
   {path: '', component: UserPanelComponent, children: [
+    {path: '', component: UserPanelMainPageComponent},
+    {path: 'report', component: ReportBugComponent, canActivate: [AuthGuard]},
+    {path: 'enter-ingredients', component: EnterIngredientsComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent, children: [
       {path: '', component: RegisterFormComponent},
@@ -44,6 +53,7 @@ const routes: Routes = [
     [
       {path: '', component: RecipesComponent},
       {path: 'add', component: RecipeAddComponent, canActivate: [AuthGuard]},
+      {path: 'by-ingredients', component: RecipesByIngredientsComponent},
       {path: ':id', component: RecipeComponent},
       
     ]}
@@ -55,6 +65,8 @@ const routes: Routes = [
     {path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard, AdminGuard]},
     {path: 'units', component: UnitsComponent, canActivate: [AuthGuard, AdminGuard]},
     {path: 'create-recipe', component: AdminRecipeCreateComponent, canActivate: [AuthGuard, AdminGuard]},
+    {path: 'users', component: UsersListComponent, canActivate: [AdminGuard]},
+    {path: 'reports', component: ReportsListComponent, canActivate: [AuthGuard, AdminGuard]},
     {path: 'recipes-to-accept', component: AdminRecipesToAcceptMainComponent, canActivate: [AuthGuard, EmployeeGuard], children: [
       {path: '', component: AdminRecipesToAcceptComponent, canActivate: [AuthGuard, EmployeeGuard]},
       {path: ':id', component: AdminRecipeToAcceptComponent, canActivate: [AuthGuard, EmployeeGuard]}

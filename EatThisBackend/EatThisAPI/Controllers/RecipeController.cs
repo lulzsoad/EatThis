@@ -73,5 +73,20 @@ namespace EatThisAPI.Controllers
         {
             return Ok(await recipeService.GetProposedRecipeById(id));
         }
+
+        [HttpGet]
+        [Route("byIngredients")]
+        public async Task<ActionResult> GetRecipesByIngredients([FromQuery] string ingredientsJson, [FromQuery] int? skip, [FromQuery] int? take)
+        {
+            return Ok(await recipeService.GetRecipesByIngredients(ingredientsJson, skip, take));
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("currentUserRecipes")]
+        public async Task<ActionResult> GetCurentUserRecipess()
+        {
+            return Ok(await recipeService.GetCurrentUsersRecipe());
+        }
     }
 }

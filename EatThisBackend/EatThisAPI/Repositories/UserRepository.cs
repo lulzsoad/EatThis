@@ -17,6 +17,7 @@ namespace EatThisAPI.Repositories
         Task<User> GetUserByEmail(string email);
         Task<User> GetUserById(int id);
         Task<User> UpdateUser(User user, object updatedUser);
+        Task ChangePassword(int userId, string newPassword);
     }
     public class UserRepository : IUserRepository
     {
@@ -61,6 +62,13 @@ namespace EatThisAPI.Repositories
                 await context.SaveChangesAsync();
             }
             return userFromDb;
+        }
+
+        public async Task ChangePassword(int userId, string newPassword)
+        {
+            var userFromDb = context.Users.FirstOrDefault(x => x.Id == userId);
+            userFromDb.PasswordHash = newPassword;
+            await context.SaveChangesAsync();
         }
     }
 }

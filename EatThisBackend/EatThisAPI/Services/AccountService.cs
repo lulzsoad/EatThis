@@ -3,6 +3,7 @@ using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs.User;
+using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Repositories;
 using EatThisAPI.Settings;
 using EatThisAPI.Validators;
@@ -28,6 +29,7 @@ namespace EatThisAPI.Services
         Task<PasswordResetCodeViewModel> GeneratePasswordResetCode(string email);
         Task<PasswordResetCodeViewModel> PasswordResetCodeCheck(PasswordResetCodeViewModel passwordResetCodeVM);
         Task ChangePasswordByResetCode(ChangePasswordResetCodeViewModel changePasswordResetCodeViewModel);
+        Task ChangePassword(ChangePasswordViewModel changePasswordVM);
     }
 
     public class AccountService : IAccountService
@@ -41,6 +43,7 @@ namespace EatThisAPI.Services
         private readonly IUserActivatingCodeRepository userActivatingCodeRepository;
         private readonly IPasswordResetCodeRepository passwordResetCodeRepository;
         private readonly IValidator validator;
+        private readonly IUserHelper userHelper;
         public AccountService(
             IMapper mapper, 
             IUserRepository userRepository, 
@@ -49,7 +52,9 @@ namespace EatThisAPI.Services
             IEmailService emailService,
             IUserActivatingCodeRepository userActivatingCodeRepository,
             AuthenticationSettings authenticationSettings,
-            IPasswordResetCodeRepository passwordResetCodeRepository,IValidator validator)
+            IPasswordResetCodeRepository passwordResetCodeRepository,
+            IValidator validator,
+            IUserHelper userHelper)
         {
             this.mapper = mapper;
             this.userRepository = userRepository;
@@ -60,6 +65,7 @@ namespace EatThisAPI.Services
             this.userActivatingCodeRepository = userActivatingCodeRepository;
             this.passwordResetCodeRepository = passwordResetCodeRepository;
             this.validator = validator;
+            this.userHelper = userHelper;
         }
         public async Task RegisterUser(RegisterUserDto registerUserDto)
         {
@@ -76,6 +82,20 @@ namespace EatThisAPI.Services
 
             int userId = await userRepository.RegisterUser(newUser);
             await SendActivatingCode(newUser.Email, userId);
+        }
+
+        public async Task ChangePassword(ChangePasswordViewModel changePasswordVM)
+        {
+            var user = await this.userHelper.GetCurrentUser();
+            var verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, changePasswordVM.OldPassword);
+            if(verificationResult == PasswordVerificationResult.Failed)
+            {
+                user = null;
+                userValidator.LoginUserValidate(user);
+            }
+
+            var hashedPassword = passwordHasher.HashPassword(user, changePasswordVM.NewPassword);
+            await userRepository.ChangePassword(user.Id, hashedPassword);
         }
 
         public async Task<AuthToken> GenerateJwtToken(LoginDto loginDto)

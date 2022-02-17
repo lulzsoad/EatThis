@@ -1,0 +1,63 @@
+<div class="container">
+    <br>
+    <h2 class="text-center">Wybierz składniki</h2>
+    <div class="rounded-container-white">
+        <div>
+            <input [(ngModel)]="filter" type="text" placeholder="Szukaj składnika" class="form-control" (keyup)="filterIngredients($event)"/>
+        </div>
+        <br>
+        <div class="col-12 row">
+            <div class="col-4" style="margin-bottom: 10px;"
+                *ngFor="let ingredientCategory of ingredientCategories; index as i"
+                [id]="ingredientCategory?.id">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button bg-color-orange" type="button" data-bs-toggle="collapse" 
+                      [attr.data-bs-target]="'#collapse' + i">
+                        {{ingredientCategory?.name}}
+                      </button>
+                    </h2>
+                    <div [id]="'collapse' + i" class="accordion-collapse collapse show">
+                      <div class="accordion-body" style="height: 250px; overflow-y: auto;">
+                        <div class="col-12 row"
+                            *ngFor="let ingredientPosition of filterIngredientsByCategoryId(ingredientCategory?.id)"
+                        >
+                            <div class="col-10 d-flex flex-column justify-content-end">
+                                {{ingredientPosition.ingredient?.name}}
+                            </div>
+                            <div class="col-2">
+                                <button 
+                                    (click)="selectIngredient(ingredientPosition)"
+                                    [ngClass]="ingredientPosition.isSelected ? 'btn btn-success' : 'btn btn-outline-success'"
+                                >
+                                <i *ngIf="!ingredientPosition.isSelected" class="fas fa-square"></i>
+                                <i *ngIf="ingredientPosition.isSelected" class="fas fa-check-square"></i>
+                            </button>
+                            </div>
+                            <hr width="100%" style="margin: 5px;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="col-12 row" *ngIf="selectedIngredients.length > 0">
+            <div class="col-6">
+                <ul class="list-group">
+                    <li class="list-group-item active">Wybrane składniki</li>
+                    <li class="list-group-item" *ngFor="let ingredientPosition of selectedIngredients">
+                        {{ingredientPosition.ingredient.name}}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <h4 class="header-orange">Wszystko gotowe</h4>
+                <p>Wystarczy tylko jeden składnik aby przeszukać naszą bazę przepisów. Kliknij poniższy przycisk, aby rozpocząć szukanie</p>
+                <br>
+                <div class="d-flex flex-row justify-content-end">
+                    <button (click)="submit()" class="btn btn-warning text-right">Szukaj</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

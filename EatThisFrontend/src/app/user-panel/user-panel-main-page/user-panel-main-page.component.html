@@ -1,0 +1,66 @@
+
+<div class="container">
+    <div class="rounded-container-white">
+        <div>
+            <h2 class="header-orange">Zacznij wyszukiwać swój przepis już teraz!</h2>
+            <h6>Jak to działa?</h6>
+            <p>
+                Witaj w serwisie "Zjedz To". Możesz podać nam składniki, które aktualnie posiadasz w domu, a my przeszukamy naszą bazę przepisów i znajdziemy listę najbardziej odpowiadającym twoim składnikom!
+            </p>
+            <a routerLink="enter-ingredients">
+                <button class="btn btn-warning"><strong style="color: rgb(192, 83, 83);">Podaj składniki</strong></button>
+            </a>
+        </div>
+        <br>
+        <div>
+            <h6>Alternatywa</h6>
+            <p>
+                Możesz również skorzystać z naszego katalogu przepisów, który znajduje się nieco wyżej w naszym menu pod pozycją "Przepisy". Możesz skorzystać ze wszystkich kategorii lub wybrać odpowiednią dla siebie.
+            </p>
+        </div>
+        <br>
+        <div>
+            <h6>Dodaj własny przepis</h6>
+            <p>
+                Skorzystaj z naszego formularza, aby dodać własny przepis do bazy danych i udostępnić go dla innych użytkowników!
+            </p>
+        </div>
+        
+    </div>
+    <div class="rounded-container-white">
+        <div>
+            <h6>Najnowsze przepisy</h6>
+            <div class="col-12 row">
+                <div class="col-2" *ngFor="let recentRecipe of recentRecipes?.data">
+                    <kendo-card (click)="navigateToRecipe(recentRecipe?.id)" style="width: 100%; cursor: pointer;">
+                        <kendo-card-header>
+                            <h6 class="header-orange text-center">{{recentRecipe?.name}}</h6>
+                        </kendo-card-header>
+                        <img
+                            [src]="recentRecipe?.image"
+                            width="auto"
+                            height="120px"
+                        >
+                        <kendo-card-footer>
+                            <div class="col-12 row font-size-12">
+                                <div class="col-4">
+                                    <p class="text-center">{{recentRecipe?.personQuantity}} os.</p>
+                                </div>
+                                <div class="col-4">
+                                    <p class="text-center">
+                                        {{recentRecipe?.time}} min.
+                                    </p>
+                                </div>
+                                <div class="col-4">
+                                    <p class="text-center">
+                                        {{recentRecipe.difficulty}}
+                                    </p>
+                                </div>
+                            </div>
+                        </kendo-card-footer>
+                    </kendo-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

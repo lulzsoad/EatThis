@@ -149,7 +149,7 @@ export class IngredientsComponent implements OnInit, OnDestroy {
   }
 
   async getIngredientCategories(){
-    this.ingredientCategories = await this.ingredientCategoryService.getAll();
+    this.ingredientCategories = await this.ingredientCategoryService.getAll().toPromise();
     this.selectedCategoryValue = this.ingredient?.ingredientCategory;
   }
 

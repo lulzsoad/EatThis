@@ -96,7 +96,7 @@ export class IngredientCategoriesComponent implements OnInit {
 
   private async getAll(){
     this.loadingPanelVisible = true;
-    this.ingredientCategories = await this.ingredientCategoryService.getAll()
+    this.ingredientCategories = await this.ingredientCategoryService.getAll().toPromise();
     this.loadingPanelVisible = false;
   }
 

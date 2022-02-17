@@ -73,6 +73,16 @@ import { AdminRecipesToAcceptComponent } from './admin-panel/admin-recipes/admin
 import { AdminRecipeToAcceptComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipe-to-accept/admin-recipe-to-accept.component';
 import { AdminRecipesToAcceptMainComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipes-to-accept-main.component';
 import { ChangeProposedIngredientToIngredientModalComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/modals/change-proposed-ingredient-to-ingredient-modal/change-proposed-ingredient-to-ingredient-modal.component';
+import { UserPanelMainPageComponent } from './user-panel/user-panel-main-page/user-panel-main-page.component';
+import { LayoutModule } from '@progress/kendo-angular-layout';
+import { EnterIngredientsComponent } from './user-panel/enter-ingredients/enter-ingredients.component';
+import { RecipesByIngredientsComponent } from './user-panel/recipes-main/recipes-by-ingredients/recipes-by-ingredients.component';
+import { ReportBugComponent } from './user-panel/report-bug/report-bug.component';
+import { ReportService } from './services/report.service';
+import { UsersListComponent } from './admin-panel/users/users-list/users-list.component';
+import { ReportsListComponent } from './admin-panel/users/reports-list/reports-list.component';
+import { ChangePasswordModalComponent } from './user-panel/account/change-password-modal/change-password-modal.component';
+
 
 
 
@@ -118,7 +128,14 @@ import { ChangeProposedIngredientToIngredientModalComponent } from './admin-pane
     AdminRecipesToAcceptComponent,
     AdminRecipeToAcceptComponent,
     AdminRecipesToAcceptMainComponent,
-    ChangeProposedIngredientToIngredientModalComponent
+    ChangeProposedIngredientToIngredientModalComponent,
+    UserPanelMainPageComponent,
+    EnterIngredientsComponent,
+    RecipesByIngredientsComponent,
+    ReportBugComponent,
+    UsersListComponent,
+    ReportsListComponent,
+    ChangePasswordModalComponent
   ],
   imports: [
     BrowserModule,
@@ -141,6 +158,7 @@ import { ChangeProposedIngredientToIngredientModalComponent } from './admin-pane
     DropDownsModule,
     ToastrModule.forRoot(),
     UploadsModule,
+    LayoutModule,
   ],
   providers: [
     HttpClient,
@@ -159,6 +177,7 @@ import { ChangeProposedIngredientToIngredientModalComponent } from './admin-pane
     ConfigStore,
     UserService,
     RecipeService,
+    ReportService,
     {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptorService, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
   ],

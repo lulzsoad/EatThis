@@ -103,6 +103,8 @@ namespace EatThisAPI
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IIngredientQuantityRepository, IngredientQuantityRepository>();
             services.AddScoped<IStepRepository, StepRepository>();
+            services.AddScoped<IReportRepository, ReportRepository>();
+            services.AddScoped<IReportService, ReportService>();
 
             services.AddAutoMapper(this.GetType().Assembly);
 

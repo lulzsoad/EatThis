@@ -42,15 +42,20 @@
                         </div>
                     </div>
                     <br>
-                    <div class="btn-group">
-                        <button *ngIf="editMode" class="btn btn-success" (click)="saveProfile()">
-                            Zapisz
-                        </button>
-                        <button 
-                            [ngClass]="editMode ? 'btn btn-danger' : 'btn btn-warning'" 
-                            (click)="editProfile()">
-                                {{editMode ? 'Anuluj': 'Edytuj profil'}}
-                        </button>
+                    <div class="d-flex flex-row justify-content-between">
+                        <div class="btn-group">
+                            <button *ngIf="editMode" class="btn btn-success" (click)="saveProfile()">
+                                Zapisz
+                            </button>
+                            <button 
+                                [ngClass]="editMode ? 'btn btn-danger' : 'btn btn-warning'" 
+                                (click)="editProfile()">
+                                    {{editMode ? 'Anuluj': 'Edytuj profil'}}
+                            </button>
+                        </div>
+                        <div>
+                            <button class="btn btn-warning" (click)="changePasswordClick()">Zmień hasło</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,13 +76,33 @@
                     </nav>
                     <div *ngIf="selectedBookmark.name == 'MyRecipes'">
                         <br><br>
-                        <p class="text-center">Brak przepisów</p>
+                        <p class="text-center" *ngIf="myRecipes?.length < 1">Brak przepisów</p>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-warning pointer"
+                                (click)="navigateToRecipe(recipe?.id)"
+                                *ngFor="let recipe of myRecipes">
+                                {{recipe?.name}}
+                                <hr width="100%" style="margin: 2px;">
+                            </li>
+                        </ul>
                     </div>
                     <div *ngIf="selectedBookmark.name == 'MyReports'">
                         <br><br>
-                        <p class="text-center">Brak zgłoszeń</p>
+                        <p class="text-center" *ngIf="myReports?.length < 1">Brak zgłoszeń</p>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-warning"
+                                *ngFor="let report of myReports"
+                            >
+                                <div class="d-flex flex-row justify-content-between">
+                                    <span>{{report?.title}}</span>
+                                    <span>{{report?.reportStatus?.name}}</span>
+                                </div>
+                                <hr width="100%" style="margin: 2px;">
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div kendoDialogContainer></div>

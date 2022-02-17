@@ -26,6 +26,8 @@ namespace EatThisAPI.Repositories
             List<ProposedStep> proposedSteps);
         Task<DataChunkViewModel<ProposedRecipe>> GetChunkOfProposedRecipes(int skip, int take);
         Task<ProposedRecipe> GetProposedRecipeById(int id);
+        Task<DataChunkViewModel<RecipeByIngredientsViewModel>> GetRecipesByIngredients(List<Ingredient> ingredients, int? skip, int? take);
+        Task<List<Recipe>> GetRecipesByUserId(int userId);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -75,6 +77,7 @@ namespace EatThisAPI.Repositories
             var query = context.Recipes
                 .AsNoTracking()
                 .Where(x => x.IsVisible == true)
+                .OrderByDescending(x => x.CreationDate)
                 .AsQueryable();
 
             var count = await query.CountAsync();
@@ -215,6 +218,51 @@ namespace EatThisAPI.Repositories
                     .ThenInclude(x => x.ProposedIngredient)
                     .ThenInclude(x => x.IngredientCategory)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<DataChunkViewModel<RecipeByIngredientsViewModel>> GetRecipesByIngredients(List<Ingredient> ingredients, int? skip, int? take)
+        {
+            var query = context.Recipes
+                .AsNoTracking()
+                .Include(x => x.Category)
+                .Include(x => x.IngredientQuantities)
+                    .ThenInclude(x => x.Ingredient)
+                    .ThenInclude(x => x.IngredientCategory)
+                .Where(x => x.IngredientQuantities.Any(y => ingredients.Contains(y.Ingredient)) && x.IsVisible)
+                .Select(x => new RecipeByIngredientsViewModel
+                 {
+                     Recipe = x,
+                     IncludedIngredientsCount = x.IngredientQuantities.Where(y => ingredients.Contains(y.Ingredient)).Count(),
+                     MissingIngredientsCount = x.IngredientQuantities.Where(y => !ingredients.Contains(y.Ingredient)).Count()
+                })
+                .OrderByDescending(x => x.IncludedIngredientsCount);
+
+            var data = new List<RecipeByIngredientsViewModel>();
+            var total = await query.CountAsync();
+
+            if(skip != null && take != null)
+            {
+                data = await query.Skip((int)skip).Take((int)take).ToListAsync();
+            }
+            else
+            {
+                data = query.ToList();
+            }
+
+            return new DataChunkViewModel<RecipeByIngredientsViewModel> { Data = data, Total = total };
+        }
+
+        public async Task<List<Recipe>> GetRecipesByUserId(int userId)
+        {
+            return await context.Recipes
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new Recipe
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).OrderBy(x => x.Name)
+                .ToListAsync();
         }
     }
 }
