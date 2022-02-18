@@ -52,7 +52,7 @@
                     <div *ngFor="let proposedIngredientQuantity of proposedRecipe?.proposedIngredientQuantities">
                         <div class="d-flex flex-row justify-content-between">
                             <div>
-                                <strong style="color: green;">{{proposedIngredientQuantity?.proposedIngredient?.name}}</strong>&nbsp;
+                                <strong (click)="changeIngredient(proposedIngredientQuantity)" class="pointer" style="color: green;">{{proposedIngredientQuantity?.proposedIngredient?.name}}</strong>&nbsp;
                                 <span *ngIf="proposedIngredientQuantity?.description">({{proposedIngredientQuantity?.description}})</span>
                             </div>
                             <div>
@@ -80,13 +80,13 @@
                                     {{proposedIngredientQuantity?.proposedIngredient?.name}}
                                 </strong>
                                 <div class="btn-group">
-                                    <button 
+                                    <button class="k-button"
                                         style="color: green;" 
                                         (click)="acceptIngredient(proposedIngredientQuantity?.proposedIngredient)"
                                         >
                                         <i class="fas fa-check-square"></i>
                                     </button>
-                                    <button 
+                                    <button class="k-button"
                                         (click)="removeIngredient(proposedIngredientQuantity?.proposedIngredient)" 
                                         style="color: red;">
                                         <i class="fas fa-times"></i>
@@ -104,8 +104,8 @@
                 <div *ngIf="proposedRecipe?.proposedCategory" class="d-flex flex-row justify-content-between" >
                     <strong>{{proposedRecipe?.proposedCategory?.name}}</strong>
                     <div class="btn-group">
-                        <button style="color: green;"><i class="fas fa-check-square"></i></button>
-                        <button style="color: red;"><i class="fas fa-times"></i></button>
+                        <button class="k-button" (click)="acceptCategory(proposedRecipe?.proposedCategory)" style="color: green;"><i class="fas fa-check-square"></i></button>
+                        <button class="k-button" (click)="removeProposedCategory(proposedRecipe?.proposedCategory)" style="color: red;"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
             </div>
@@ -131,6 +131,17 @@
     <div class="col-12 gray-container" *ngIf="proposedRecipe?.note">
         <h3>Notatka od użytkownika</h3>
         <p>{{proposedRecipe?.note}}</p>
+    </div>
+    <br>
+    <div class="col-12 row">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="d-flex flex-row justify-content-around">
+                <button (click)="acceptRecipe()" kendoButton class="k-button success" style="color: green;">Akceptuj przepis</button>
+                <button (click)="discardRecipe()" kendoButton class="k-button-error" style="color: red">Odrzuć przepis</button>
+            </div>
+            <br>
+        </div>
     </div>
 </div>
 <div kendoDialogContainer></div>

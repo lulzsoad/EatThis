@@ -10,7 +10,8 @@ namespace EatThisAPI.Helpers.Enums
         public enum ReportStatus
         {
             Reported = 1,
-            Considered = 2
+            InProgress = 2,
+            Finished = 3
         }
     }
 }

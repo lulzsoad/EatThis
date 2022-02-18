@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="col-12 row">
+        <div class="col-6">Kategoria</div>
+        <div class="col-6">{{proposedIngredient?.ingredientCategory?.name}}</div>
+    </div>
+    <div class="col-12 row">
+        <div class="col-6">Nazwa</div>
+        <div class="col-6">{{proposedIngredient?.name}}</div>
+    </div>
+    <br>
+    <div class="col-12 row">
+        <div class="col-6">Wybierz składnik</div>
+        <div class="col-6">
+            <kendo-dropdownlist
+                [data]="ingredients"
+                textField="name"
+                valueField="id"
+                [value]="ingredients[0].id"
+                [(ngModel)]="changedIngredient"
+            >
+            </kendo-dropdownlist>
+        </div>
+    </div>
+</div>

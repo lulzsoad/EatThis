@@ -28,6 +28,11 @@ namespace EatThisAPI.Repositories
         Task<ProposedRecipe> GetProposedRecipeById(int id);
         Task<DataChunkViewModel<RecipeByIngredientsViewModel>> GetRecipesByIngredients(List<Ingredient> ingredients, int? skip, int? take);
         Task<List<Recipe>> GetRecipesByUserId(int userId);
+        Task ProposedRecipeChangeCategory(int proposedRecipeId, int categoryId);
+        Task ProposedCategoryRemoveProposedCategory(int proposedRecipeId, int proposedCategoryId);
+        Task ChangeProposedIngredientToIngredient(int proposedRecipeId, int proposedIngredientId, int IngredientId);
+        Task<int> AcceptProposedRecipe(Recipe recipe, List<IngredientQuantity> ingredientQuantities, List<Step> steps, int proposedRecipeId);
+        Task DiscardProposedRecipe(int proposedRecipeId);
     }
     public class RecipeRepository : IRecipeRepository
     {
@@ -263,6 +268,115 @@ namespace EatThisAPI.Repositories
                     Name = x.Name
                 }).OrderBy(x => x.Name)
                 .ToListAsync();
+        }
+
+        public async Task ProposedRecipeChangeCategory(int proposedRecipeId, int categoryId)
+        {
+            var proposedRecipe = await context.ProposedRecipes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == proposedRecipeId);
+            proposedRecipe.CategoryId = categoryId;
+            proposedRecipe.ProposedCategory = null;
+            proposedRecipe.ProposedCategoryId = null;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task ProposedCategoryRemoveProposedCategory(int proposedRecipeId, int proposedCategoryId)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var proposedRecipe = await context.ProposedRecipes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == proposedRecipeId);
+                    var proposedCategory = await context.ProposedCategories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == proposedCategoryId);
+                    proposedRecipe.ProposedCategoryId = null;
+                    await context.SaveChangesAsync();
+                    // Jeżeli wyskoczy błąd spróbuj uśpić program na 1-2 sekundy w tym miejscu
+                    context.ProposedCategories.Remove(proposedCategory);
+                    await context.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new CustomException(BackendMessage.Transaction.TRANSACTION_ERROR);
+                }
+                
+            } 
+        }
+
+        public async Task ChangeProposedIngredientToIngredient(int proposedRecipeId, int proposedIngredientId, int IngredientId)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var proposedIngredientQuantity = context.ProposedIngredientQuantities
+                        .FirstOrDefault(x => x.ProposedRecipeId == proposedRecipeId && x.ProposedIngredientId == proposedIngredientId);
+
+                    proposedIngredientQuantity.ProposedIngredientId = null;
+                    proposedIngredientQuantity.Reference = null;
+                    proposedIngredientQuantity.IngredientId = IngredientId;
+                    await context.SaveChangesAsync();
+
+                    var proposedIngredient = context.ProposedIngredients.FirstOrDefault(x => x.Id == proposedIngredientId);
+                    context.ProposedIngredients.Remove(proposedIngredient);
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new CustomException(BackendMessage.Transaction.TRANSACTION_ERROR);
+                }
+            }
+            
+        }
+
+        public async Task<int> AcceptProposedRecipe(Recipe recipe, List<IngredientQuantity> ingredientQuantities, List<Step> steps, int proposedRecipeId)
+        {
+            using(var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    context.Recipes.Add(recipe);
+                    await context.SaveChangesAsync();
+
+                    foreach(var ingredientQuantity in ingredientQuantities)
+                    {
+                        ingredientQuantity.RecipeId = recipe.Id;
+                        context.IngredientQuantities.Add(ingredientQuantity);
+                    }
+
+                    foreach(var step in steps)
+                    {
+                        step.RecipeId = recipe.Id;
+                        context.Steps.Add(step);
+                    }
+
+                    await context.SaveChangesAsync();
+
+                    var proposedRecipeDto = context.ProposedRecipes.FirstOrDefault(x => x.Id == proposedRecipeId);
+                    context.ProposedRecipes.Remove(proposedRecipeDto);
+
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new CustomException(BackendMessage.Transaction.TRANSACTION_ERROR);
+                }
+            }
+
+            return recipe.Id;
+        }
+
+        public async Task DiscardProposedRecipe(int proposedRecipeId)
+        {
+            var proposedRecipe = context.ProposedRecipes.FirstOrDefault(x => x.Id == proposedRecipeId);
+            context.ProposedRecipes.Remove(proposedRecipe);
+            await context.SaveChangesAsync();
         }
     }
 }

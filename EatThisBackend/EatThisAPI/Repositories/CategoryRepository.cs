@@ -1,5 +1,6 @@
 ﻿using EatThisAPI.Database;
 using EatThisAPI.Models;
+using EatThisAPI.Models.ProposedRecipe;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

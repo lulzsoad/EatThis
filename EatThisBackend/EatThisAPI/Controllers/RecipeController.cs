@@ -88,5 +88,49 @@ namespace EatThisAPI.Controllers
         {
             return Ok(await recipeService.GetCurrentUsersRecipe());
         }
+
+        [Authorize(Roles = "Admin,Employee")]
+        [HttpPut]
+        [Route("acceptProposedCategory/{id}")]
+        public async Task<ActionResult> AcceptProposedCategory([FromRoute]int id, [FromBody] ProposedCategoryDto proposedCategory)
+        {
+            await recipeService.AcceptProposedCategory(id, proposedCategory);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin,Employee")]
+        [HttpDelete]
+        [Route("removeProposedCategory")]
+        public async Task<ActionResult> ProposedRecipeRemoveProposedCategory([FromQuery] int proposedRecipeId, [FromQuery] int proposedCategoryId)
+        {
+            await recipeService.ProposedRecipeRemoveProposedCategory(proposedRecipeId, proposedCategoryId);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin,Employee")]
+        [HttpPut]
+        [Route("changeProposedIngredientToIngredient")]
+        public async Task<ActionResult> ChangeProposedIngredientToIngrdient([FromQuery] int proposedRecipeId, [FromQuery] int proposedIngredientId, [FromQuery] int ingredientId)
+        {
+            await recipeService.ChangeProposedIngredientToIngredient(proposedRecipeId, proposedIngredientId, ingredientId);
+            return Ok();
+        }
+
+        [Authorize(Roles = "Admin,Employee")]
+        [HttpPost]
+        [Route("acceptProposedRecipe")]
+        public async Task<ActionResult> AcceptProposedRecipe([FromBody] ProposedRecipeDto proposedRecipeDto)
+        {
+            return Ok(await recipeService.AcceptProposedRecipe(proposedRecipeDto));
+        }
+
+        [Authorize(Roles = "Admin,Employee")]
+        [HttpDelete]
+        [Route("discardProposedRecipe")]
+        public async Task<ActionResult> DiscardProposedRecipe([FromBody] DiscardProposedRecipeViewModel discardProposedRecipeRequest)
+        {
+            await recipeService.DiscardProposedRecipe(discardProposedRecipeRequest);
+            return Ok();
+        }
     }
 }

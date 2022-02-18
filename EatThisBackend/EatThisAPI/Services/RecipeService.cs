@@ -26,6 +26,11 @@ namespace EatThisAPI.Services
         Task<ProposedRecipeDto> GetProposedRecipeById(int id);
         Task<DataChunkViewModel<RecipeDtoByIngredientsViewModel>> GetRecipesByIngredients(string ingredientsJson, int? skip, int? take);
         Task<List<RecipeDto>> GetCurrentUsersRecipe();
+        Task AcceptProposedCategory(int proposedRecipeId, ProposedCategoryDto proposedCategory);
+        Task ProposedRecipeRemoveProposedCategory(int proposedRecipeId, int proposedCategoryId);
+        Task ChangeProposedIngredientToIngredient(int proposedRecipe, int proposedIngredientId, int ingredientId);
+        Task<int> AcceptProposedRecipe(ProposedRecipeDto proposedRecipeDto);
+        Task DiscardProposedRecipe(DiscardProposedRecipeViewModel discardProposedRecipeViewModel);
     }
     public class RecipeService : IRecipeService
     {
@@ -33,17 +38,23 @@ namespace EatThisAPI.Services
         private readonly IValidator validator;
         private readonly IUserHelper userHelper;
         private readonly IRecipeValidator recipeValidator;
+        private readonly ICategoryService categoryService;
+        private readonly IEmailService emailService;
         public RecipeService(
             IRecipeRepository recipeRepository,
             IValidator validator,
             IUserHelper userHelper,
-            IRecipeValidator recipeValidator
+            IRecipeValidator recipeValidator,
+            ICategoryService categoryService,
+            IEmailService emailService
             )
         {
             this.recipeRepository = recipeRepository;
             this.validator = validator;
             this.userHelper = userHelper;
             this.recipeValidator = recipeValidator;
+            this.categoryService = categoryService;
+            this.emailService = emailService;
         }
 
         public async Task<int> AddRecipe(RecipeDto recipeDto)
@@ -499,6 +510,92 @@ namespace EatThisAPI.Services
             };
 
             return recipesDto;
+        }
+
+        public async Task AcceptProposedCategory(int proposedRecipeId, ProposedCategoryDto proposedCategory)
+        {
+            validator.IsObjectNull(proposedCategory);
+            var category = new CategoryDto
+            {
+                Name = proposedCategory.Name
+            };
+            int id = await categoryService.Add(category);
+            await recipeRepository.ProposedRecipeChangeCategory(proposedRecipeId, id);
+            await recipeRepository.ProposedCategoryRemoveProposedCategory(proposedRecipeId, proposedCategory.Id);
+        }
+
+        public async Task ProposedRecipeRemoveProposedCategory(int proposedRecipeId, int proposedCategoryId)
+        {
+            await recipeRepository.ProposedCategoryRemoveProposedCategory(proposedRecipeId, proposedCategoryId);
+        }
+
+        public async Task ChangeProposedIngredientToIngredient(int proposedRecipe, int proposedIngredientId, int ingredientId)
+        {
+            await recipeRepository.ChangeProposedIngredientToIngredient(proposedRecipe, proposedIngredientId, ingredientId);
+        }
+
+        public async Task<int> AcceptProposedRecipe(ProposedRecipeDto proposedRecipeDto)
+        {
+            validator.IsObjectNull(proposedRecipeDto);
+            var recipe = new Recipe
+            {
+                Name = proposedRecipeDto.Name,
+                SubName = proposedRecipeDto.SubName,
+                CategoryId = proposedRecipeDto.Category.Id,
+                Time = proposedRecipeDto.Time,
+                PersonQuantity = proposedRecipeDto.PersonQuantity,
+                Difficulty = proposedRecipeDto.Difficulty,
+                Description = proposedRecipeDto.Description,
+                CreationDate = DateTime.UtcNow,
+                IsVisible = true,
+                Image = proposedRecipeDto.Image,
+                UserId = proposedRecipeDto.UserDetails.Id,
+            };
+
+            var ingredientQuantities = new List<IngredientQuantity>();
+            foreach(var ingredientQuantity in proposedRecipeDto.IngredientQuantities)
+            {
+                ingredientQuantities.Add(new IngredientQuantity
+                {
+                    IngredientId = ingredientQuantity.Ingredient.Id,
+                    Description = ingredientQuantity.Description,
+                    Quantity = ingredientQuantity.Quantity,
+                    UnitId = ingredientQuantity.Unit.Id
+                });
+            }
+
+            var steps = new List<Step>();
+            foreach(var step in proposedRecipeDto.ProposedSteps)
+            {
+                steps.Add(new Step
+                {
+                    Order = step.Order,
+                    Description = step.Description,
+                    Image = step.Image,
+                });
+            }
+
+            int recipeId = await recipeRepository.AcceptProposedRecipe(recipe, ingredientQuantities, steps, proposedRecipeDto.Id);
+
+            emailService.SendByNoReply(
+                proposedRecipeDto.UserDetails.Email, 
+                "Twój przepis został zaakceptowany", 
+                BackendMessage.EmailMessages.EMAILMESSAGE_YOUR_RECIPE_HAS_BEEN_ACCEPTED
+                );
+
+            return recipeId;
+        }
+
+        public async Task DiscardProposedRecipe(DiscardProposedRecipeViewModel discardProposedRecipeViewModel)
+        {
+            validator.IsObjectNull(discardProposedRecipeViewModel);
+            await recipeRepository.DiscardProposedRecipe(discardProposedRecipeViewModel.ProposedRecipeId);
+
+            emailService.SendByNoReply(
+                discardProposedRecipeViewModel.Email,
+                "Twój przepis został odrzucony",
+                $"Powód odrzucenia: {discardProposedRecipeViewModel.Message}"
+                );
         }
     }
 }

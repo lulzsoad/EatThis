@@ -83,6 +83,8 @@ import { UsersListComponent } from './admin-panel/users/users-list/users-list.co
 import { ReportsListComponent } from './admin-panel/users/reports-list/reports-list.component';
 import { ChangePasswordModalComponent } from './user-panel/account/change-password-modal/change-password-modal.component';
 import { ChangeRoleModalComponent } from './admin-panel/users/users-list/change-role-modal/change-role-modal.component';
+import { ChangeIngredientModalComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipe-to-accept/change-ingredient-modal/change-ingredient-modal.component';
+import { DiscardProposedRecipeReasonModalComponent } from './admin-panel/admin-recipes/admin-recipes-to-accept-main/admin-recipe-to-accept/discard-proposed-recipe-reason-modal/discard-proposed-recipe-reason-modal.component';
 
 
 
@@ -137,7 +139,9 @@ import { ChangeRoleModalComponent } from './admin-panel/users/users-list/change-
     UsersListComponent,
     ReportsListComponent,
     ChangePasswordModalComponent,
-    ChangeRoleModalComponent
+    ChangeRoleModalComponent,
+    ChangeIngredientModalComponent,
+    DiscardProposedRecipeReasonModalComponent
   ],
   imports: [
     BrowserModule,

@@ -50,6 +50,7 @@ namespace EatThisAPI.Helpers
             public static string EMAILMESSAGE_ACTIVATE_YOUR_ACCOUNT = "Aktywuj swoje konto";
             public static string EMAILMESSAGE_RESET_YOUR_PASSWORD = "Prośba o zresetowanie hasła";
             public static string EMAILMESSAGE_RESET_YOUR_PASSWORD_MESSAGE = "Otrzymaliśmy informację o tym, że chcesz zresetować swoje hasło. Wpisz poniższy kod na naszej stronie, aby kontynuować. Jeżeli to nie Ty wysłałeś/aś zapytanie o zresetowaniu hasła, zalecamy je zmienić w razie próby kradzieży konta.";
+            public static string EMAILMESSAGE_YOUR_RECIPE_HAS_BEEN_ACCEPTED = "Nasz pracownik właśnie zatwierdził przepis, który zaproponowałeś dla naszego serwisu. Dziękujemy!";
         }
 
         public class Transaction
