@@ -6,6 +6,7 @@ import { ChangePassword } from "../models/app-models/change-password.model";
 import { PasswordResetCodeCheckModel } from "../models/password-reset-code-check.model";
 import { PasswordResetCodeNewPassword } from "../models/password-reset-code-new-password.model";
 import { PasswordReset } from "../models/password-reset.model";
+import { Role } from "../models/role.model";
 import { User } from "../models/user.model";
 import { AlertService } from "./app-services/alert.service";
 
@@ -44,5 +45,9 @@ export class AccountService{
 
     changePasswordModal(changePasswordVm: ChangePassword){
         return this.httpClient.put(`${this.apiUrl}change-password`, changePasswordVm);
+    }
+
+    getRoles(){
+        return this.httpClient.get<Role[]>(`${this.apiUrl}roles`);
     }
 }

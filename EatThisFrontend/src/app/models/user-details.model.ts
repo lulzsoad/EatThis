@@ -1,3 +1,5 @@
+import { Role } from "./role.model";
+
 export class UserDetails{
     id: number;
     firstName: string;
@@ -9,6 +11,8 @@ export class UserDetails{
     image: string;
     description: string;
     fullName: string;
+    isActive: boolean;
+    role: Role;
 
     constructor(
         firstName: string = null,

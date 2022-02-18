@@ -1,6 +1,7 @@
 ﻿using EatThisAPI.Database;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs.User;
+using EatThisAPI.Models.ViewModels;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,6 +19,8 @@ namespace EatThisAPI.Repositories
         Task<User> GetUserById(int id);
         Task<User> UpdateUser(User user, object updatedUser);
         Task ChangePassword(int userId, string newPassword);
+        Task<DataChunkViewModel<User>> GetChunkOfUsers(int skip, int take, string search);
+        Task ChangeUserRole(int userId, int roleId);
     }
     public class UserRepository : IUserRepository
     {
@@ -68,6 +71,49 @@ namespace EatThisAPI.Repositories
         {
             var userFromDb = context.Users.FirstOrDefault(x => x.Id == userId);
             userFromDb.PasswordHash = newPassword;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<DataChunkViewModel<User>> GetChunkOfUsers(int skip, int take, string search)
+        {
+            var vm = new DataChunkViewModel<User>();
+            var users = context.Users
+                .AsNoTracking()
+                .Include(x => x.Role)
+                .OrderBy(x => x.RoleId)
+                    .ThenBy(x => x.LastName)
+                    .ThenBy(x => x.FirstName)
+                    .ThenBy(x=> x.Email)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(x =>
+                    x.Email.Contains(search) ||
+                    x.FirstName.Contains(search) ||
+                    x.LastName.Contains(search) ||
+                    x.Role.Name.Contains(search));
+            }
+
+            vm.Total = users.Count();
+            vm.Data = await users.Skip(skip).Take(take)
+                .Select(x => new User
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Role = x.Role,
+                    IsActive = x.IsActive
+                }).ToListAsync();
+
+            return vm;
+        }
+
+        public async Task ChangeUserRole(int userId, int roleId)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user.RoleId = roleId;
             await context.SaveChangesAsync();
         }
     }

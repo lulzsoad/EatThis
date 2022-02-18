@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using EatThisAPI.Exceptions;
 using EatThisAPI.Helpers;
 using EatThisAPI.Models;
 using EatThisAPI.Models.DTOs;
 using EatThisAPI.Models.DTOs.User;
+using EatThisAPI.Models.ViewModels;
 using EatThisAPI.Repositories;
 using EatThisAPI.Validators;
 using Microsoft.AspNetCore.JsonPatch;
@@ -18,6 +20,8 @@ namespace EatThisAPI.Services
         Task<UserDto> GetUserById(int id);
         Task<UserDetails> GetCurrentUserDetails();
         Task<UserDetails> UpdateCurrentUser(JsonPatchDocument userDetails);
+        Task<DataChunkViewModel<UserDetails>> GetChunkOfUsers(int skip, int take, string search);
+        Task ChangeUserRole(int userId, RoleDto roleDto);
     }
     public class UserService : IUserService
     {
@@ -80,6 +84,39 @@ namespace EatThisAPI.Services
             user = await userRepository.UpdateUser(user, userDetailsDocument);
             var userDetails = mapper.Map<UserDetails>(user);
             return userDetails;
+        }
+
+        public async Task<DataChunkViewModel<UserDetails>> GetChunkOfUsers(int skip, int take, string search)
+        {
+            var users = await userRepository.GetChunkOfUsers(skip, take, search);
+            validator.IsObjectNull(users);
+
+            var usersDto = new DataChunkViewModel<UserDetails>();
+            usersDto.Data = new List<UserDetails>();
+            usersDto.Total = users.Total;
+            foreach(var user in users.Data)
+            {
+                usersDto.Data.Add(new UserDetails
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = new RoleDto
+                    {
+                        Id = user.Role.Id,
+                        Name = user.Role.Name
+                    },
+                    IsActive = user.IsActive
+                });
+            }
+
+            return usersDto;
+        }
+
+        public async Task ChangeUserRole(int userId, RoleDto roleDto)
+        {
+            await userRepository.ChangeUserRole(userId, roleDto.Id);
         }
     }
 }

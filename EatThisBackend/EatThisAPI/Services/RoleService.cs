@@ -11,6 +11,7 @@ namespace EatThisAPI.Services
     public interface IRoleService
     {
         Task<RoleDto> GetRoleById(int id);
+        Task<List<RoleDto>> GetRoles();
     }
     public class RoleService : IRoleService
     {
@@ -28,6 +29,22 @@ namespace EatThisAPI.Services
             roleDto.Id = role.Id;
             roleDto.Name = role.Name;
             return roleDto;
+        }
+
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            var roles = await roleRepository.GetRoles();
+            var rolesDto = new List<RoleDto>();
+            foreach(var role in roles)
+            {
+                rolesDto.Add(new RoleDto
+                {
+                    Id = role.Id,
+                    Name = role.Name
+                });
+            }
+
+            return rolesDto;
         }
     }
 }

@@ -15,9 +15,11 @@ namespace EatThisAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IRoleService roleService;
+        public AccountController(IAccountService accountService, IRoleService roleService)
         {
             this.accountService = accountService;
+            this.roleService = roleService;
         }
 
         [HttpPost]
@@ -71,6 +73,14 @@ namespace EatThisAPI.Controllers
         {
             await accountService.ChangePassword(changePasswordVM);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("roles")]
+        public async Task<ActionResult> GetRoles()
+        {
+            return Ok(await roleService.GetRoles());
         }
     }
 }

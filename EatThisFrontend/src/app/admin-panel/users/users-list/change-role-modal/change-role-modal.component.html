@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="col-10 row">
+        <div class="col-5">Email:</div>
+        <div class="col-5">{{user?.email}}</div>
+    </div>
+    <div class="col-10 row">
+        <div class="col-5">Imię:</div>
+        <div class="col-5">{{user?.firstName}}</div>
+    </div>
+    <div class="col-10 row">
+        <div class="col-5">Nazwisko:</div>
+        <div class="col-5">{{user?.lastName}}</div>
+    </div>
+    <div class="col-10 row">
+        <div class="col-5">Aktywny:</div>
+        <div class="col-5">{{user?.isActive}}</div>
+    </div>
+    <div class="col-10 row">
+        <div class="col-5">Rola:</div>
+        <div class="col-5">{{user?.role?.name}}</div>
+    </div>
+    <br>
+    <div class="col-12 row">
+        <kendo-label class="col-4" [for]="newRole" text="Nowa rola"></kendo-label>
+        <kendo-dropdownlist class="col-8"
+            [data]="roles"
+            textField="name"
+            valueField="id"
+            [(ngModel)]="newRole"
+        >
+    </kendo-dropdownlist>
+    </div>
+  </div>

@@ -39,9 +39,25 @@ namespace EatThisAPI.Controllers
         [Authorize]
         [HttpPatch]
         [Route("currentUser")]
-        public async Task<ActionResult<UserDetails>> PatchCurrentUser([FromBody]JsonPatchDocument userDetails)
+        public async Task<ActionResult<UserDetails>> PatchCurrentUser([FromBody] JsonPatchDocument userDetails)
         {
             return Ok(await userService.UpdateCurrentUser(userDetails));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<ActionResult> GetChunkOfUsers([FromQuery] int skip, [FromQuery] int take, [FromQuery] string search)
+        {
+            return Ok(await userService.GetChunkOfUsers(skip, take, search));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("changeUserRole")]
+        public async Task<ActionResult> ChangeUserRole([FromQuery] int userId, [FromBody] RoleDto role)
+        {
+            await userService.ChangeUserRole(userId, role);
+            return Ok();
         }
     }
 }

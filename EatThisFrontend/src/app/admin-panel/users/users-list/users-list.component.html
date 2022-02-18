@@ -1,1 +1,55 @@
-<p>users-list works!</p>
+<div kendoDialogContainer></div>
+<kendo-grid style="height: 90%;"
+    [data]="users"
+    [pageSize]="take"
+    [skip]="skip"
+    [pageable]="pageableConfig"
+    [loading]="loading"
+    (pageChange)="pageChange($event)"
+>
+    <ng-template kendoGridToolbarTemplate>
+        <input
+        [style.width.px]="165"
+        placeholder="Szukaj"
+        kendoTextBox
+        [(ngModel)]="search"
+        (keyup)="onSearchEvent($event)"
+        />
+        <button (click)="onSearch()" class="k-button">Szukaj</button>
+    </ng-template>
+    <kendo-grid-column
+        field="id"
+        title="ID"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="email"
+        title="E-mail"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="lastName"
+        title="Nazwisko"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="firstName"
+        title="Imię"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="isActive"
+        title="Aktywny"
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+        field="role.name"
+        title="Rola"
+    >
+    </kendo-grid-column>
+    <kendo-grid-command-column>
+        <ng-template kendoGridCellTemplate let-user>
+            <a (click)="showDialog(user)"><i class="fas fa-edit pointer"></i></a>
+        </ng-template>
+    </kendo-grid-command-column>
+</kendo-grid>

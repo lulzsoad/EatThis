@@ -82,6 +82,7 @@ import { ReportService } from './services/report.service';
 import { UsersListComponent } from './admin-panel/users/users-list/users-list.component';
 import { ReportsListComponent } from './admin-panel/users/reports-list/reports-list.component';
 import { ChangePasswordModalComponent } from './user-panel/account/change-password-modal/change-password-modal.component';
+import { ChangeRoleModalComponent } from './admin-panel/users/users-list/change-role-modal/change-role-modal.component';
 
 
 
@@ -135,7 +136,8 @@ import { ChangePasswordModalComponent } from './user-panel/account/change-passwo
     ReportBugComponent,
     UsersListComponent,
     ReportsListComponent,
-    ChangePasswordModalComponent
+    ChangePasswordModalComponent,
+    ChangeRoleModalComponent
   ],
   imports: [
     BrowserModule,

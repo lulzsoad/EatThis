@@ -11,6 +11,7 @@ namespace EatThisAPI.Repositories
     public interface IRoleRepository
     {
         Task<Role> GetRoleById(int id);
+        Task<List<Role>> GetRoles();
     }
 
     public class RoleRepository : IRoleRepository
@@ -24,6 +25,11 @@ namespace EatThisAPI.Repositories
         public async Task<Role> GetRoleById(int id)
         {
             return await dbContext.Roles.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Role>> GetRoles()
+        {
+            return await dbContext.Roles.ToListAsync();
         }
     }
 }

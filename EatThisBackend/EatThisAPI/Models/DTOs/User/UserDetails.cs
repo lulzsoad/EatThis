@@ -14,8 +14,10 @@ namespace EatThisAPI.Models.DTOs.User
         public DateTime? DateOfBirth { get; set; }
         public DateTime? RegisterDate { get; set; }
         public int RoleId { get; set; }
+        public RoleDto Role { get; set; }
         public string Image { get; set; }
         public string Description { get; set; }
         public string FullName { get => FirstName + " " + LastName; }
+        public bool IsActive { get; set; }
     }
 }
