@@ -242,6 +242,8 @@ namespace EatThisAPI.Repositories
                 })
                 .OrderByDescending(x => x.IncludedIngredientsCount);
 
+            var rawQuery = query.ToQueryString();
+
             var data = new List<RecipeByIngredientsViewModel>();
             var total = await query.CountAsync();
 

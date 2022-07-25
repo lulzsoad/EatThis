@@ -62,7 +62,12 @@
             </div>
             <br>
             <hr width="100%">
-            <br>
+            <br> 
+        </div>
+        <div class="text-center mt-50 mb-50">
+            <span *ngFor="let page of pages">
+                <a class="page-number" [ngClass]="selectedPage?.name == page?.name ? 'background-yellow' : ''" (click)="changePage(page)">{{page.label}}</a>
+            </span>
         </div>
     </div>
 </div>

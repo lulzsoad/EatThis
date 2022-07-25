@@ -141,14 +141,8 @@ namespace EatThisAPI.Services
 
         public async Task SendActivatingCode(string email, int userId)
         {
-            StringBuilder sb = new StringBuilder();
-            var timestamp = DateTime.UtcNow.ToString();
-            foreach(byte b in GetHash(timestamp))
-            {
-                sb.Append(b.ToString("X2"));
-            }
-
-            var activatingCode = sb.ToString();
+            var timestamp = Encoding.ASCII.GetBytes(DateTime.UtcNow.ToString());
+            var activatingCode = Convert.ToBase64String(timestamp);
             var userActivatingCode = new UserActivatingCode
             {
                 UserId = userId,

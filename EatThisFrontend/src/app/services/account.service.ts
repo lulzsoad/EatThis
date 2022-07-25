@@ -39,7 +39,8 @@ export class AccountService{
         let request = new PasswordResetCodeNewPassword()
         request.passwordResetCode = passwordReset;
         request.password = newPassword;
-
+        console.log("asd");
+        console.log(this.httpClient.post(`${this.apiUrl}change-password-reset-code`, request));
         return this.httpClient.post(`${this.apiUrl}change-password-reset-code`, request);
     }
 

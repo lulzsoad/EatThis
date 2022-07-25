@@ -28,9 +28,14 @@ namespace EatThisAPI.Database
             {
                 if (!context.Roles.Any())
                 {
-                    var roles = GetRoles();
-                    context.Roles.AddRange(roles);
+                    context.Database.ExecuteSqlRaw(@"SET IDENTITY_INSERT Roles ON");
+                    context.Database.ExecuteSqlRaw(@"
+SET IDENTITY_INSERT Roles ON; 
+INSERT INTO Roles(Id, Name) VALUES(1, 'Admin'), (2, 'Employee'), (3, 'User')
+SET IDENTITY_INSERT Roles OFF; 
+");
                     context.SaveChanges();
+                    context.Database.ExecuteSqlRaw(@"SET IDENTITY_INSERT [dbo].[Roles] OFF");
                 }
 
                 if (!context.Units.Any())

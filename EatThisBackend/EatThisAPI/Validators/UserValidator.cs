@@ -36,11 +36,44 @@ namespace EatThisAPI.Validators
             ValidatePersonalData(user);
         }
 
+        public async Task ValidateEmail(string email)
+        {
+            if (await userRepository.EmailExists(email))
+            {
+                throw new CustomException(BackendMessage.Account.USER_EMAIL_ALEADY_TAKEN);
+            }
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains('@') || !email.Contains('.'))
+            {
+                throw new CustomException(BackendMessage.Account.USER_INVALID_EMAIL);
+            }
+        }
+        public void ValidatePassword(string password)
+        {
+            if (password.Length < 6 || password == null)
+            {
+                throw new CustomException(BackendMessage.Account.USER_INVALID_PASSWORD);
+            }
+        }
+        public void ValidatePersonalData(User user)
+        {
+            if (string.IsNullOrWhiteSpace(user.FirstName))
+            {
+                throw new CustomException(BackendMessage.Account.USER_FIRST_NAME_REQUIRED);
+            }
+            if (string.IsNullOrWhiteSpace(user.LastName))
+            {
+                throw new CustomException(BackendMessage.Account.USER_LAST_NAME_REQUIRED);
+            }
+        }
         public void LoginUserValidate(User user)
         {
             if(user == null)
             {
                 throw new CustomException(BackendMessage.Account.USER_INVALID_EMAIL_OR_PASSWORD);
+            }
+            else if (!user.IsActive)
+            {
+                throw new CustomException(BackendMessage.Account.USER_NOT_ACTIVE);
             }
         }
 
@@ -60,37 +93,11 @@ namespace EatThisAPI.Validators
             }
         }
 
-        public async Task ValidateEmail(string email)
-        {
-            if (await userRepository.EmailExists(email))
-            {
-                throw new CustomException(BackendMessage.Account.USER_EMAIL_ALEADY_TAKEN);
-            }
-            if (string.IsNullOrWhiteSpace(email) || !email.Contains('@') || !email.Contains('.'))
-            {
-                throw new CustomException(BackendMessage.Account.USER_INVALID_EMAIL);
-            }
-        }
+        
 
-        public void ValidatePassword(string password)
-        {
-            if(password.Length < 6 || password == null)
-            {
-                throw new CustomException(BackendMessage.Account.USER_INVALID_PASSWORD);
-            }
-        }
+        
 
-        public void ValidatePersonalData(User user)
-        {
-            if(string.IsNullOrWhiteSpace(user.FirstName))
-            {
-                throw new CustomException(BackendMessage.Account.USER_FIRST_NAME_REQUIRED);
-            }
-            if (string.IsNullOrWhiteSpace(user.LastName))
-            {
-                throw new CustomException(BackendMessage.Account.USER_LAST_NAME_REQUIRED);
-            }
-        }
+        
 
         public async Task EmailExists(string email)
         {

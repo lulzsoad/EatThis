@@ -94,19 +94,15 @@ export class EnterIngredientsComponent implements OnInit {
     return this.ingredientPositions.filter(x => x.isSelected);
   }
 
-  async submit(){
+  submit(){
     this.configStore.startLoadingPanel();
-    let ingredients: Ingredient[] = [];
+    let ingredients: string = "";
     for(let ingredientPosition of this.selectedIngredients){
-      ingredients.push(ingredientPosition.ingredient);
+      ingredients += ingredientPosition.ingredient.id + "_" + ingredientPosition.ingredient.name + ",";
     }
 
-    for(let i = 0; i < ingredients.length; i++){
-      delete ingredients[i].ingredientCategory;
-    }
-
-    let ingredientsJson = encodeURIComponent(JSON.stringify(ingredients));
+    let ingredientsUrl = encodeURIComponent(ingredients);
     this.configStore.stopLoadingPanel();
-    this.router.navigate(['../recipes/by-ingredients'], {relativeTo: this.route, queryParams: {ingredients: ingredientsJson}})
+    this.router.navigate(['../recipes/by-ingredients'], {relativeTo: this.route, queryParams: {ingredients: ingredientsUrl, page: 1}})
   }
 }

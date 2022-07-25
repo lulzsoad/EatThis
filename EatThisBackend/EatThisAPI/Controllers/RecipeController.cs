@@ -50,6 +50,13 @@ namespace EatThisAPI.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("byIngredients")]
+        public async Task<ActionResult> GetRecipesByIngredients([FromQuery] string ingredients, [FromQuery] int? skip, [FromQuery] int? take)
+        {
+            return Ok(await recipeService.GetRecipesByIngredients(ingredients, skip, take));
+        }
+
         [Authorize]
         [HttpPost]
         [Route("addProposedRecipe")]
@@ -74,12 +81,7 @@ namespace EatThisAPI.Controllers
             return Ok(await recipeService.GetProposedRecipeById(id));
         }
 
-        [HttpGet]
-        [Route("byIngredients")]
-        public async Task<ActionResult> GetRecipesByIngredients([FromQuery] string ingredientsJson, [FromQuery] int? skip, [FromQuery] int? take)
-        {
-            return Ok(await recipeService.GetRecipesByIngredients(ingredientsJson, skip, take));
-        }
+        
 
         [Authorize]
         [HttpGet]

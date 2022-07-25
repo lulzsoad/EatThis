@@ -430,19 +430,9 @@ namespace EatThisAPI.Services
             return proposedRecipeDto;
         }
 
-        public async Task<DataChunkViewModel<RecipeDtoByIngredientsViewModel>> GetRecipesByIngredients(string ingredientsJson, int? skip, int? take)
+        public async Task<DataChunkViewModel<RecipeDtoByIngredientsViewModel>> GetRecipesByIngredients(string ingredientsString, int? skip, int? take)
         {
-            var ingredientsDto = JsonSerializer.Deserialize<List<IngredientDto>>(ingredientsJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
-            var ingredients = new List<Ingredient>();
-            foreach(var ingredientDto in ingredientsDto)
-            {
-                ingredients.Add(new Ingredient
-                {
-                    Id = ingredientDto.Id,
-                    Name = ingredientDto.Name
-                });
-            }
-
+            List<Ingredient> ingredients = GetIngredientsFromString(ingredientsString);
             var recipes = await recipeRepository.GetRecipesByIngredients(ingredients, skip, take);
             var recipesDto = new DataChunkViewModel<RecipeDtoByIngredientsViewModel>() 
             { 
@@ -488,8 +478,6 @@ namespace EatThisAPI.Services
                     });
                 }
             }
-
-            
 
             recipesDto.Total = recipes.Total;
             return recipesDto;
@@ -596,6 +584,24 @@ namespace EatThisAPI.Services
                 "Twój przepis został odrzucony",
                 $"Powód odrzucenia: {discardProposedRecipeViewModel.Message}"
                 );
+        }
+
+        private List<Ingredient> GetIngredientsFromString(string ingredients)
+        {
+            List<Ingredient> ids = new List<Ingredient>();
+            var tab = ingredients.Split(',');
+            foreach(var item in tab)
+            {
+                if (item.Contains('_'))
+                {
+                    ids.Add(new Ingredient
+                    {
+                        Id = Convert.ToInt32(item.Split('_')[0]),
+                        Name = item.Split('_')[1]
+                    });
+                }
+            };
+            return ids;
         }
     }
 }

@@ -38,10 +38,6 @@ namespace EatThisAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProposedIngredientQuantity>()
-                .Property(x => x.ProposedRecipeId)
-                .IsRequired();
-
             modelBuilder.Entity<Category>()
                 .Property(x => x.Name)
                 .IsRequired()
@@ -77,6 +73,10 @@ namespace EatThisAPI.Database
             modelBuilder.Entity<IngredientCategory>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<ProposedIngredientQuantity>()
+                .Property(x => x.ProposedRecipeId)
+                .IsRequired();
 
             modelBuilder.Entity<Recipe>()
                 .Property(x => x.Name)

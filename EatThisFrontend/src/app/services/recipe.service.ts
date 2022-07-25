@@ -39,8 +39,8 @@ export class RecipeService{
         return this.httpClient.get<ProposedRecipe>(`${this.apiUrl}/proposedRecipes/${id}`);
     }
 
-    getRecipesByIngredients(ingredientsJson: string, skip: number = null, take: number = null){
-        return this.httpClient.get<DataChunk<RecipeByIngredient>>(`${this.apiUrl}/byIngredients?ingredientsJson=${ingredientsJson}&skip=${skip}&take=${take}`);
+    getRecipesByIngredients(ingredients: string, skip: number = null, take: number = null){
+        return this.httpClient.get<DataChunk<RecipeByIngredient>>(`${this.apiUrl}/byIngredients?ingredients=${ingredients}&skip=${skip}&take=${take}`);
     }
 
     getCurrentUserRecipes(){

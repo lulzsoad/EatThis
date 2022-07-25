@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigStore } from 'src/app/app-config/config-store';
 import { DataChunk } from 'src/app/models/app-models/data-chunk.model';
+import { Bookmark } from 'src/app/models/bookmark.model';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { RecipeByIngredient } from 'src/app/models/recipe-by-ingredient.model';
 import { RecipeService } from 'src/app/services/recipe.service';
@@ -13,10 +14,13 @@ import { RecipeService } from 'src/app/services/recipe.service';
 })
 export class RecipesByIngredientsComponent implements OnInit {
   public recipes: DataChunk<RecipeByIngredient>;
+  public page: number = 1;
+  public pages: Bookmark[] = [];
+  public selectedPage: Bookmark;
+  public count: number;
 
   private selectedIngredients: Ingredient[];
   private ingredientsUrl: string;
-  private page: number;
   private skip: number = 0;
   private take: number = 5;
 
@@ -28,27 +32,33 @@ export class RecipesByIngredientsComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.route.queryParamMap.subscribe(() => {
+    this.route.queryParamMap.subscribe(async () => {
+      this.configStore.startLoadingPanel();
       this.ingredientsUrl = this.route.snapshot.queryParamMap.get('ingredients');
       this.page = +this.route.snapshot.queryParamMap.get('page');
+      await this.getRecipesByIngredients();
+      this.getSelectedIngredients();
+      this.getIncludedIngredients();
+      this.getMissingIngredients();
+      this.loadPages();
+      this.configStore.stopLoadingPanel();
     });
-
-    this.configStore.startLoadingPanel();
-    await this.getRecipesByIngredients();
-    this.getSelectedIngredients();
-    this.getIncludedIngredients();
-    this.getMissingIngredients();
-    this.configStore.stopLoadingPanel();
-
-    console.log(this.recipes);
   }
 
   async getRecipesByIngredients(){
-    this.recipes = await this.recipeService.getRecipesByIngredients(this.ingredientsUrl, this.skip, this.take).toPromise();
+    this.recipes = await this.recipeService.getRecipesByIngredients(this.ingredientsUrl, (this.page - 1) * this.take, this.take).toPromise();
+    this.count = this.recipes.total;
   }
 
   getSelectedIngredients(){
-    this.selectedIngredients = JSON.parse(decodeURIComponent(this.ingredientsUrl));
+    this.selectedIngredients = [];
+    let decodedIngredients = decodeURIComponent(this.ingredientsUrl).split(',')
+    for(var item of decodedIngredients){
+      let ingredient = new Ingredient(item.split('_')[1]);
+      ingredient.id = +item.split('_')[0];
+      delete ingredient.ingredientCategory;
+      this.selectedIngredients.push(ingredient);
+    };
   }
 
   getIncludedIngredients(){
@@ -63,8 +73,6 @@ export class RecipesByIngredientsComponent implements OnInit {
         }
       }
     }
-    console.log(this.selectedIngredients);
-    console.log(this.recipes);
   }
 
   getMissingIngredients(){
@@ -82,5 +90,17 @@ export class RecipesByIngredientsComponent implements OnInit {
   
   navigateToRecipe(recipeId){
     this.router.navigate(['../', recipeId], {relativeTo: this.route})
+  }
+
+  loadPages(){
+    this.pages = [];
+    let pagesCount = Math.ceil(this.count / this.take);
+        for(let i = 0; i < pagesCount; i++){
+          this.pages.push(new Bookmark(i.toString(), (i+1).toString()));
+        }
+  }
+
+  async changePage(page: Bookmark){
+    this.router.navigate([], {queryParams: {ingredients: this.ingredientsUrl, page: page.label}})
   }
 }

@@ -13,9 +13,10 @@ namespace EatThisAPI.Models.DTOs.User
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
         public DateTime? BirthDate { get; set; }
-        public int RoleId { get; set; } = 3;
     }
 }

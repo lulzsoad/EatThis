@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from "../app-config/app.config";
 import { Ingredient } from "../models/ingredient.model";
 import { Subject } from "rxjs";
@@ -7,6 +7,8 @@ import { AlertService } from "./app-services/alert.service";
 import { IngredientPosition } from "../models/app-models/ingredient-position.model";
 import { IngredientQuantity } from "../models/ingredient-quantity.model";
 import { IngredientQuantitiesVM } from "../models/app-models/ingredient-quantities-vm.model";
+import { AuthService } from "./auth.service";
+import { User } from "../models/user.model";
 
 @Injectable()
 export class IngredientService{
@@ -17,7 +19,8 @@ export class IngredientService{
     private serverUrl: string = AppConfig.APP_URL;
     private apiUrl: string = `${this.serverUrl}api/ingredient/`;
     
-    constructor(private httpClient: HttpClient, private alertService: AlertService){}
+    constructor(private httpClient: HttpClient, private alertService: AlertService, private authService: AuthService){}
+    private user: User
     
     getAll(){
         return this.httpClient.get<Ingredient[]>(`${this.apiUrl}`);
@@ -43,12 +46,8 @@ export class IngredientService{
             .catch(err => this.alertService.showError(err.error));
     }
 
-    async update(ingredient: Ingredient){
-        await this.httpClient.put<Ingredient>(this.apiUrl, ingredient)
-            .toPromise()
-            .then(data => {ingredient = data; this.alertService.showSuccess("Sukces")})
-            .catch(err => this.alertService.showError(err.error));
-        return ingredient;
+    update(ingredient: Ingredient){
+        return this.httpClient.put<Ingredient>(this.apiUrl, ingredient)
     }
 
     async delete(ingredient: Ingredient){

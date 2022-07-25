@@ -76,7 +76,7 @@ export class PasswordResetCodeComponent implements OnInit {
       return;
     }
   
-    let response = await this.accountService.changePassword(this.response, this.changePasswordForm.value.newPassword);
+    await this.accountService.changePassword(this.response, this.changePasswordForm.value.newPassword);
     this.router.navigate(['../../']);
     this.alertService.showSuccess("Zmieniono hasło");
     this.configStore.stopLoadingPanel();

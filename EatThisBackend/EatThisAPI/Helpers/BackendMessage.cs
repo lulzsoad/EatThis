@@ -39,6 +39,7 @@ namespace EatThisAPI.Helpers
             public static string USER_LAST_NAME_REQUIRED = "Nazwisko jest wymagane";
             public static string USER_INVALID_EMAIL_OR_PASSWORD = "Nieprawidłowe dane logowania";
             public static string USER_EMAIL_NOT_FOUND = "Nie znaleziono adresu email";
+            public static string USER_NOT_ACTIVE = "Konto nie zostało aktywowane";
 
             public static string PASSWORD_RESET_CODE_INVALID = "Nieprawidłowy kod";
             public static string PASSWORD_RESET_CODE_ERROR = "Niezgodne dane";

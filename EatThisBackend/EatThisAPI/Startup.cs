@@ -134,10 +134,7 @@ namespace EatThisAPI
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
